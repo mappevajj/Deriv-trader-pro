@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Deriv Trader Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0e14;
+            --surface: rgba(20, 25, 35, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e0e0e0;
+            --accent: #00e5a0;
+            --danger: #ff4d6a;
+            --warning: #ffb700;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10,14,20,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+        .header .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .header .status {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+        }
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 90px;
+            scroll-behavior: smooth;
+        }
+        .card {
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: border 0.2s;
+        }
+        .card:hover {
+            border-color: rgba(0, 229, 160, 0.2);
+        }
+        .card h3 {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #fff;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .accent {
+            color: var(--accent);
+        }
+        .danger {
+            color: var(--danger);
+        }
+        button {
+            background: linear-gradient(135deg, #00c896, #00a87e);
+            border: none;
+            color: #000;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            margin: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        button:active {
+            transform: scale(0.96);
+            filter: brightness(1.1);
+        }
+        button.secondary {
+            background: rgba(255,255,255,0.08);
+            color: #ccc;
+        }
+        button.warning {
+            background: var(--warning);
+            color: #000;
+        }
+        button.danger {
+            background: var(--danger);
+        }
+        button.big {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+        }
+        select, input, textarea {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            font-size: 14px;
+            width: 100%;
+            margin: 5px 0;
+            outline: none;
+            transition: border 0.2s;
+        }
+        select:focus, input:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+        .inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 6px 0;
+        }
+        .inline strong {
+            min-width: 70px;
+            color: #aaa;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15,20,30,0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #666;
+            background: none;
+            border: none;
+            padding: 5px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: var(--accent);
+        }
+        .nav-item span {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+        #log {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 11px;
+            height: 120px;
+            overflow-y: auto;
+            color: #aaa;
+            border: 1px solid var(--border);
+            margin-top: 10px;
+        }
+        .log-trade {
+            color: var(--accent);
+        }
+        .log-error {
+            color: var(--danger);
+        }
+        .hidden {
+            display: none;
+        }
+        .disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .symbol-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+        .symbol-item:hover {
+            background: rgba(255,255,255,0.03);
+        }
+        .portfolio-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .badge {
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.08);
+            display: inline-block;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Deriv Trader Pro</div>
+        <div class="status" id="connection-status">○ Offline</div>
+    </div>
+    <div class="main-content" id="main-content">
+        <div id="tab-content"></div>
+    </div>
+    <div class="bottom-nav">
+        <button class="nav-item active" data-tab="setup"><span>🔑</span>Setup</button>
+        <button class="nav-item" data-tab="dashboard"><span>📈</span>Dash</button>
+        <button class="nav-item" data-tab="market"><span>📊</span>Market</button>
+        <button class="nav-item" data-tab="trade"><span>🖐️</span>Trade</button>
+        <button class="nav-item" data-tab="portfolio"><span>📋</span>Portfolio</button>
+        <button class="nav-item" data-tab="history"><span>📜</span>History</button>
+        <button class="nav-item" data-tab="bot"><span>🤖</span>Bot</button>
+    </div>
+    <script>
+        // ====================== GLOBAL STATE ======================
+        let APP_ID = '', PAT_TOKEN = '', selectedAccountId = '';
+        let ws = null, pingInterval = null;
+        let currentMarket = 'R_10';
+        let openContracts = [];
+        let tickHistory = [];
+        let counts = [0,0,0,0,0,0,0,0,0,0], totalTicks = 0;
+        let lastDigitValue = null, currentDigitStreak = 0, longestDigitStreak = 0;
+        let botEnabled = false, botFunction = null;
+        let activeSymbolsCache = [];
+        let lastProposalId = null;
+
+        // ====================== UTILS ======================
+        function log(msg, type='info') {
+            const logEl = document.getElementById('log');
+            if (!logEl) return;
+            const time = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.textContent = `[${time}] ${msg}`;
+            div.className = type === 'error' ? 'log-error' : type === 'trade' ? 'log-trade' : '';
+            logEl.appendChild(div);
+            logEl.scrollTop = logEl.scrollHeight;
+            while (logEl.children.length > 100) logEl.removeChild(logEl.firstChild);
+        }
+
+        async function apiFetch(url, method='GET', body=null) {
+            const headers = {
+                'Deriv-App-ID': APP_ID,
+                'Authorization': `Bearer ${PAT_TOKEN}`,
+                'Content-Type': 'application/json'
+            };
+            return await fetch(`https://api.derivws.com${url}`, { method, headers, body: body ? JSON.stringify(body) : null });
+        }
+
+        // ====================== WEBSOCKET ======================
+        async function connectWebSocket() {
+            if (!selectedAccountId) { log('Select an account first.', 'error'); return; }
+            log('Getting OTP...');
+            try {
+                const res = await apiFetch(`/trading/v1/options/accounts/${selectedAccountId}/otp`, 'POST');
+                const data = await res.json();
+                if (data.errors) { log('OTP error: ' + data.errors[0].message, 'error'); return; }
+                ws = new WebSocket(data.data.url);
+                ws.onopen = () => {
+                    log('Connected!', 'trade');
+                    document.getElementById('connection-status').innerHTML = '● Connected';
+                    ws.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
+                    ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
+                    ws.send(JSON.stringify({ proposal_open_contract: 1, subscribe: 1 }));
+                    startPing();
+                };
+                ws.onmessage = handleWSMessage;
+                ws.onerror = () => log('WebSocket error', 'error');
+                ws.onclose = () => {
+                    log('Connection closed.', 'error');
+                    document.getElementById('connection-status').innerHTML = '○ Offline';
+                    stopPing();
+                };
+            } catch (e) { log('Connection failed: ' + e.message, 'error'); }
+        }
+
+        function handleWSMessage(event) {
+            const msg = JSON.parse(event.data);
+            if (msg.tick) {
+                const digit = parseInt(msg.tick.quote.toString().slice(-1));
+                const lastDigitEl = document.getElementById('last-digit');
+                if (lastDigitEl) lastDigitEl.textContent = digit;
+                tickHistory.push({ time: new Date().toISOString(), digit });
+                counts[digit]++; totalTicks++;
+                if (lastDigitValue === digit) currentDigitStreak++; else currentDigitStreak = 1;
+                lastDigitValue = digit;
+                if (currentDigitStreak > longestDigitStreak) longestDigitStreak = currentDigitStreak;
+                // Bot
+                if (botEnabled && botFunction) {
+                    try {
+                        const decision = botFunction({
+                            lastDigit: digit,
+                            digitStreak: currentDigitStreak,
+                            match: digit === parseInt(document.getElementById('match-digit')?.value || 9),
+                        });
+                        if (decision && typeof decision === 'object') {
+                            const cType = decision.contract_type || document.getElementById('bot-contract-type')?.value;
+                            const stake = decision.stake !== undefined ? decision.stake : parseFloat(document.getElementById('bot-stake')?.value || 0.5);
+                            placeTrade(cType, stake, decision.digit, decision.barrier);
+                        }
+                    } catch (e) { log('Bot error: ' + e.message, 'error'); }
+                }
+                return;
+            }
+            if (msg.msg_type === 'balance') {
+                const balEl = document.getElementById('balance-display');
+                if (balEl) balEl.innerHTML = `<span class="accent">$${msg.balance.balance}</span> ${msg.balance.currency}`;
+                return;
+            }
+            if (msg.buy) log(`Trade executed: ID ${msg.buy.contract_id}`, 'trade');
+            if (msg.error) log('Error: ' + msg.error.message, 'error');
+            if (msg.msg_type === 'proposal_open_contract') {
+                if (msg.proposal_open_contract) updatePortfolioFromStream(msg.proposal_open_contract);
+            }
+            if (msg.active_symbols) {
+                activeSymbolsCache = msg.active_symbols;
+                displaySymbols(activeSymbolsCache);
+            }
+            if (msg.contracts_for) {
+                document.getElementById('contracts-result').innerHTML = '<pre>' + JSON.stringify(msg.contracts_for.available, null, 2) + '</pre>';
+            }
+            if (msg.history) {
+                document.getElementById('history-result').innerHTML = '<pre>' + JSON.stringify(msg.history.prices, null, 2) + '</pre>';
+            }
+            if (msg.proposal) {
+                document.getElementById('proposal-details').textContent = `Payout: $${msg.proposal.payout} | Cost: $${msg.proposal.ask_price}`;
+                document.getElementById('proposal-display').classList.remove('hidden');
+                lastProposalId = msg.proposal.id;
+            }
+            if (msg.portfolio) {
+                openContracts = msg.portfolio.contracts || [];
+                renderPortfolio();
+            }
+            if (msg.profit_table) {
+                document.getElementById('profit-table-result').innerHTML = '<pre>' + JSON.stringify(msg.profit_table.transactions, null, 2) + '</pre>';
+            }
+            if (msg.statement) {
+                document.getElementById('statement-result').innerHTML = '<pre>' + JSON.stringify(msg.statement.transactions, null, 2) + '</pre>';
+            }
+        }
+
+        function placeTrade(contractType, stake, digit=null, barrier=null) {
+            if (!ws || ws.readyState !== WebSocket.OPEN) { log('Not connected.', 'error'); return; }
+            const params = {
+                buy: "1", price: stake,
+                parameters: {
+                    contract_type: contractType,
+                    underlying_symbol: currentMarket,
+                    currency: 'USD', amount: stake, basis: 'stake',
+                    duration: 1, duration_unit: 't'
+                }
+            };
+            if (['DIGITMATCH','DIGITDIFF'].includes(contractType)) {
+                if (digit === null || digit < 0 || digit > 9) { log('Digit 0-9 required.', 'error'); return; }
+                params.parameters.barrier = String(digit);
+            } else if (['DIGITOVER','DIGITUNDER'].includes(contractType)) {
+                if (barrier === null || barrier < 0 || barrier > 9) { log('Barrier 0-9 required.', 'error'); return; }
+                params.parameters.barrier = String(barrier);
+            }
+            ws.send(JSON.stringify(params));
+            log(`Trade sent: ${contractType} $${stake}`, 'trade');
+        }
+
+        // ====================== PORTFOLIO ======================
+        function updatePortfolioFromStream(contract) {
+            openContracts = openContracts.filter(c => c.contract_id !== contract.contract_id);
+            if (contract.status === 'open') openContracts.push(contract);
+            renderPortfolio();
+        }
+        function renderPortfolio() {
+            const list = document.getElementById('portfolio-list');
+            if (!list) return;
+            if (openContracts.length === 0) { list.innerHTML = '<p>No open contracts.</p>'; return; }
+            list.innerHTML = openContracts.map(c => `
+                <div class="portfolio-item">
+                    <strong>${c.longcode}</strong><br>
+                    ID: ${c.contract_id} | Status: ${c.status} | Profit: <span class="${c.profit >= 0 ? 'accent' : 'danger'}">$${c.profit}</span><br>
+                    Buy: $${c.buy_price} | Bid: $${c.bid_price}
+                    <button class="secondary" onclick="sellContract(${c.contract_id})">Sell</button>
+                </div>
+            `).join('');
+        }
+        function sellContract(contractId) {
+            if (!ws) { log('Not connected.', 'error'); return; }
+            ws.send(JSON.stringify({ sell: contractId, price: 0 }));
+            log('Sell request sent for ' + contractId, 'trade');
+        }
+        function refreshPortfolio() {
+            if (!ws) { log('Connect first.', 'error'); return; }
+            ws.send(JSON.stringify({ portfolio: 1 }));
+        }
+
+        // ====================== MARKET DATA ======================
+        function fetchActiveSymbols() {
+            if (!ws) { log('Connect first.', 'error'); return; }
+            ws.send(JSON.stringify({ active_symbols: "brief" }));
+        }
+        function displaySymbols(symbols) {
+            const search = document.getElementById('symbol-search')?.value.toLowerCase() || '';
+            const list = document.getElementById('active-symbols-list');
+            if (!list) return;
+            list.innerHTML = symbols.filter(s => s.underlying_symbol.toLowerCase().includes(search)).map(s =>
+                `<div class="symbol-item" onclick="currentMarket='${s.underlying_symbol}'; log('Market set to ${s.underlying_symbol}')">
+                    <strong>${s.underlying_symbol}</strong> - ${s.underlying_symbol_name} (${s.market})
+                </div>`
+            ).join('');
+        }
+        function filterSymbols() {
+            if (activeSymbolsCache.length) displaySymbols(activeSymbolsCache);
+        }
+        function getContracts() {
+            const symbol = document.getElementById('contract-symbol-input').value.trim();
+            if (!symbol) return;
+            if (!ws) { log('Connect first.', 'error'); return; }
+            ws.send(JSON.stringify({ contracts_for: symbol }));
+        }
+        function getHistory() {
+            const symbol = document.getElementById('history-symbol').value.trim();
+            if (!symbol) return;
+            if (!ws) { log('Connect first.', 'error'); return; }
+            ws.send(JSON.stringify({ ticks_history: symbol, count: 10, end: "latest", style: "ticks" }));
+        }
+
+        // ====================== MANUAL TRADE ======================
+        function updateTradeUI() {
+            const type = document.getElementById('manual-contract-type').value;
+            const digitGroup = document.getElementById('digit-group');
+            if (['DIGITODD','DIGITEVEN'].includes(type)) {
+                digitGroup.classList.add('disabled');
+            } else {
+                digitGroup.classList.remove('disabled');
+            }
+        }
+        function getProposal() {
+            const contractType = document.getElementById('manual-contract-type').value;
+            const stake = document.getElementById('manual-stake').value;
+            const digit = document.getElementById('manual-digit').value;
+            const duration = document.getElementById('duration-ticks').value || 1;
+            if (!ws) { log('Connect first.', 'error'); return; }
+            const params = {
+                proposal: 1, amount: stake, basis: 'stake',
+                contract_type: contractType,
+                underlying_symbol: currentMarket,
+                currency: 'USD',
+                duration: duration, duration_unit: 't'
+            };
+            if (['DIGITMATCH','DIGITDIFF'].includes(contractType)) params.barrier = String(digit);
+            else if (['DIGITOVER','DIGITUNDER'].includes(contractType)) params.barrier = String(4);
+            ws.send(JSON.stringify(params));
+        }
+        function buyProposal() {
+            if (!lastProposalId) { log('Get a proposal first.', 'error'); return; }
+            const price = document.getElementById('manual-stake').value;
+            ws.send(JSON.stringify({ buy: lastProposalId, price: price }));
+            document.getElementById('proposal-display').classList.add('hidden');
+            log('Buying from proposal...', 'trade');
+        }
+        function manualTrade() {
+            const contractType = document.getElementById('manual-contract-type').value;
+            const stake = parseFloat(document.getElementById('manual-stake').value);
+            const digit = parseInt(document.getElementById('manual-digit').value);
+            placeTrade(contractType, stake, digit, 4);
+        }
+        function suggestDigit() {
+            const windowSize = parseInt(document.getElementById('suggest-window').value) || 50;
+            const recent = tickHistory.slice(-windowSize);
+            const freq = [0,0,0,0,0,0,0,0,0,0];
+            recent.forEach(t => freq[t.digit]++);
+            let minDigit = 0, minCount = Infinity;
+            freq.forEach((c, i) => { if (c < minCount) { minCount = c; minDigit = i; } });
+            document.getElementById('manual-digit').value = minDigit;
+            log(`Suggested digit: ${minDigit} (${minCount}/${recent.length} ticks)`);
+        }
+
+        // ====================== HISTORY ======================
+        function getProfitTable() {
+            if (!ws) { log('Connect first.', 'error'); return; }
+            ws.send(JSON.stringify({ profit_table: 1, description: 1, limit: 10 }));
+        }
+        function getStatement() {
+            if (!ws) { log('Connect first.', 'error'); return; }
+            ws.send(JSON.stringify({ statement: 1, description: 1, limit: 10 }));
+        }
+
+        // ====================== BOT ======================
+        function toggleBot() {
+            botEnabled = document.getElementById('bot-enabled').checked;
+            document.getElementById('bot-status').textContent = botEnabled ? 'Running' : 'Stopped';
+        }
+        function loadExampleBot() {
+            document.getElementById('bot-script').value = `function onTick(data) {\n    if (data.match && data.matchStreak === 3) return {};\n    return null;\n}`;
+            compileBot();
+        }
+        function importBot(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('bot-script').value = e.target.result;
+                    compileBot();
+                };
+                reader.readAsText(file);
+            }
+        }
+        function compileBot() {
+            const script = document.getElementById('bot-script').value;
+            try {
+                const wrapped = `"use strict"; ${script}; return typeof onTick === 'function' ? onTick : null;`;
+                botFunction = new Function(wrapped)();
+                document.getElementById('bot-status').textContent = botFunction ? 'Ready' : 'Error';
+            } catch(e) { log('Bot compile error: ' + e.message, 'error'); }
+        }
+        function saveBot() {
+            localStorage.setItem('botScript', document.getElementById('bot-script').value);
+            log('Bot saved.');
+        }
+
+        // ====================== SETTINGS ======================
+        async function saveKeys() {
+            APP_ID = document.getElementById('app-id').value.trim();
+            PAT_TOKEN = document.getElementById('pat-token').value.trim();
+            if (!APP_ID || !PAT_TOKEN) { log('Enter both keys.', 'error'); return; }
+            localStorage.setItem('deriv_app_id', APP_ID);
+            localStorage.setItem('deriv_pat_token', PAT_TOKEN);
+            log('Fetching accounts...');
+            const res = await apiFetch('/trading/v1/options/accounts');
+            const data = await res.json();
+            if (data.errors) { log('Error: ' + data.errors[0].message, 'error'); return; }
+            const select = document.getElementById('account-select');
+            select.innerHTML = '';
+            data.data.forEach(acc => {
+                const opt = document.createElement('option');
+                opt.value = acc.account_id;
+                opt.textContent = `${acc.account_id} (${acc.account_type}) - $${acc.balance}`;
+                select.appendChild(opt);
+            });
+            selectedAccountId = data.data[0]?.account_id;
+            document.getElementById('connect-btn').disabled = false;
+            log('Accounts ready.');
+        }
+
+        // ====================== RENDER TABS ======================
+        function renderTab(tab) {
+            const content = document.getElementById('tab-content');
+            switch (tab) {
+                case 'setup':
+                    content.innerHTML = `
+                        <div class="card">
+                            <h3>🔑 API Keys</h3>
+                            <input type="text" id="app-id" placeholder="App ID" value="${APP_ID}">
+                            <input type="password" id="pat-token" placeholder="PAT Token" value="${PAT_TOKEN}">
+                            <button onclick="saveKeys()">Save & Fetch Accounts</button>
+                            <div id="log"></div>
+                        </div>
+                        <div class="card">
+                            <h3>Account</h3>
+                            <select id="account-select"><option>-- Fetch accounts first --</option></select>
+                            <button id="connect-btn" onclick="connectWebSocket()" disabled>Connect</button>
+                        </div>
+                    `;
+                    break;
+                case 'dashboard':
+                    content.innerHTML = `
+                        <div class="card"><h3>💰 Balance</h3><div id="balance-display">--</div></div>
+                        <div class="card"><h3>📊 Open P&L</h3><div id="open-pl">--</div></div>
+                        <div class="card"><h3>🏁 Last Trade</h3><div id="last-result-dash">--</div></div>
+                    `;
+                    break;
+                case 'market':
+                    content.innerHTML = `
+                        <div class="card"><h3>Active Symbols</h3>
+                            <input type="text" id="symbol-search" placeholder="Search symbol..." oninput="filterSymbols()">
+                            <div id="active-symbols-list" style="max-height:200px; overflow-y:auto;"></div>
+                        </div>
+                        <div class="card"><h3>Contracts for Symbol</h3>
+                            <input type="text" id="contract-symbol-input" placeholder="e.g., R_10">
+                            <button onclick="getContracts()">Get Contracts</button>
+                            <div id="contracts-result"></div>
+                        </div>
+                        <div class="card"><h3>Historical Ticks</h3>
+                            <input type="text" id="history-symbol" placeholder="e.g., R_100">
+                            <button onclick="getHistory()">Last 10 Ticks</button>
+                            <div id="history-result"></div>
+                        </div>
+                    `;
+                    break;
+                case 'trade':
+                    content.innerHTML = `
+                        <div class="card"><h3>🖐️ Manual Trade</h3>
+                            <div class="inline"><strong>Contract:</strong>
+                                <select id="manual-contract-type" onchange="updateTradeUI()">
+                                    <option value="DIGITMATCH">Matches</option><option value="DIGITDIFF">Differs</option>
+                                    <option value="DIGITODD">Odd</option><option value="DIGITEVEN">Even</option>
+                                    <option value="DIGITOVER">Over</option><option value="DIGITUNDER">Under</option>
+                                </select>
+                            </div>
+                            <div class="inline" id="digit-group">
+                                <strong>Digit:</strong>
+                                <select id="manual-digit">${[...Array(10)].map((_,i) => `<option value="${i}">${i}</option>`).join('')}</select>
+                                <button class="warning" onclick="suggestDigit()">💡 Suggest</button>
+                                <input type="number" id="suggest-window" value="50" style="width:60px;" title="Ticks window">
+                            </div>
+                            <div class="inline"><strong>Stake ($):</strong><input type="number" id="manual-stake" value="0.5" step="0.1"></div>
+                            <div class="inline"><strong>Duration (ticks):</strong><input type="number" id="duration-ticks" value="1" min="1"></div>
+                            <button onclick="getProposal()">📊 Get Proposal</button>
+                            <div id="proposal-display" class="hidden card" style="margin-top:10px;">
+                                <span id="proposal-details"></span>
+                                <button class="big" onclick="buyProposal()">Buy</button>
+                            </div>
+                            <button class="big" onclick="manualTrade()">Place Trade Now</button>
+                        </div>
+                        <div class="card"><h3>Live Tick</h3><p>Last digit: <span id="last-digit" class="accent">-</span></p></div>
+                    `;
+                    break;
+                case 'portfolio':
+                    content.innerHTML = `
+                        <div class="card"><h3>Open Contracts</h3>
+                            <button onclick="refreshPortfolio()">Refresh</button>
+                            <div id="portfolio-list"></div>
+                        </div>
+                    `;
+                    break;
+                case 'history':
+                    content.innerHTML = `
+                        <div class="card"><h3>Profit Table</h3><button onclick="getProfitTable()">Load</button><div id="profit-table-result"></div></div>
+                        <div class="card"><h3>Statement</h3><button onclick="getStatement()">Last 10</button><div id="statement-result"></div></div>
+                    `;
+                    break;
+                case 'bot':
+                    content.innerHTML = `
+                        <div class="card"><h3>🤖 Bot</h3>
+                            <label><input type="checkbox" id="bot-enabled" onchange="toggleBot()"> Enable</label>
+                            <span id="bot-status">Sleeping</span>
+                            <div class="inline"><strong>Stake:</strong><input type="number" id="bot-stake" value="0.5" step="0.1"></div>
+                            <div class="inline"><strong>Contract:</strong>
+                                <select id="bot-contract-type">
+                                    <option value="DIGITMATCH">Matches</option><option value="DIGITDIFF">Differs</option>
+                                    <option value="DIGITODD">Odd</option><option value="DIGITEVEN">Even</option>
+                                    <option value="DIGITOVER">Over</option><option value="DIGITUNDER">Under</option>
+                                </select>
+                            </div>
+                            <textarea id="bot-script" rows="6">function onTick(data) { if (data.match && data.matchStreak === 3) return {}; return null; }</textarea>
+                            <button onclick="loadExampleBot()">Load Example</button>
+                            <button onclick="document.getElementById('import-file-input').click()">Import .js</button>
+                            <input type="file" id="import-file-input" accept=".js" onchange="importBot(event)" hidden>
+                            <button onclick="saveBot()">Save</button>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // ====================== NAVIGATION ======================
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                renderTab(item.dataset.tab);
+                if (item.dataset.tab === 'market') fetchActiveSymbols();
+            });
+        });
+
+        // Ping keep-alive
+        function startPing() { pingInterval = setInterval(() => { if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ ping: 1 })); }, 45000); }
+        function stopPing() { clearInterval(pingInterval); }
+
+        // Load saved keys
+        (function() {
+            const savedAppId = localStorage.getItem('deriv_app_id');
+            const savedPat = localStorage.getItem('deriv_pat_token');
+            if (savedAppId) APP_ID = savedAppId;
+            if (savedPat) PAT_TOKEN = savedPat;
+            const savedBot = localStorage.getItem('botScript');
+            if (savedBot) setTimeout(() => { const ta = document.getElementById('bot-script'); if (ta) ta.value = savedBot; }, 200);
+        })();
+
+        renderTab('setup');
+    </script>
+</body>
+</html>
