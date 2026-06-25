@@ -1190,7 +1190,6 @@
             loading1.classList.add('hidden');
             loading2.classList.add('hidden');
             renderTab('dashboard');
-            // Update portfolio after render
             setTimeout(renderPortfolio, 300);
         }
 
@@ -1214,7 +1213,6 @@
                 log('Failed to fetch accounts. Please check your credentials.', 'error');
                 document.getElementById('cred-error').textContent = 'Failed to fetch accounts. Please check your App ID and PAT token.';
                 document.getElementById('cred-error').classList.add('show');
-                // Go back to login
                 loginScreen.classList.remove('hidden');
                 loading2.classList.add('hidden');
                 return;
@@ -1255,6 +1253,9 @@
         document.getElementById('login-trade-btn').addEventListener('click', () => {
             credModal.classList.add('active');
             document.getElementById('cred-error').classList.remove('show');
+            // Pre-fill from saved if exists
+            if (savedApp) document.getElementById('cred-app-id').value = savedApp;
+            if (savedPat) document.getElementById('cred-pat-token').value = savedPat;
         });
 
         // ── Close cred modal ──
@@ -1395,14 +1396,32 @@
             }
         }
 
+        // ── FIXED API FETCH: uses correct base URL ──
         async function apiFetch(url, method = 'GET', body = null) {
             const headers = {
                 'Deriv-App-ID': APP_ID,
                 'Authorization': `Bearer ${PAT_TOKEN}`,
                 'Content-Type': 'application/json'
             };
-            return await fetch(`https://api.derivws.com${url}`, { method, headers, body: body ? JSON.stringify(body) :
-                    null });
+            // Use the correct Deriv REST API endpoint
+            const baseUrl = 'https://api.deriv.com';
+            const fullUrl = `${baseUrl}${url}`;
+            const options = {
+                method,
+                headers,
+                body: body ? JSON.stringify(body) : undefined
+            };
+            try {
+                const response = await fetch(fullUrl, options);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+                return await response.json();
+            } catch (e) {
+                log(`API request failed: ${e.message}`, 'error');
+                throw e;
+            }
         }
 
         // ============================================================
@@ -1415,8 +1434,8 @@
             }
             try {
                 log('Fetching accounts...', 'info');
-                const res = await apiFetch('/trading/v1/options/accounts');
-                const data = await res.json();
+                // The correct endpoint for listing accounts
+                const data = await apiFetch('/trading/v1/options/accounts');
 
                 if (data.errors) {
                     log('API error: ' + data.errors[0]?.message || 'Unknown error', 'error');
@@ -1510,13 +1529,14 @@
             if (!selectedAccountId) { log('No account selected.', 'error'); return; }
             log('Connecting to Deriv WebSocket...');
             try {
-                const res = await apiFetch(`/trading/v1/options/accounts/${selectedAccountId}/otp`, 'POST');
-                const data = await res.json();
+                // Get OTP token for WebSocket
+                const data = await apiFetch(`/trading/v1/options/accounts/${selectedAccountId}/otp`, 'POST');
                 if (data.errors) {
                     log('OTP error: ' + data.errors[0]?.message || 'Unknown', 'error');
                     return;
                 }
-                ws = new WebSocket(data.data.url);
+                const wsUrl = data.data.url; // This should be the WebSocket URL
+                ws = new WebSocket(wsUrl);
                 ws.onopen = () => {
                     log('Connected to Deriv!', 'trade');
                     setStatus(true);
@@ -2192,13 +2212,10 @@
         }
 
         // ============================================================
-        //  ACCOUNT UPDATE POLLING (keep accounts in sync)
+        //  ACCOUNT UPDATE POLLING
         // ============================================================
-        // Refresh accounts periodically when connected
         setInterval(() => {
             if (APP_ID && PAT_TOKEN && document.getElementById('app-container').classList.contains('active')) {
-                // Refresh account balance via WebSocket is already handled
-                // Just make sure dropdown has latest accounts
                 fetchAndDisplayAccounts().catch(() => {});
             }
         }, 60000);
