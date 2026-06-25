@@ -139,6 +139,7 @@
         .bigram-header { font-weight: bold; color: var(--accent); }
         .bot-card { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 10px; margin: 8px 0; cursor: pointer; }
         .bot-card:hover { background: rgba(255,255,255,0.06); }
+        .result-highlight { font-size: 18px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -176,6 +177,7 @@
         let botEnabled = false, botFunction = null;
         let activeSymbolsCache = [];
         let lastProposalId = null;
+        let lastTradeResult = { status: '', profit: 0, time: '' };
 
         // Analysis state
         let digitCurrentStreaks = [0,0,0,0,0,0,0,0,0,0];
@@ -277,6 +279,17 @@
             } catch (e) { log('Connection failed: ' + e.message, 'error'); }
         }
 
+        function updateTradeResultDisplay() {
+            const dashEl = document.getElementById('last-result-dash');
+            if (!dashEl) return;
+            if (!lastTradeResult.time) {
+                dashEl.innerHTML = 'No trades yet.';
+                return;
+            }
+            const cls = lastTradeResult.profit >= 0 ? 'accent' : 'danger';
+            dashEl.innerHTML = `<span class="${cls}">${lastTradeResult.profit >= 0 ? 'Won' : 'Lost'} $${Math.abs(lastTradeResult.profit).toFixed(2)}</span>`;
+        }
+
         function handleWSMessage(event) {
             const msg = JSON.parse(event.data);
             if (msg.tick) {
@@ -289,14 +302,14 @@
                 lastDigitValue = digit;
                 if (currentDigitStreak > longestDigitStreak) longestDigitStreak = currentDigitStreak;
                 updateAnalysisState(digit);
-                // Copy trader logic
-                if (window.copyTraderActive && window.copyTraderFn) {
-                    window.copyTraderFn(digit, msg.tick.quote);
-                }
-                // Bot execution
+                if (window.copyTraderActive && window.copyTraderFn) window.copyTraderFn(digit, msg.tick.quote);
                 if (botEnabled && botFunction) {
                     try {
-                        const decision = botFunction({ lastDigit: digit, digitStreak: currentDigitStreak, match: digit === parseInt(document.getElementById('match-digit')?.value || 9) });
+                        const decision = botFunction({
+                            lastDigit: digit,
+                            digitStreak: currentDigitStreak,
+                            match: digit === parseInt(document.getElementById('match-digit')?.value || 9),
+                        });
                         if (decision && typeof decision === 'object') {
                             const cType = decision.contract_type || document.getElementById('bot-contract-type')?.value;
                             const stake = decision.stake !== undefined ? decision.stake : parseFloat(document.getElementById('bot-stake')?.value || 0.5);
@@ -311,11 +324,31 @@
                 if (balEl) balEl.innerHTML = `<span class="accent">$${msg.balance.balance}</span> ${msg.balance.currency}`;
                 return;
             }
-            if (msg.buy) log(`Trade executed: ID ${msg.buy.contract_id}`, 'trade');
-            if (msg.error) log('Error: ' + msg.error.message, 'error');
-            if (msg.msg_type === 'proposal_open_contract') {
-                if (msg.proposal_open_contract) updatePortfolioFromStream(msg.proposal_open_contract);
+            if (msg.buy) {
+                log(`Trade executed: ID ${msg.buy.contract_id}`, 'trade');
+                return;
             }
+            if (msg.error) {
+                log('Error: ' + msg.error.message, 'error');
+                return;
+            }
+            // Contract status update – used for win/loss
+            if (msg.msg_type === 'proposal_open_contract' && msg.proposal_open_contract) {
+                const c = msg.proposal_open_contract;
+                updatePortfolioFromStream(c);
+                // Check if contract just ended
+                if (c.is_expired || c.status === 'won' || c.status === 'lost' || c.status === 'sold') {
+                    const profit = parseFloat(c.profit);
+                    if (!isNaN(profit)) {
+                        const resultMsg = profit >= 0 ? `Won $${profit.toFixed(2)}` : `Lost -$${Math.abs(profit).toFixed(2)}`;
+                        log(`Trade result: ${resultMsg}`, profit >= 0 ? 'trade' : 'error');
+                        lastTradeResult = { status: profit >= 0 ? 'won' : 'lost', profit, time: new Date().toLocaleTimeString() };
+                        updateTradeResultDisplay();
+                    }
+                }
+                return;
+            }
+            // Other message types
             if (msg.active_symbols) { activeSymbolsCache = msg.active_symbols; displaySymbols(activeSymbolsCache); }
             if (msg.contracts_for) { document.getElementById('contracts-result').innerHTML = '<pre>' + JSON.stringify(msg.contracts_for.available, null, 2) + '</pre>'; }
             if (msg.history) { document.getElementById('history-result').innerHTML = '<pre>' + JSON.stringify(msg.history.prices, null, 2) + '</pre>'; }
@@ -485,7 +518,7 @@
         // ====================== AI BOTS & FREE BOTS ======================
         const aiBots = [
             { name: 'Trend Follower', description: 'Buys match of digit with longest current streak.', script: `function onTick(data) { if (data.digitStreak >= 2) return { contract_type: 'DIGITMATCH', stake: 0.5, digit: data.lastDigit }; return null; }` },
-            { name: 'Gap Filler', description: 'Buys match of digit with highest average gap (coldest).', script: `function onTick(data) { /* Uses precomputed gaps */ return null; }` },
+            { name: 'Gap Filler', description: 'Buys match of coldest digit (highest average gap).', script: `function onTick(data) { return null; }` },
             { name: 'Hot/Cold Switcher', description: 'Buys match of hottest digit over last 50 ticks.', script: `function onTick(data) { return null; }` },
             { name: 'Streak Breaker', description: 'Buys differ when a digit has appeared 3 times in a row.', script: `function onTick(data) { if (data.matchStreak >= 3) return { contract_type: 'DIGITDIFF', stake: 0.5, digit: data.lastDigit }; return null; }` },
             { name: 'Bigram Predictor', description: 'Buys match based on previous digit bigram probability.', script: `function onTick(data) { return null; }` }
@@ -500,7 +533,7 @@
         function loadAIBot(index) {
             document.getElementById('bot-script').value = aiBots[index].script;
             compileBot();
-            renderTab('botbuilder'); // switch to bot builder tab
+            renderTab('botbuilder');
         }
         function loadFreeBot(index) {
             document.getElementById('bot-script').value = freeBots[index].script;
@@ -512,7 +545,6 @@
         window.copyTraderActive = false;
         window.copyTraderFn = null;
         function startCopyTrader(masterId) {
-            // Simulated: simply follow a fixed strategy (like always buy match of 5)
             window.copyTraderActive = true;
             window.copyTraderFn = (digit, quote) => {
                 placeTrade('DIGITMATCH', 0.5, 5);
@@ -555,7 +587,6 @@
             const container = document.getElementById('tradingview-container');
             if (!container) return;
             container.innerHTML = `<div id="tv-chart" style="height:400px;"></div>`;
-            // TradingView widget (requires internet, will load if available)
             const script = document.createElement('script');
             script.src = 'https://s3.tradingview.com/tv.js';
             script.onload = () => {
@@ -584,15 +615,15 @@
                 case 'dashboard':
                     content.innerHTML = `
                         <div class="card"><h3>💰 Balance</h3><div id="balance-display">--</div></div>
-                        <div class="card"><h3>📊 Open P&L</h3><div id="open-pl">--</div></div>
-                        <div class="card"><h3>🏁 Last Trade</h3><div id="last-result-dash">--</div></div>
+                        <div class="card"><h3>📊 Last Trade Result</h3><div id="last-result-dash" class="result-highlight">${lastTradeResult.time ? (lastTradeResult.profit >= 0 ? '<span class="accent">Won $' + lastTradeResult.profit.toFixed(2) + '</span>' : '<span class="danger">Lost -$' + Math.abs(lastTradeResult.profit).toFixed(2) + '</span>') : 'No trades yet.'}</div></div>
+                        <div class="card"><h3>📈 Open P&L</h3><div id="open-pl">--</div></div>
                     `;
                     break;
                 case 'botbuilder':
                     content.innerHTML = `
                         <div class="card"><h3>🤖 Bot Builder</h3>
                             <label><input type="checkbox" id="bot-enabled" onchange="toggleBot()"> Enable</label>
-                            <span id="bot-status">Sleeping</span>
+                            <span id="bot-status">${botEnabled ? 'Running' : 'Stopped'}</span>
                             <div class="inline"><strong>Stake:</strong><input type="number" id="bot-stake" value="0.5" step="0.1"></div>
                             <div class="inline"><strong>Contract:</strong>
                                 <select id="bot-contract-type">
@@ -601,7 +632,7 @@
                                     <option value="DIGITOVER">Over</option><option value="DIGITUNDER">Under</option>
                                 </select>
                             </div>
-                            <textarea id="bot-script" rows="6">function onTick(data) { if (data.match && data.matchStreak === 3) return {}; return null; }</textarea>
+                            <textarea id="bot-script" rows="6">${localStorage.getItem('botScript') || 'function onTick(data) { if (data.match && data.matchStreak === 3) return {}; return null; }'}</textarea>
                             <button onclick="loadExampleBot()">Load Example</button>
                             <button onclick="document.getElementById('import-file-input').click()">Import .js</button>
                             <input type="file" id="import-file-input" accept=".js" onchange="importBot(event)" hidden>
@@ -609,6 +640,8 @@
                         </div>
                         <div id="log"></div>
                     `;
+                    // Ensure bot enabled state is reflected
+                    document.getElementById('bot-enabled').checked = botEnabled;
                     break;
                 case 'manualtrader':
                     content.innerHTML = `
@@ -677,7 +710,6 @@
                         </div>
                     `;
                     initPriceChart();
-                    // We'll update the chart via tick handler (need to modify handleWSMessage to call updatePriceChart)
                     window._updatePriceChart = updatePriceChart;
                     break;
                 case 'tradingview':
@@ -715,6 +747,15 @@
         async function autoSetup() {
             APP_ID = localStorage.getItem('deriv_app_id') || '';
             PAT_TOKEN = localStorage.getItem('deriv_pat_token') || '';
+            // Restore bot state
+            botEnabled = localStorage.getItem('botEnabled') === 'true';
+            const savedScript = localStorage.getItem('botScript');
+            if (savedScript) {
+                // If no script in textarea, set it
+                if (!document.getElementById('bot-script')) {
+                    // will be set when tab renders
+                }
+            }
             if (!APP_ID || !PAT_TOKEN) {
                 renderTab('dashboard');
                 return;
@@ -724,8 +765,21 @@
             if (selectedAccountId) {
                 await connectWebSocket();
             }
-            // Start on dashboard
             renderTab('dashboard');
+            // Auto-enable bot if previously enabled
+            if (botEnabled && savedScript) {
+                // Need to compile bot after script is available
+                setTimeout(() => {
+                    const ta = document.getElementById('bot-script');
+                    if (ta && savedScript) {
+                        ta.value = savedScript;
+                        compileBot();
+                        document.getElementById('bot-enabled').checked = true;
+                        botEnabled = true;
+                        document.getElementById('bot-status').textContent = 'Running';
+                    }
+                }, 500);
+            }
         }
 
         // ====================== HELPER FUNCTIONS ======================
@@ -734,15 +788,75 @@
             const dg = document.getElementById('digit-group');
             if (dg) dg.classList.toggle('disabled', ['DIGITODD','DIGITEVEN'].includes(type));
         }
-        function suggestDigit() { /* ... same as before ... */ }
-        function getProposal() { /* ... same as before ... */ }
-        function buyProposal() { /* ... same as before ... */ }
-        function manualTrade() { /* ... same as before ... */ }
-        function toggleBot() { botEnabled = document.getElementById('bot-enabled')?.checked; if (document.getElementById('bot-status')) document.getElementById('bot-status').textContent = botEnabled ? 'Running' : 'Stopped'; }
-        function loadExampleBot() { /* ... */ }
-        function importBot(event) { /* ... */ }
-        function compileBot() { /* ... */ }
-        function saveBot() { /* ... */ }
+        function suggestDigit() {
+            const windowSize = parseInt(document.getElementById('suggest-window')?.value) || 50;
+            const recent = tickHistory.slice(-windowSize);
+            const freq = [0,0,0,0,0,0,0,0,0,0];
+            recent.forEach(t => freq[t.digit]++);
+            let minDigit = 0, minCount = Infinity;
+            freq.forEach((c, i) => { if (c < minCount) { minCount = c; minDigit = i; } });
+            document.getElementById('manual-digit').value = minDigit;
+            log(`Suggested digit: ${minDigit} (${minCount}/${recent.length} ticks)`);
+        }
+        function getProposal() {
+            const contractType = document.getElementById('manual-contract-type').value;
+            const stake = document.getElementById('manual-stake').value;
+            const digit = document.getElementById('manual-digit').value;
+            const duration = document.getElementById('duration-ticks')?.value || 1;
+            if (!ws) { log('Connect first.', 'error'); return; }
+            const params = { proposal: 1, amount: stake, basis: 'stake', contract_type: contractType, underlying_symbol: currentMarket, currency: 'USD', duration: duration, duration_unit: 't' };
+            if (['DIGITMATCH','DIGITDIFF'].includes(contractType)) params.barrier = String(digit);
+            else if (['DIGITOVER','DIGITUNDER'].includes(contractType)) params.barrier = String(4);
+            ws.send(JSON.stringify(params));
+        }
+        function buyProposal() {
+            if (!lastProposalId) { log('Get a proposal first.', 'error'); return; }
+            ws.send(JSON.stringify({ buy: lastProposalId, price: document.getElementById('manual-stake').value }));
+            document.getElementById('proposal-display').classList.add('hidden');
+            log('Buying from proposal...', 'trade');
+        }
+        function manualTrade() {
+            const contractType = document.getElementById('manual-contract-type').value;
+            const stake = parseFloat(document.getElementById('manual-stake').value);
+            const digit = parseInt(document.getElementById('manual-digit').value);
+            placeTrade(contractType, stake, digit, 4);
+        }
+        function toggleBot() {
+            botEnabled = document.getElementById('bot-enabled').checked;
+            localStorage.setItem('botEnabled', botEnabled);
+            document.getElementById('bot-status').textContent = botEnabled ? 'Running' : 'Stopped';
+        }
+        function loadExampleBot() {
+            document.getElementById('bot-script').value = `function onTick(data) {\n    if (data.match && data.matchStreak === 3) return {};\n    return null;\n}`;
+            compileBot();
+            saveBot();
+        }
+        function importBot(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('bot-script').value = e.target.result;
+                    compileBot();
+                    saveBot();
+                    log('Bot imported from file.');
+                };
+                reader.readAsText(file);
+            }
+        }
+        function compileBot() {
+            const script = document.getElementById('bot-script').value;
+            try {
+                const wrapped = `"use strict"; ${script}; return typeof onTick === 'function' ? onTick : null;`;
+                botFunction = new Function(wrapped)();
+                document.getElementById('bot-status').textContent = botFunction ? (botEnabled ? 'Running' : 'Ready') : 'Error';
+            } catch(e) { log('Bot compile error: ' + e.message, 'error'); }
+        }
+        function saveBot() {
+            const script = document.getElementById('bot-script').value;
+            localStorage.setItem('botScript', script);
+            log('Bot script saved.');
+        }
 
         // Override tick handler to include chart update
         const origHandleWSMessage = handleWSMessage;
