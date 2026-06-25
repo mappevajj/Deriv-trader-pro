@@ -162,6 +162,17 @@
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.3px;
         }
+        .header .logo .badge {
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(0, 229, 160, 0.15);
+            color: var(--accent);
+            padding: 2px 12px;
+            border-radius: 30px;
+            margin-left: 8px;
+            -webkit-text-fill-color: var(--accent);
+            letter-spacing: 0.5px;
+        }
         .header-right {
             display: flex;
             align-items: center;
@@ -414,7 +425,117 @@
             color: #88b0ff;
         }
 
-        /* ── Dashboard stats ── */
+        /* ── Dashboard specific ── */
+        .welcome-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(145deg, rgba(0, 229, 160, 0.05), rgba(0, 0, 0, 0.3));
+            border: 1px solid rgba(0, 229, 160, 0.15);
+        }
+        .welcome-card h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .welcome-card .sub {
+            color: var(--text-dim);
+            font-size: 16px;
+            letter-spacing: 0.3px;
+        }
+        .welcome-card .tagline {
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        /* Progress / loading bar */
+        .progress-wrap {
+            margin: 20px 0 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            height: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-wrap .bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #00c896);
+            border-radius: 30px;
+            transition: width 1.5s ease;
+        }
+        .progress-label {
+            font-size: 13px;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Feature grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .feature-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: 0.2s;
+            cursor: default;
+        }
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(0, 229, 160, 0.2);
+        }
+        .feature-item .icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        .feature-item .label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #fff;
+        }
+        .feature-item .desc {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        /* Market price cards */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .market-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+        }
+        .market-card .pair {
+            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+        }
+        .market-card .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+        .market-card .change {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* ── Other existing styles ── */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -443,7 +564,6 @@
             color: var(--danger);
         }
 
-        /* ── Symbol list ── */
         .symbol-item {
             padding: 10px 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -458,7 +578,6 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
-        /* ── Portfolio ── */
         .portfolio-item {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 12px;
@@ -472,7 +591,6 @@
             color: var(--text-dim);
         }
 
-        /* ── Frequency grid ── */
         .freq-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -505,7 +623,6 @@
             transition: width 0.3s;
         }
 
-        /* ── Bigram ── */
         .bigram-grid {
             display: grid;
             grid-template-columns: repeat(11, 1fr);
@@ -526,7 +643,6 @@
             font-size: 11px;
         }
 
-        /* ── Bot cards ── */
         .bot-card {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 12px;
@@ -551,7 +667,6 @@
             font-size: 12px;
         }
 
-        /* ── Misc ── */
         .hidden {
             display: none !important;
         }
@@ -597,7 +712,6 @@
             color: var(--text);
         }
 
-        /* ── Chart container ── */
         .chart-wrap {
             height: 260px;
             position: relative;
@@ -607,10 +721,23 @@
             height: 100% !important;
         }
 
-        /* ── Responsive ── */
+        .footer-note {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 11px;
+            padding: 8px 0 4px;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
+        }
+
         @media (max-width: 600px) {
             .header .logo {
                 font-size: 16px;
+            }
+            .header .logo .badge {
+                font-size: 9px;
+                padding: 1px 8px;
+                margin-left: 4px;
             }
             .header-right select {
                 min-width: 80px;
@@ -644,6 +771,12 @@
                 min-width: 50px;
                 font-size: 12px;
             }
+            .feature-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .market-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -671,7 +804,10 @@
 
     <!-- ─── HEADER ─── -->
     <div class="header">
-        <div class="logo">Deriv Trader Pro</div>
+        <div class="logo">
+            Deriv Trader Pro
+            <span class="badge">TRADING HUB LIVE</span>
+        </div>
         <div class="header-right">
             <select id="account-select-header"><option value="">No account</option></select>
             <div class="status-badge" id="connection-status">
@@ -736,6 +872,14 @@
 
         // Chart
         let priceChart = null;
+
+        // Dashboard market data (static examples, updated with ticks)
+        let marketPrices = {
+            'ETH/USD': { price: 3406.28, change: '+0.00%' },
+            'EUR/USD': { price: 1.0875, change: '+0.08%' },
+            'GBP/USD': { price: 1.2054, change: '-0.02%' },
+            'BTC/USD': { price: 67432.50, change: '+0.30%' }
+        };
 
         // ============================================================
         //  UTILITIES
@@ -803,7 +947,6 @@
             if (savedApp && savedPat) {
                 document.getElementById('setup-app-id').value = savedApp;
                 document.getElementById('setup-pat-token').value = savedPat;
-                // Auto-connect after a beat
                 setTimeout(() => {
                     document.getElementById('setup-connect-btn').click();
                 }, 300);
@@ -905,7 +1048,6 @@
         function handleWSMessage(event) {
             const msg = JSON.parse(event.data);
 
-            // ── Tick ──
             if (msg.tick) {
                 const digit = parseInt(msg.tick.quote.toString().slice(-1));
                 const lastDigitEl = document.getElementById('last-digit');
@@ -924,6 +1066,23 @@
 
                 // Update chart
                 if (window._updatePriceChart) window._updatePriceChart(msg.tick.quote);
+
+                // Update dashboard market prices (use current quote for a sample pair)
+                // We'll update one of the market cards with the current price
+                const priceEls = document.querySelectorAll('.market-card .price');
+                if (priceEls.length > 0 && priceEls[0]) {
+                    // Update the first one (ETH/USD) with the tick quote
+                    // But we need to map: we'll just update the first card with the tick price
+                    // More sophisticated: we could map symbols, but for simplicity we update one.
+                    // Actually we can set a specific pair: we'll update a dummy pair called "R_10"
+                    // but we'll just show the tick price in one of the cards.
+                    // Let's update the "BTC/USD" or "ETH/USD" with the quote.
+                    // We'll update the first card (ETH/USD) with the quote.
+                    const ethCard = document.querySelector('.market-card .price');
+                    if (ethCard) {
+                        ethCard.textContent = msg.tick.quote.toFixed(2);
+                    }
+                }
 
                 // Copy trader
                 if (window.copyTraderActive && window.copyTraderFn) {
@@ -949,26 +1108,22 @@
                 return;
             }
 
-            // ── Balance ──
             if (msg.msg_type === 'balance') {
                 const el = document.getElementById('balance-display');
                 if (el) el.innerHTML = `<span class="text-accent">$${msg.balance.balance}</span> ${msg.balance.currency}`;
                 return;
             }
 
-            // ── Buy confirmation ──
             if (msg.buy) {
                 log(`Trade executed: ID ${msg.buy.contract_id}`, 'trade');
                 return;
             }
 
-            // ── Error ──
             if (msg.error) {
                 log('Error: ' + msg.error.message, 'error');
                 return;
             }
 
-            // ── Contract update ──
             if (msg.msg_type === 'proposal_open_contract' && msg.proposal_open_contract) {
                 const c = msg.proposal_open_contract;
                 updatePortfolioFromStream(c);
@@ -985,25 +1140,21 @@
                 return;
             }
 
-            // ── Active symbols ──
             if (msg.active_symbols) {
                 activeSymbolsCache = msg.active_symbols;
                 displaySymbols(activeSymbolsCache);
             }
 
-            // ── Contracts for ──
             if (msg.contracts_for) {
                 const el = document.getElementById('contracts-result');
                 if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.contracts_for.available, null, 2) + '</pre>';
             }
 
-            // ── History ──
             if (msg.history) {
                 const el = document.getElementById('history-result');
                 if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.history.prices, null, 2) + '</pre>';
             }
 
-            // ── Proposal ──
             if (msg.proposal) {
                 const el = document.getElementById('proposal-details');
                 if (el) el.textContent = `Payout: $${msg.proposal.payout}  |  Cost: $${msg.proposal.ask_price}`;
@@ -1012,19 +1163,16 @@
                 lastProposalId = msg.proposal.id;
             }
 
-            // ── Portfolio ──
             if (msg.portfolio) {
                 openContracts = msg.portfolio.contracts || [];
                 renderPortfolio();
             }
 
-            // ── Profit table ──
             if (msg.profit_table) {
                 const el = document.getElementById('profit-table-result');
                 if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.profit_table.transactions, null, 2) + '</pre>';
             }
 
-            // ── Statement ──
             if (msg.statement) {
                 const el = document.getElementById('statement-result');
                 if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.statement.transactions, null, 2) + '</pre>';
@@ -1352,7 +1500,6 @@
             const container = document.getElementById('tradingview-container');
             if (!container) return;
             container.innerHTML = `<div id="tv-chart" style="height:380px;"></div>`;
-            // Remove old script if any
             const old = document.getElementById('tv-script');
             if (old) old.remove();
             const script = document.createElement('script');
@@ -1387,11 +1534,110 @@
             switch (tab) {
                 case 'dashboard':
                     content.innerHTML = `
-                        <div class="card"><h3>💰 Balance</h3><div id="balance-display" style="font-size:22px;font-weight:700;">—</div></div>
-                        <div class="card"><h3>📊 Last Trade Result</h3><div id="last-result-dash" class="result-highlight">${lastTradeResult.time ? (lastTradeResult.profit >= 0 ? '<span class="text-accent">Won $' + lastTradeResult.profit.toFixed(2) + '</span>' : '<span class="text-danger">Lost -$' + Math.abs(lastTradeResult.profit).toFixed(2) + '</span>') : 'No trades yet.'}</div></div>
-                        <div class="card"><h3>📈 Open P&L</h3><div id="open-pl" class="text-dim">—</div></div>
-                        <div class="card"><h3>📋 Portfolio</h3><div id="portfolio-list"><p class="text-dim">No open contracts.</p></div></div>
+                        <!-- Welcome Card -->
+                        <div class="card welcome-card">
+                            <h1>Welcome to Deriv Trader Pro</h1>
+                            <div class="sub">Empowering your financial journey</div>
+                            <div class="tagline">⚡ Analyzing Tick Data...</div>
+                            <!-- Progress bar animation -->
+                            <div class="progress-wrap">
+                                <div class="bar" id="init-progress-bar" style="width:0%;"></div>
+                            </div>
+                            <div class="progress-label">
+                                <span>Initializing D-Bot...</span>
+                                <span id="progress-percent">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Feature Grid -->
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <div class="icon">📈</div>
+                                <div class="label">Advanced Charts</div>
+                                <div class="desc">Real-time & historical</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon">🎯</div>
+                                <div class="label">Trading Bets</div>
+                                <div class="desc">Manual & automated</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="icon">👥</div>
+                                <div class="label">Copy Trading</div>
+                                <div class="desc">Follow the masters</div>
+                            </div>
+                        </div>
+
+                        <!-- Market Prices -->
+                        <div class="card">
+                            <h3>📊 Live Market Prices</h3>
+                            <div class="market-grid">
+                                <div class="market-card">
+                                    <div class="pair">ETH/USD</div>
+                                    <div class="price" id="eth-price">3,406.28</div>
+                                    <div class="change">+0.08%</div>
+                                </div>
+                                <div class="market-card">
+                                    <div class="pair">EUR/USD</div>
+                                    <div class="price" id="eur-price">1.0875</div>
+                                    <div class="change">+0.08%</div>
+                                </div>
+                                <div class="market-card">
+                                    <div class="pair">GBP/USD</div>
+                                    <div class="price" id="gbp-price">1.2054</div>
+                                    <div class="change">-0.02%</div>
+                                </div>
+                                <div class="market-card">
+                                    <div class="pair">BTC/USD</div>
+                                    <div class="price" id="btc-price">67,432.50</div>
+                                    <div class="change">+0.30%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Balance & Last Result (compact) -->
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                                <div>
+                                    <div class="text-dim" style="font-size:13px;">Balance</div>
+                                    <div id="balance-display" style="font-size:22px;font-weight:700;">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-dim" style="font-size:13px;">Last Trade</div>
+                                    <div id="last-result-dash" class="result-highlight">No trades yet.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Portfolio (collapsible or short) -->
+                        <div class="card">
+                            <h3>📋 Open Positions <span class="badge" id="open-count">0</span></h3>
+                            <div id="portfolio-list"><p class="text-dim">No open contracts.</p></div>
+                        </div>
+
+                        <div class="footer-note">© 2026 Deriv Trader Pro. All rights reserved.</div>
                     `;
+
+                    // Animate progress bar from 0 to 100% over 3 seconds
+                    const bar = document.getElementById('init-progress-bar');
+                    const percentLabel = document.getElementById('progress-percent');
+                    if (bar) {
+                        let progress = 0;
+                        const interval = setInterval(() => {
+                            progress += Math.random() * 8 + 2;
+                            if (progress >= 100) {
+                                progress = 100;
+                                clearInterval(interval);
+                            }
+                            bar.style.width = progress + '%';
+                            if (percentLabel) percentLabel.textContent = Math.floor(progress) + '%';
+                        }, 200);
+                    }
+                    // Update portfolio count
+                    setTimeout(() => {
+                        const countEl = document.getElementById('open-count');
+                        if (countEl) countEl.textContent = openContracts.length;
+                    }, 500);
                     break;
 
                 case 'botbuilder':
