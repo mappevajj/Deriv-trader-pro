@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>pemaanalysispro</title>
+    <title>pemaanalysispro – Deriv Trading Workspace</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
     <style>
@@ -15,7 +15,7 @@
         }
         :root {
             --bg: #0b0f1a;
-            --surface: rgba(18, 25, 40, 0.85);
+            --surface: rgba(18, 25, 40, 0.88);
             --border: rgba(255, 255, 255, 0.06);
             --text: #e4e8f0;
             --text-dim: #8892a8;
@@ -25,6 +25,7 @@
             --warning: #ffb700;
             --radius: 16px;
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.03);
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
@@ -48,147 +49,167 @@
             background: transparent;
         }
 
-        /* ── Loading Overlay ── */
-        #loading-overlay {
+        /* ── LOADING OVERLAY ── */
+        .loading-overlay {
             position: fixed;
             inset: 0;
             background: var(--bg);
-            z-index: 10001;
+            z-index: 99999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-            padding: 20px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
-        #loading-overlay.hidden {
+        .loading-overlay.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
-        #loading-overlay .brand {
+        .loading-overlay .brand {
             font-size: 42px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent), #00c896);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
             margin-bottom: 20px;
         }
-        #loading-overlay .spinner {
+        .loading-overlay .brand small {
+            font-size: 16px;
+            font-weight: 400;
+            -webkit-text-fill-color: var(--text-dim);
+            background: none;
+            display: block;
+            text-align: center;
+            margin-top: 4px;
+        }
+        .loading-overlay .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid var(--border);
-            border-top-color: var(--accent);
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top: 3px solid var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin: 16px 0;
         }
         @keyframes spin {
             to {
                 transform: rotate(360deg);
             }
         }
-        #loading-overlay .progress-text {
-            margin-top: 20px;
+        .loading-overlay .status-text {
             color: var(--text-dim);
             font-size: 14px;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+        }
+        .loading-overlay .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+        .loading-overlay .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #00c896);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .loading-overlay .progress-text {
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-top: 6px;
         }
 
-        /* ── Landing Overlay ── */
-        #landing-overlay {
+        /* ── LOGIN SCREEN ── */
+        #login-screen {
             position: fixed;
             inset: 0;
             background: var(--bg);
-            z-index: 9999;
-            overflow-y: auto;
-            padding: 20px;
+            z-index: 99998;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
+            padding: 20px;
             transition: opacity 0.6s ease, visibility 0.6s ease;
         }
-        #landing-overlay.hidden {
+        #login-screen.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
-        .landing-container {
-            max-width: 820px;
+        .login-container {
+            max-width: 480px;
             width: 100%;
-            margin: 0 auto;
-            padding: 20px 0 40px;
+            text-align: center;
         }
-        .landing-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .landing-header .brand {
-            font-size: 32px;
+        .login-container .brand {
+            font-size: 34px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent), #00c896);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
         }
-        .landing-header .powered {
-            color: var(--text-dim);
-            font-size: 13px;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 4px 14px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-        }
-        .landing-hero {
-            text-align: center;
-            margin: 16px 0 28px;
-        }
-        .landing-hero h2 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #fff;
-        }
-        .landing-hero .sub {
-            color: var(--text-dim);
-            font-size: 16px;
-            margin-top: 4px;
-        }
-        .desc-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px 28px;
-            margin-bottom: 28px;
-            text-align: center;
-        }
-        .desc-card p {
+        .login-container .sub {
             color: var(--text-dim);
             font-size: 15px;
-            line-height: 1.6;
+            margin: 6px 0 30px;
         }
-        .action-buttons {
+        .login-container .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        .login-container .stat-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 8px;
+        }
+        .login-container .stat-box .label {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .login-container .stat-box .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 2px;
+        }
+        .login-container .stat-box .value.up {
+            color: var(--accent);
+        }
+        .login-container .stat-box .value.down {
+            color: var(--danger);
+        }
+
+        .login-container .btn-group {
             display: flex;
+            flex-direction: column;
             gap: 14px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 12px 0 28px;
+            margin: 20px 0 16px;
         }
         .btn-landing {
-            padding: 14px 34px;
+            padding: 16px 34px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 17px;
             cursor: pointer;
             transition: 0.2s;
             font-family: inherit;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            min-width: 180px;
+            width: 100%;
         }
         .btn-landing.primary {
             background: linear-gradient(135deg, var(--accent), #00a87e);
@@ -196,54 +217,52 @@
             box-shadow: 0 4px 24px rgba(0, 229, 160, 0.25);
         }
         .btn-landing.primary:active {
-            transform: scale(0.96);
+            transform: scale(0.97);
         }
         .btn-landing.secondary {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.07);
             color: #fff;
             border: 1px solid var(--border);
         }
         .btn-landing.secondary:active {
-            transform: scale(0.96);
+            transform: scale(0.97);
             background: rgba(255, 255, 255, 0.14);
         }
-        .risk {
-            font-size: 11px;
+        .login-container .risk {
+            font-size: 10px;
             color: var(--text-dim);
-            line-height: 1.6;
-            padding: 16px 0 8px;
-            border-top: 1px solid var(--border);
-            margin-top: 12px;
-            text-align: center;
+            line-height: 1.5;
+            margin-top: 16px;
+            opacity: 0.7;
         }
 
-        /* ── Login Modal ── */
-        #login-modal {
+        /* ── LOGIN MODAL (for credentials) ── */
+        #cred-modal {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            z-index: 10000;
+            z-index: 99997;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        #login-modal.active {
+        #cred-modal.active {
             display: flex;
         }
-        .login-card {
+        .cred-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 32px 28px;
-            max-width: 440px;
+            max-width: 420px;
             width: 100%;
             box-shadow: var(--shadow);
             position: relative;
         }
-        .login-card .close-btn {
+        .cred-card .close-btn {
             position: absolute;
             top: 12px;
             right: 16px;
@@ -253,25 +272,25 @@
             font-size: 24px;
             cursor: pointer;
         }
-        .login-card h3 {
+        .cred-card h3 {
             font-size: 22px;
             font-weight: 700;
             color: #fff;
             margin-bottom: 4px;
         }
-        .login-card .sub {
+        .cred-card .sub {
             color: var(--text-dim);
             font-size: 14px;
             margin-bottom: 20px;
         }
-        .login-card label {
+        .cred-card label {
             display: block;
             font-size: 13px;
             font-weight: 600;
             color: var(--text-dim);
             margin: 14px 0 4px;
         }
-        .login-card input {
+        .cred-card input {
             width: 100%;
             padding: 12px 14px;
             border-radius: 10px;
@@ -282,10 +301,10 @@
             outline: none;
             transition: border 0.2s;
         }
-        .login-card input:focus {
+        .cred-card input:focus {
             border-color: var(--accent);
         }
-        .login-card .btn-login {
+        .cred-card .btn-login {
             width: 100%;
             margin-top: 24px;
             padding: 14px;
@@ -298,22 +317,22 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .login-card .btn-login:active {
+        .cred-card .btn-login:active {
             transform: scale(0.97);
         }
-        .login-card .hint {
+        .cred-card .hint {
             font-size: 12px;
             color: var(--text-dim);
             margin-top: 16px;
             text-align: center;
             line-height: 1.5;
         }
-        .login-card .hint a {
+        .cred-card .hint a {
             color: var(--accent);
             text-decoration: none;
         }
 
-        /* ── Main App Container ── */
+        /* ── MAIN APP ── */
         #app-container {
             display: none;
             flex-direction: column;
@@ -338,7 +357,7 @@
             flex-shrink: 0;
         }
         .header .logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent), #00c896);
             -webkit-background-clip: text;
@@ -346,15 +365,15 @@
             letter-spacing: -0.3px;
         }
         .header .logo .badge {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            background: rgba(0, 229, 160, 0.15);
+            background: rgba(0, 229, 160, 0.12);
             color: var(--accent);
-            padding: 2px 12px;
+            padding: 2px 10px;
             border-radius: 30px;
-            margin-left: 8px;
+            margin-left: 6px;
             -webkit-text-fill-color: var(--accent);
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
         .header-right {
             display: flex;
@@ -362,32 +381,44 @@
             gap: 8px;
             flex-wrap: wrap;
         }
+        .header-right .balance-display {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+        .header-right .balance-display .amt {
+            color: var(--accent);
+        }
         .header-right select {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 6px 10px;
+            padding: 4px 10px;
             color: #fff;
-            font-size: 12px;
-            min-width: 120px;
+            font-size: 11px;
+            min-width: 100px;
             outline: none;
             cursor: pointer;
         }
         .status-badge {
-            font-size: 11px;
-            padding: 4px 12px;
+            font-size: 10px;
+            padding: 3px 10px;
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
         .status-badge .dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
         }
         .status-badge .dot.online {
@@ -398,12 +429,12 @@
             background: var(--text-dim);
         }
         .logout-btn {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             border: none;
             color: var(--text-dim);
-            padding: 4px 12px;
+            padding: 3px 12px;
             border-radius: 30px;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             transition: 0.2s;
             font-family: inherit;
@@ -433,7 +464,7 @@
             background: none;
             border: none;
             color: var(--text-dim);
-            padding: 10px 14px;
+            padding: 10px 16px;
             font-size: 12px;
             font-weight: 600;
             white-space: nowrap;
@@ -456,10 +487,9 @@
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
-            padding-bottom: 24px;
+            padding: 14px 16px 24px;
             scroll-behavior: smooth;
-            background: radial-gradient(ellipse at 20% 20%, rgba(0, 229, 160, 0.03), transparent 70%);
+            background: radial-gradient(ellipse at 20% 20%, rgba(0, 229, 160, 0.02), transparent 70%);
         }
 
         /* ── Cards ── */
@@ -469,203 +499,173 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 18px 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-            transition: border 0.2s;
-        }
-        .card:hover {
-            border-color: rgba(255, 255, 255, 0.10);
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
         .card h3 {
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        /* ── Dashboard Specific ── */
+        /* ── Dashboard specific ── */
         .dash-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
         }
-        .dash-card {
-            background: rgba(255, 255, 255, 0.03);
+        .dash-vol {
+            background: var(--card-bg);
             border-radius: 12px;
-            padding: 14px 12px;
+            padding: 12px 14px;
             border: 1px solid var(--border);
             text-align: center;
         }
-        .dash-card .label {
-            font-size: 12px;
+        .dash-vol .vol-label {
+            font-size: 11px;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
-        .dash-card .value {
-            font-size: 22px;
+        .dash-vol .vol-value {
+            font-size: 20px;
             font-weight: 700;
             color: #fff;
-            margin-top: 4px;
+            margin-top: 2px;
         }
-        .dash-card .value .sub {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--text-dim);
-            margin-left: 4px;
-        }
-        .dash-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 10px 0;
-        }
-        .dash-actions .btn-action {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 10px 24px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            min-width: 120px;
-        }
-        .dash-actions .btn-action:active {
-            transform: scale(0.96);
-            background: rgba(255, 255, 255, 0.12);
-        }
-        .dash-actions .btn-action.accent {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-        }
-        .dash-actions .btn-action.accent:active {
-            background: #00c896;
-        }
-        .ai-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 229, 160, 0.15);
+        .dash-vol .vol-value .accent {
             color: var(--accent);
-            font-weight: 700;
-            font-size: 18px;
-            padding: 4px 12px;
-            border-radius: 30px;
-            letter-spacing: 1px;
+        }
+        .dash-vol .vol-sub {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 2px;
         }
 
-        /* ── Buttons (general) ── */
-        button,
-        .btn {
-            background: linear-gradient(135deg, #00c896, #00a87e);
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 6px 0 4px;
+        }
+        .action-btn {
+            padding: 12px;
             border: none;
-            color: #000;
+            border-radius: 12px;
             font-weight: 700;
-            padding: 10px 20px;
-            border-radius: 30px;
             font-size: 13px;
             cursor: pointer;
             transition: 0.2s;
+            font-family: inherit;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: inherit;
-            box-shadow: 0 4px 16px rgba(0, 229, 160, 0.15);
+            text-align: center;
         }
-        button:active {
-            transform: scale(0.96);
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--accent), #00a87e);
+            color: #000;
         }
-        button.secondary {
-            background: rgba(255, 255, 255, 0.07);
-            color: #ccc;
-            box-shadow: none;
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border: 1px solid var(--border);
         }
-        button.warning {
+        .action-btn.warning {
             background: var(--warning);
             color: #000;
         }
-        button.danger {
+        .action-btn.danger {
             background: var(--danger);
             color: #fff;
         }
-        button.big {
-            width: 100%;
-            padding: 14px;
-            font-size: 15px;
-        }
-        button:disabled {
-            opacity: 0.4;
-            pointer-events: none;
+        .action-btn:active {
+            transform: scale(0.96);
         }
 
-        /* ── Form elements ── */
-        select,
-        input,
-        textarea {
-            background: rgba(255, 255, 255, 0.04);
+        /* ── Bot Builder ── */
+        .bot-builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .bot-stat {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 12px 14px;
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 12px;
+            text-align: center;
+        }
+        .bot-stat .label {
+            font-size: 11px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .bot-stat .value {
+            font-size: 18px;
+            font-weight: 700;
             color: #fff;
-            font-size: 14px;
-            width: 100%;
-            margin: 4px 0;
-            outline: none;
-            font-family: inherit;
-            transition: border 0.2s;
+            margin-top: 2px;
         }
-        select:focus,
-        input:focus,
-        textarea:focus {
-            border-color: var(--accent);
+        .bot-stat .value .accent {
+            color: var(--accent);
         }
-        select option {
-            background: #1a2233;
-            color: #fff;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 13px;
-            line-height: 1.5;
+        .bot-stat .sub {
+            font-size: 10px;
+            color: var(--text-dim);
+            margin-top: 2px;
         }
 
-        .inline {
+        /* ── Manual Trader ── */
+        .manual-ai {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 6px 0;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 0;
         }
-        .inline strong {
-            min-width: 70px;
+        .manual-ai .ai-badge {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #00c896);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+        .manual-ai .ai-label {
+            font-size: 14px;
             color: var(--text-dim);
-            font-weight: 500;
-            font-size: 13px;
+            font-weight: 600;
         }
-        .inline input,
-        .inline select {
-            flex: 1;
-            min-width: 80px;
+
+        /* ── Log ── */
+        #log {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            height: 80px;
+            overflow-y: auto;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            line-height: 1.6;
         }
-        .inline .btn {
-            flex-shrink: 0;
+        #log .trade {
+            color: var(--accent);
+        }
+        #log .error {
+            color: var(--danger);
+        }
+        #log .info {
+            color: #88b0ff;
         }
 
         .hidden {
@@ -680,91 +680,150 @@
         .mt-8 {
             margin-top: 8px;
         }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
         /* ── Responsive ── */
         @media (max-width: 600px) {
-            .dash-grid {
+            .loading-overlay .brand {
+                font-size: 28px;
+            }
+            .login-container .brand {
+                font-size: 26px;
+            }
+            .login-container .stats-row {
                 grid-template-columns: 1fr 1fr;
             }
-            .dash-actions .btn-action {
-                min-width: 100px;
-                font-size: 12px;
-                padding: 8px 16px;
+            .login-container .stats-row .stat-box:last-child {
+                grid-column: span 2;
             }
-            .landing-header .brand {
-                font-size: 24px;
+            .dash-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .action-buttons {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .action-btn {
+                font-size: 11px;
+                padding: 10px;
+            }
+            .bot-builder-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
             }
             .header .logo {
-                font-size: 16px;
+                font-size: 15px;
             }
             .header .logo .badge {
-                font-size: 9px;
-                padding: 1px 8px;
-                margin-left: 4px;
+                font-size: 8px;
+                padding: 1px 6px;
+            }
+            .header-right .balance-display {
+                font-size: 12px;
+                padding: 2px 10px;
             }
             .header-right select {
-                min-width: 80px;
-                font-size: 11px;
-                padding: 4px 8px;
+                min-width: 70px;
+                font-size: 10px;
+                padding: 3px 6px;
             }
             .top-nav button {
                 font-size: 10px;
                 padding: 8px 10px;
             }
+            .main-content {
+                padding: 10px 12px 20px;
+            }
             .card {
-                padding: 14px;
+                padding: 12px 14px;
+            }
+            .dash-vol .vol-value {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ─── LOADING OVERLAY (initial) ─── -->
-    <div id="loading-overlay">
-        <div class="brand">pemaanalysispro</div>
+    <!-- ─── FIRST LOADING SCREEN (10s) ─── -->
+    <div class="loading-overlay" id="loading1">
+        <div class="brand">
+            pemaanalysispro
+            <small>Deriv Trading Workspace</small>
+        </div>
         <div class="spinner"></div>
-        <div class="progress-text">Loading workspace...</div>
+        <div class="status-text">Initializing workspace...</div>
+        <div class="progress-bar"><div class="fill" id="progress1"></div></div>
+        <div class="progress-text" id="progressText1">0%</div>
     </div>
 
-    <!-- ─── LANDING OVERLAY ─── -->
-    <div id="landing-overlay" class="hidden">
-        <div class="landing-container">
-            <div class="landing-header">
-                <div class="brand">pemaanalysispro</div>
-                <div class="powered">Deriv API</div>
+    <!-- ─── LOGIN SCREEN ─── -->
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="brand">pemaanalysispro</div>
+            <div class="sub">Empowering your financial journey</div>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="label">Visibility</div>
+                    <div class="value up">25 +0.68%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Bear Market Index</div>
+                    <div class="value up">+2.09%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Bull Market Index</div>
+                    <div class="value down">-0.31%</div>
+                </div>
             </div>
-            <div class="landing-hero">
-                <h2>Trade with better structure</h2>
-                <div class="sub">Use manual trading, charts, copy tools, automation, and market analysis without jumping between separate apps.</div>
+
+            <div class="btn-group">
+                <button class="btn-landing primary" id="login-trade-btn">Log In and Trade</button>
+                <button class="btn-landing secondary" id="create-account-btn">Create New Account</button>
             </div>
-            <div class="desc-card">
-                <p>Empower your financial journey with real-time analytics, advanced bots, and a seamless trading experience.</p>
-            </div>
-            <div class="action-buttons">
-                <button class="btn-landing primary" id="login-btn">Log In and Trade</button>
-                <button class="btn-landing secondary" id="create-account-btn">Create Free Account</button>
-            </div>
+
             <div class="risk">
-                "Risk Disclaimer. Deriv offers complex derivatives, such as options and contracts for difference ("CFDs"). These products may not be suitable for all clients, and trading them puts you at risk. Please make sure that you understand the full financial risks before trading. Please read the terms and conditions of your account."
+                "Risk Disclaimer. Deriv offers complex derivatives, such as options and contracts for difference ("CFDs"). These products may not be suitable for all clients, and trading them puts you at risk. Please make sure that you understand the full financial risks before trading."
             </div>
         </div>
     </div>
 
-    <!-- ─── LOGIN MODAL ─── -->
-    <div id="login-modal">
-        <div class="login-card">
-            <button class="close-btn" id="close-login">×</button>
+    <!-- ─── CREDENTIALS MODAL ─── -->
+    <div id="cred-modal">
+        <div class="cred-card">
+            <button class="close-btn" id="close-cred">×</button>
             <h3>Log In to Trade</h3>
             <div class="sub">Enter your Deriv credentials</div>
             <label>App ID</label>
-            <input id="login-app-id" type="text" placeholder="e.g. 12345" />
+            <input id="cred-app-id" type="text" placeholder="e.g. 12345" />
             <label>Personal Access Token</label>
-            <input id="login-pat-token" type="password" placeholder="Your PAT token" />
-            <button class="btn-login" id="login-submit">Connect & Trade</button>
+            <input id="cred-pat-token" type="password" placeholder="Your PAT token" />
+            <button class="btn-login" id="cred-submit">Connect & Trade</button>
             <div class="hint">
                 Don't have an account? <a href="#" id="signup-hint">Create one here</a>
             </div>
         </div>
+    </div>
+
+    <!-- ─── SECOND LOADING SCREEN (10s) ─── -->
+    <div class="loading-overlay hidden" id="loading2">
+        <div class="brand">
+            pemaanalysispro
+            <small>Connecting to Deriv...</small>
+        </div>
+        <div class="spinner"></div>
+        <div class="status-text" id="conn-status">Establishing secure connection...</div>
+        <div class="progress-bar"><div class="fill" id="progress2"></div></div>
+        <div class="progress-text" id="progressText2">0%</div>
     </div>
 
     <!-- ─── MAIN APP ─── -->
@@ -773,9 +832,10 @@
         <div class="header">
             <div class="logo">
                 pemaanalysispro
-                <span class="badge">TRADING HUB LIVE</span>
+                <span class="badge">LIVE</span>
             </div>
             <div class="header-right">
+                <div class="balance-display">USD <span class="amt" id="header-balance">0.00</span></div>
                 <select id="account-select-header"><option value="">No account</option></select>
                 <div class="status-badge" id="connection-status">
                     <span class="dot offline" id="status-dot"></span>
@@ -790,12 +850,8 @@
             <button class="nav-item active" data-tab="dashboard">Dashboard</button>
             <button class="nav-item" data-tab="botbuilder">Bot Builder</button>
             <button class="nav-item" data-tab="manualtrader">Manual Trader</button>
-            <button class="nav-item" data-tab="premium">Premium Bots</button>
-            <button class="nav-item" data-tab="bulktrader">Bulk Trader</button>
-            <button class="nav-item" data-tab="copytrader">Copy Trader</button>
-            <button class="nav-item" data-tab="analysis">Analysis</button>
             <button class="nav-item" data-tab="chart">Chart</button>
-            <button class="nav-item" data-tab="tradingview">TradingView</button>
+            <button class="nav-item" data-tab="analysis">Analysis</button>
         </div>
 
         <!-- Main Content -->
@@ -806,92 +862,7 @@
 
     <script>
         // ============================================================
-        //  LOADING SEQUENCE
-        // ============================================================
-        const loadingOverlay = document.getElementById('loading-overlay');
-        const landingOverlay = document.getElementById('landing-overlay');
-        const appContainer = document.getElementById('app-container');
-
-        // Step 1: Show loading for 10s, then show landing
-        setTimeout(() => {
-            loadingOverlay.classList.add('hidden');
-            landingOverlay.classList.remove('hidden');
-        }, 10000);
-
-        // ============================================================
-        //  LANDING / LOGIN CONTROLS
-        // ============================================================
-        const loginModal = document.getElementById('login-modal');
-
-        document.getElementById('login-btn').addEventListener('click', () => {
-            loginModal.classList.add('active');
-        });
-
-        document.getElementById('close-login').addEventListener('click', () => {
-            loginModal.classList.remove('active');
-        });
-        loginModal.addEventListener('click', (e) => {
-            if (e.target === loginModal) loginModal.classList.remove('active');
-        });
-
-        document.getElementById('signup-hint').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open('https://deriv.com/signup', '_blank');
-        });
-        document.getElementById('create-account-btn').addEventListener('click', () => {
-            window.open('https://deriv.com/signup', '_blank');
-        });
-
-        // Login submit -> show loading for 10s, then show app
-        document.getElementById('login-submit').addEventListener('click', async () => {
-            const appId = document.getElementById('login-app-id').value.trim();
-            const pat = document.getElementById('login-pat-token').value.trim();
-            if (!appId || !pat) {
-                alert('Please enter both App ID and PAT token.');
-                return;
-            }
-            // Close modal and hide landing, show loading
-            loginModal.classList.remove('active');
-            landingOverlay.classList.add('hidden');
-            loadingOverlay.classList.remove('hidden');
-            loadingOverlay.querySelector('.progress-text').textContent = 'Connecting to Deriv...';
-
-            // Save credentials
-            localStorage.setItem('deriv_app_id', appId);
-            localStorage.setItem('deriv_pat_token', pat);
-
-            // Wait 10 seconds, then initialize app
-            setTimeout(async () => {
-                loadingOverlay.classList.add('hidden');
-                appContainer.classList.add('active');
-                // Initialize the app with the saved credentials
-                window.APP_ID = appId;
-                window.PAT_TOKEN = pat;
-                await autoSetup();
-            }, 10000);
-        });
-
-        // Logout
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('deriv_app_id');
-            localStorage.removeItem('deriv_pat_token');
-            localStorage.removeItem('deriv_selected_account');
-            if (ws) { ws.close();
-                ws = null; }
-            stopPing();
-            setStatus(false);
-            APP_ID = '';
-            PAT_TOKEN = '';
-            selectedAccountId = '';
-            appContainer.classList.remove('active');
-            landingOverlay.classList.remove('hidden');
-            // reset login fields
-            document.getElementById('login-app-id').value = '';
-            document.getElementById('login-pat-token').value = '';
-        });
-
-        // ============================================================
-        //  GLOBAL STATE (app)
+        //  GLOBAL STATE
         // ============================================================
         let APP_ID = '',
             PAT_TOKEN = '',
@@ -910,6 +881,7 @@
             botFunction = null;
         let lastProposalId = null;
         let lastTradeResult = { status: '', profit: 0, time: '' };
+        let balance = 0;
 
         // Analysis
         let digitCurrentStreaks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -919,12 +891,247 @@
         let gapCounter = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         let gapSamples = Array(10).fill().map(() => []);
 
-        window.copyTraderActive = false;
-        window.copyTraderFn = null;
+        // Chart
         let priceChart = null;
 
         // ============================================================
-        //  UTILITY
+        //  LOADING SEQUENCE
+        // ============================================================
+        const loading1 = document.getElementById('loading1');
+        const loading2 = document.getElementById('loading2');
+        const loginScreen = document.getElementById('login-screen');
+        const appContainer = document.getElementById('app-container');
+        const credModal = document.getElementById('cred-modal');
+
+        // Check for saved credentials
+        const savedApp = localStorage.getItem('pema_app_id');
+        const savedPat = localStorage.getItem('pema_pat_token');
+
+        function showLoading1() {
+            loading1.classList.remove('hidden');
+            loginScreen.classList.add('hidden');
+            loading2.classList.add('hidden');
+            appContainer.classList.remove('active');
+            return new Promise((resolve) => {
+                const bar = document.getElementById('progress1');
+                const text = document.getElementById('progressText1');
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 1;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                    }
+                    bar.style.width = progress + '%';
+                    text.textContent = progress + '%';
+                }, 100);
+                // Strict 10 seconds
+                setTimeout(() => {
+                    clearInterval(interval);
+                    bar.style.width = '100%';
+                    text.textContent = '100%';
+                    loading1.classList.add('hidden');
+                    resolve();
+                }, 10000);
+            });
+        }
+
+        function showLoginScreen() {
+            loginScreen.classList.remove('hidden');
+            loading1.classList.add('hidden');
+            loading2.classList.add('hidden');
+            appContainer.classList.remove('active');
+        }
+
+        function showLoading2() {
+            loading2.classList.remove('hidden');
+            loginScreen.classList.add('hidden');
+            loading1.classList.add('hidden');
+            appContainer.classList.remove('active');
+            return new Promise((resolve) => {
+                const bar = document.getElementById('progress2');
+                const text = document.getElementById('progressText2');
+                const status = document.getElementById('conn-status');
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 1;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                    }
+                    bar.style.width = progress + '%';
+                    text.textContent = progress + '%';
+                    if (progress < 30) status.textContent = 'Connecting to Deriv servers...';
+                    else if (progress < 60) status.textContent = 'Authenticating account...';
+                    else if (progress < 85) status.textContent = 'Loading market data...';
+                    else status.textContent = 'Almost ready...';
+                }, 100);
+                // Strict 10 seconds
+                setTimeout(() => {
+                    clearInterval(interval);
+                    bar.style.width = '100%';
+                    text.textContent = '100%';
+                    status.textContent = 'Connected!';
+                    setTimeout(() => {
+                        loading2.classList.add('hidden');
+                        resolve();
+                    }, 400);
+                }, 10000);
+            });
+        }
+
+        function showApp() {
+            appContainer.classList.add('active');
+            loginScreen.classList.add('hidden');
+            loading1.classList.add('hidden');
+            loading2.classList.add('hidden');
+            renderTab('dashboard');
+        }
+
+        // ============================================================
+        //  LOGIN FLOW
+        // ============================================================
+        async function handleLogin(appId, pat) {
+            APP_ID = appId;
+            PAT_TOKEN = pat;
+            localStorage.setItem('pema_app_id', appId);
+            localStorage.setItem('pema_pat_token', pat);
+            credModal.classList.remove('active');
+
+            // Show second loading (10s) and connect to Deriv
+            await showLoading2();
+
+            // Now connect and setup
+            const success = await fetchAndDisplayAccounts();
+            if (!success) {
+                log('Failed to fetch accounts. Check credentials.', 'error');
+                // Retry or show error
+                showLoginScreen();
+                return;
+            }
+            if (selectedAccountId) {
+                await connectWebSocket();
+            }
+            showApp();
+            // Restore bot state
+            botEnabled = localStorage.getItem('pema_botEnabled') === 'true';
+            const savedScript = localStorage.getItem('pema_botScript');
+            if (botEnabled && savedScript) {
+                setTimeout(() => {
+                    const ta = document.getElementById('bot-script');
+                    if (ta) {
+                        ta.value = savedScript;
+                        compileBot();
+                        const cb = document.getElementById('bot-enabled');
+                        if (cb) cb.checked = true;
+                        const st = document.getElementById('bot-status');
+                        if (st) st.textContent = 'Running';
+                    }
+                }, 600);
+            }
+        }
+
+        // ── Login button ──
+        document.getElementById('login-trade-btn').addEventListener('click', () => {
+            credModal.classList.add('active');
+        });
+
+        // ── Close cred modal ──
+        document.getElementById('close-cred').addEventListener('click', () => {
+            credModal.classList.remove('active');
+        });
+        credModal.addEventListener('click', (e) => {
+            if (e.target === credModal) credModal.classList.remove('active');
+        });
+
+        // ── Signup ──
+        document.getElementById('signup-hint').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('https://deriv.com/signup', '_blank');
+        });
+        document.getElementById('create-account-btn').addEventListener('click', () => {
+            window.open('https://deriv.com/signup', '_blank');
+        });
+
+        // ── Submit credentials ──
+        document.getElementById('cred-submit').addEventListener('click', async () => {
+            const appId = document.getElementById('cred-app-id').value.trim();
+            const pat = document.getElementById('cred-pat-token').value.trim();
+            if (!appId || !pat) {
+                alert('Please enter both App ID and PAT token.');
+                return;
+            }
+            await handleLogin(appId, pat);
+        });
+
+        // ── Logout ──
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('pema_app_id');
+            localStorage.removeItem('pema_pat_token');
+            localStorage.removeItem('pema_selected_account');
+            localStorage.removeItem('pema_botEnabled');
+            if (ws) { ws.close();
+                ws = null; }
+            stopPing();
+            setStatus(false);
+            APP_ID = '';
+            PAT_TOKEN = '';
+            selectedAccountId = '';
+            appContainer.classList.remove('active');
+            showLoginScreen();
+            document.getElementById('cred-app-id').value = '';
+            document.getElementById('cred-pat-token').value = '';
+        });
+
+        // ============================================================
+        //  STARTUP SEQUENCE
+        // ============================================================
+        async function startup() {
+            // First loading (10s)
+            await showLoading1();
+
+            if (savedApp && savedPat) {
+                // Auto-login: skip login screen, go straight to second loading
+                APP_ID = savedApp;
+                PAT_TOKEN = savedPat;
+                await showLoading2();
+                const success = await fetchAndDisplayAccounts();
+                if (!success) {
+                    log('Failed to fetch accounts. Please log in again.', 'error');
+                    showLoginScreen();
+                    return;
+                }
+                if (selectedAccountId) {
+                    await connectWebSocket();
+                }
+                showApp();
+                // Restore bot
+                botEnabled = localStorage.getItem('pema_botEnabled') === 'true';
+                const savedScript = localStorage.getItem('pema_botScript');
+                if (botEnabled && savedScript) {
+                    setTimeout(() => {
+                        const ta = document.getElementById('bot-script');
+                        if (ta) {
+                            ta.value = savedScript;
+                            compileBot();
+                            const cb = document.getElementById('bot-enabled');
+                            if (cb) cb.checked = true;
+                            const st = document.getElementById('bot-status');
+                            if (st) st.textContent = 'Running';
+                        }
+                    }, 600);
+                }
+            } else {
+                // Show login screen
+                showLoginScreen();
+            }
+        }
+
+        // ── Start ──
+        startup();
+
+        // ============================================================
+        //  UTILITY FUNCTIONS
         // ============================================================
         function log(msg, type = 'info') {
             const el = document.getElementById('log');
@@ -975,10 +1182,11 @@
                 accounts.forEach(acc => {
                     const opt = document.createElement('option');
                     opt.value = acc.account_id;
-                    opt.textContent = `${acc.account_id} (${acc.account_type}) – $${acc.balance}`;
+                    const label = acc.account_type === 'demo' ? '🟢 Demo' : '🔴 Real';
+                    opt.textContent = `${label} ${acc.account_id} – $${acc.balance}`;
                     select.appendChild(opt);
                 });
-                const saved = localStorage.getItem('deriv_selected_account');
+                const saved = localStorage.getItem('pema_selected_account');
                 if (saved && accounts.some(a => a.account_id === saved)) {
                     select.value = saved;
                     selectedAccountId = saved;
@@ -1001,7 +1209,7 @@
         async function reconnectWithAccount(accountId) {
             if (selectedAccountId === accountId) return;
             selectedAccountId = accountId;
-            localStorage.setItem('deriv_selected_account', accountId);
+            localStorage.setItem('pema_selected_account', accountId);
             disconnectWebSocket();
             log(`Switching to ${accountId}…`);
             await connectWebSocket();
@@ -1017,14 +1225,14 @@
         // ============================================================
         async function connectWebSocket() {
             if (!selectedAccountId) { log('No account selected.', 'error'); return; }
-            log('Connecting…');
+            log('Connecting to Deriv…');
             try {
                 const res = await apiFetch(`/trading/v1/options/accounts/${selectedAccountId}/otp`, 'POST');
                 const data = await res.json();
                 if (data.errors) { log('OTP error: ' + data.errors[0].message, 'error'); return; }
                 ws = new WebSocket(data.data.url);
                 ws.onopen = () => {
-                    log('Connected!', 'trade');
+                    log('Connected to Deriv!', 'trade');
                     setStatus(true);
                     ws.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
                     ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
@@ -1050,39 +1258,74 @@
         function stopPing() { clearInterval(pingInterval); }
 
         // ============================================================
-        //  WEBSOCKET MESSAGE HANDLER (minimal for demo)
+        //  WEBSOCKET MESSAGE HANDLER
         // ============================================================
         function handleWSMessage(event) {
             const msg = JSON.parse(event.data);
+
             if (msg.tick) {
                 const digit = parseInt(msg.tick.quote.toString().slice(-1));
+                const lastDigitEl = document.getElementById('last-digit');
+                if (lastDigitEl) lastDigitEl.textContent = digit;
+
                 tickHistory.push({ time: new Date().toISOString(), digit, quote: msg.tick.quote });
                 counts[digit]++;
                 totalTicks++;
+
                 if (lastDigitValue === digit) currentDigitStreak++;
                 else currentDigitStreak = 1;
                 lastDigitValue = digit;
                 if (currentDigitStreak > longestDigitStreak) longestDigitStreak = currentDigitStreak;
+
                 updateAnalysisState(digit);
+
                 if (window._updatePriceChart) window._updatePriceChart(msg.tick.quote);
-                // Update dashboard volume cards with random values for demo
-                updateVolumeCards();
-                // Bot & copy trader omitted for brevity (same as before)
+
+                if (botEnabled && botFunction) {
+                    try {
+                        const decision = botFunction({
+                            lastDigit: digit,
+                            digitStreak: currentDigitStreak,
+                            match: digit === parseInt(document.getElementById('match-digit')?.value || 9),
+                        });
+                        if (decision && typeof decision === 'object') {
+                            const cType = decision.contract_type || document.getElementById('bot-contract-type')?.value;
+                            const stake = decision.stake !== undefined ? decision.stake : parseFloat(document
+                                .getElementById('bot-stake')?.value || 0.5);
+                            placeTrade(cType, stake, decision.digit, decision.barrier);
+                        }
+                    } catch (e) { log('Bot error: ' + e.message, 'error'); }
+                }
                 return;
             }
+
             if (msg.msg_type === 'balance') {
-                const el = document.getElementById('balance-display');
-                if (el) el.innerHTML = `<span class="text-accent">$${msg.balance.balance}</span> ${msg.balance.currency}`;
+                balance = msg.balance.balance;
+                const el = document.getElementById('header-balance');
+                if (el) el.textContent = balance.toFixed(2);
+                const el2 = document.getElementById('balance-display');
+                if (el2) el2.innerHTML = `<span class="text-accent">$${balance.toFixed(2)}</span> ${msg.balance.currency}`;
                 return;
             }
-            if (msg.buy) { log(`Trade executed: ID ${msg.buy.contract_id}`, 'trade'); return; }
-            if (msg.error) { log('Error: ' + msg.error.message, 'error'); return; }
+
+            if (msg.buy) {
+                log(`Trade executed: ID ${msg.buy.contract_id}`, 'trade');
+                return;
+            }
+
+            if (msg.error) {
+                log('Error: ' + msg.error.message, 'error');
+                return;
+            }
+
             if (msg.msg_type === 'proposal_open_contract' && msg.proposal_open_contract) {
                 const c = msg.proposal_open_contract;
                 updatePortfolioFromStream(c);
                 if (c.is_expired || c.status === 'won' || c.status === 'lost' || c.status === 'sold') {
                     const profit = parseFloat(c.profit);
                     if (!isNaN(profit)) {
+                        const resultMsg = profit >= 0 ? `Won $${profit.toFixed(2)}` : `Lost -$${Math.abs(profit).toFixed(2)}`;
+                        log(`Trade result: ${resultMsg}`, profit >= 0 ? 'trade' : 'error');
                         lastTradeResult = { status: profit >= 0 ? 'won' : 'lost', profit, time: new Date()
                             .toLocaleTimeString() };
                         updateTradeResultDisplay();
@@ -1090,50 +1333,70 @@
                 }
                 return;
             }
-            // Other messages omitted for brevity
+
+            if (msg.active_symbols) {
+                activeSymbolsCache = msg.active_symbols;
+                displaySymbols(activeSymbolsCache);
+            }
+
+            if (msg.contracts_for) {
+                const el = document.getElementById('contracts-result');
+                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.contracts_for.available, null, 2) + '</pre>';
+            }
+
+            if (msg.history) {
+                const el = document.getElementById('history-result');
+                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.history.prices, null, 2) + '</pre>';
+            }
+
+            if (msg.proposal) {
+                const el = document.getElementById('proposal-details');
+                if (el) el.textContent = `Payout: $${msg.proposal.payout}  |  Cost: $${msg.proposal.ask_price}`;
+                const disp = document.getElementById('proposal-display');
+                if (disp) disp.classList.remove('hidden');
+                lastProposalId = msg.proposal.id;
+            }
+
+            if (msg.portfolio) {
+                openContracts = msg.portfolio.contracts || [];
+                renderPortfolio();
+            }
+
+            if (msg.profit_table) {
+                const el = document.getElementById('profit-table-result');
+                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.profit_table.transactions, null, 2) + '</pre>';
+            }
+
+            if (msg.statement) {
+                const el = document.getElementById('statement-result');
+                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.statement.transactions, null, 2) + '</pre>';
+            }
         }
 
+        // ============================================================
+        //  ANALYSIS STATE
+        // ============================================================
         function updateAnalysisState(digit) {
             if (lastDigitForBigram !== null) bigramCounts[lastDigitForBigram][digit]++;
             lastDigitForBigram = digit;
+
             for (let i = 0; i < 10; i++) {
-                if (i === digit) { digitCurrentStreaks[i]++; if (digitCurrentStreaks[i] > digitLongestStreaks[i])
-                        digitLongestStreaks[i] = digitCurrentStreaks[i]; } else digitCurrentStreaks[i] = 0;
+                if (i === digit) {
+                    digitCurrentStreaks[i]++;
+                    if (digitCurrentStreaks[i] > digitLongestStreaks[i]) digitLongestStreaks[i] = digitCurrentStreaks[i];
+                } else {
+                    digitCurrentStreaks[i] = 0;
+                }
             }
+
             for (let i = 0; i < 10; i++) gapCounter[i]++;
             gapSamples[digit].push(gapCounter[digit]);
             gapCounter[digit] = 0;
         }
 
         // ============================================================
-        //  PORTFOLIO & TRADE (simplified)
+        //  TRADE FUNCTIONS
         // ============================================================
-        function updatePortfolioFromStream(contract) {
-            openContracts = openContracts.filter(c => c.contract_id !== contract.contract_id);
-            if (contract.status === 'open') openContracts.push(contract);
-            renderPortfolio();
-        }
-
-        function renderPortfolio() {
-            const el = document.getElementById('portfolio-list');
-            if (!el) return;
-            if (!openContracts.length) { el.innerHTML = '<p class="text-dim">No open contracts.</p>'; return; }
-            el.innerHTML = openContracts.map(c => `
-                <div class="portfolio-item">
-                    <div><strong>${c.longcode}</strong></div>
-                    <div class="meta">ID: ${c.contract_id} · Status: ${c.status} · Profit: <span class="${c.profit >= 0 ? 'text-accent' : 'text-danger'}">$${c.profit}</span></div>
-                    <div class="meta">Buy: $${c.buy_price} · Bid: $${c.bid_price}</div>
-                    <button class="secondary" onclick="sellContract(${c.contract_id})" style="margin-top:6px;">Sell</button>
-                </div>
-            `).join('');
-        }
-
-        function sellContract(contractId) {
-            if (!ws) { log('Not connected.', 'error'); return; }
-            ws.send(JSON.stringify({ sell: contractId, price: 0 }));
-            log('Sell request sent for ' + contractId, 'trade');
-        }
-
         function placeTrade(contractType, stake, digit = null, barrier = null) {
             if (!ws || ws.readyState !== WebSocket.OPEN) { log('Not connected.', 'error'); return; }
             const params = {
@@ -1169,22 +1432,168 @@
         }
 
         // ============================================================
-        //  DASHBOARD VOLUME CARDS (dynamic demo)
+        //  PORTFOLIO
         // ============================================================
-        function updateVolumeCards() {
-            // Generate random values for the cards
-            const vol50 = (Math.random() * 100 + 50).toFixed(4);
-            const vol75 = (Math.random() * 1000 + 40000).toFixed(4);
-            const vol100 = (Math.random() * 50 + 300).toFixed(2);
-            const vol150 = (Math.random() * 200 + 9800).toFixed(3);
-            const elements = document.querySelectorAll('.dash-card .value');
-            if (elements.length >= 4) {
-                elements[0].innerHTML = vol50;
-                elements[1].innerHTML = vol75;
-                elements[2].innerHTML = vol100;
-                elements[3].innerHTML = vol150;
-            }
+        function updatePortfolioFromStream(contract) {
+            openContracts = openContracts.filter(c => c.contract_id !== contract.contract_id);
+            if (contract.status === 'open') openContracts.push(contract);
+            renderPortfolio();
         }
+
+        function renderPortfolio() {
+            const el = document.getElementById('portfolio-list');
+            if (!el) return;
+            if (!openContracts.length) { el.innerHTML = '<p class="text-dim">No open contracts.</p>'; return; }
+            el.innerHTML = openContracts.map(c => `
+                <div class="portfolio-item" style="background:rgba(255,255,255,0.02);border-radius:12px;padding:10px 12px;margin-bottom:8px;border:1px solid var(--border);">
+                    <div><strong>${c.longcode}</strong></div>
+                    <div style="font-size:12px;color:var(--text-dim);">ID: ${c.contract_id} · Status: ${c.status} · Profit: <span class="${c.profit >= 0 ? 'text-accent' : 'text-danger'}">$${c.profit}</span></div>
+                    <div style="font-size:12px;color:var(--text-dim);">Buy: $${c.buy_price} · Bid: $${c.bid_price}</div>
+                    <button class="secondary" onclick="sellContract(${c.contract_id})" style="margin-top:6px;padding:6px 14px;font-size:11px;">Sell</button>
+                </div>
+            `).join('');
+        }
+
+        function sellContract(contractId) {
+            if (!ws) { log('Not connected.', 'error'); return; }
+            ws.send(JSON.stringify({ sell: contractId, price: 0 }));
+            log('Sell request sent for ' + contractId, 'trade');
+        }
+
+        // ============================================================
+        //  MARKET DATA
+        // ============================================================
+        function fetchActiveSymbols() {
+            if (!ws) { log('Connect first.', 'error'); return; }
+            ws.send(JSON.stringify({ active_symbols: "brief" }));
+        }
+
+        function displaySymbols(symbols) {
+            const search = document.getElementById('symbol-search')?.value?.toLowerCase() || '';
+            const el = document.getElementById('active-symbols-list');
+            if (!el) return;
+            el.innerHTML = symbols.filter(s => s.underlying_symbol.toLowerCase().includes(search)).map(s =>
+                `<div class="symbol-item" onclick="currentMarket='${s.underlying_symbol}'; log('Market set to ${s.underlying_symbol}')">
+                    <strong>${s.underlying_symbol}</strong> — ${s.underlying_symbol_name} <span class="text-dim">(${s.market})</span>
+                </div>`
+            ).join('');
+        }
+
+        // ============================================================
+        //  ANALYSIS
+        // ============================================================
+        function getHotCold(windowSize = 50) {
+            const recent = tickHistory.slice(-windowSize);
+            const freq = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            recent.forEach(t => freq[t.digit]++);
+            let hot = 0,
+                cold = 0,
+                max = -1,
+                min = Infinity;
+            for (let i = 0; i < 10; i++) {
+                if (freq[i] > max) { max = freq[i];
+                    hot = i; }
+                if (freq[i] < min) { min = freq[i];
+                    cold = i; }
+            }
+            return { hot, cold, freq };
+        }
+
+        function renderAnalysis() {
+            const el = document.getElementById('analysis-content');
+            if (!el) return;
+            if (totalTicks === 0) {
+                el.innerHTML = '<p class="text-dim">No tick data yet. Connect and let the stream run.</p>';
+                return;
+            }
+            const { hot, cold, freq } = getHotCold(50);
+            let html = `
+                <div class="card"><h3>🔢 Digit Frequency</h3>
+                <div class="freq-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">`;
+            for (let i = 0; i < 10; i++) {
+                const pct = totalTicks > 0 ? (counts[i] / totalTicks * 100).toFixed(1) : 0;
+                html += `<div class="freq-cell" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:8px 4px;text-align:center;">
+                    <div style="font-size:20px;font-weight:700;color:#fff;">${i}</div>
+                    <div style="font-size:12px;">${counts[i]}</div>
+                    <div style="font-size:10px;color:var(--text-dim);">${pct}%</div>
+                    <div class="mini-bar" style="height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-top:4px;overflow:hidden;"><div class="mini-bar-fill" style="height:100%;width:${pct}%;background:var(--accent);border-radius:4px;"></div></div>
+                </div>`;
+            }
+            html += `</div></div>`;
+
+            html += `
+                <div class="card"><h3>🔥❄️ Hot & Cold</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--accent);">${hot}</div><div style="font-size:12px;color:var(--text-dim);">Hottest (last 50)</div></div>
+                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--warning);">${cold}</div><div style="font-size:12px;color:var(--text-dim);">Coldest (last 50)</div></div>
+                </div>
+                </div>`;
+
+            html += `
+                <div class="card"><h3>📈 Streak & Gap</h3>
+                <div style="overflow-x:auto;">
+                <table style="width:100%;font-size:12px;border-collapse:collapse;">
+                <tr><th style="text-align:left;color:var(--text-dim);">Digit</th><th style="text-align:left;color:var(--text-dim);">Current</th><th style="text-align:left;color:var(--text-dim);">Longest</th><th style="text-align:left;color:var(--text-dim);">Avg Gap</th></tr>`;
+            for (let i = 0; i < 10; i++) {
+                const avgGap = gapSamples[i].length > 0 ? (gapSamples[i].reduce((a, b) => a + b, 0) / gapSamples[i].length)
+                    .toFixed(1) : '-';
+                html += `<tr><td><strong>${i}</strong></td><td>${digitCurrentStreaks[i]}</td><td>${digitLongestStreaks[i]}</td><td>${avgGap}</td></tr>`;
+            }
+            html += `</table></div></div>`;
+
+            html += `
+                <div class="card"><h3>🧩 Bigram Matrix</h3>
+                <div class="bigram-grid" style="display:grid;grid-template-columns:repeat(11,1fr);gap:3px;font-size:10px;">
+                <div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;"></div>`;
+            for (let j = 0; j < 10; j++) html +=
+                `<div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;">${j}</div>`;
+            for (let i = 0; i < 10; i++) {
+                html +=
+                    `<div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;">${i}</div>`;
+                for (let j = 0; j < 10; j++) {
+                    const count = bigramCounts[i][j];
+                    const opacity = count > 0 ? Math.min(1, 0.15 + count * 0.04) : 0.05;
+                    html +=
+                        `<div class="bigram-cell" style="background:rgba(0,229,160,${opacity});text-align:center;padding:4px 2px;border-radius:4px;">${count}</div>`;
+                }
+            }
+            html += `</div></div>`;
+
+            el.innerHTML = html;
+        }
+
+        // ============================================================
+        //  CHART
+        // ============================================================
+        function initPriceChart() {
+            const ctx = document.getElementById('price-chart')?.getContext('2d');
+            if (!ctx) return;
+            if (priceChart) priceChart.destroy();
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: [], datasets: [{ data: [], borderColor: '#00e5a0', borderWidth: 2, pointRadius: 0,
+                        fill: false, tension: 0.2 }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { display: false }, y: { ticks: { color: '#8892a8' } } },
+                    plugins: { legend: { display: false } },
+                    animation: { duration: 0 }
+                }
+            });
+        }
+
+        function updatePriceChart(price) {
+            if (!priceChart) return;
+            priceChart.data.labels.push('');
+            priceChart.data.datasets[0].data.push(price);
+            if (priceChart.data.labels.length > 120) {
+                priceChart.data.labels.shift();
+                priceChart.data.datasets[0].data.shift();
+            }
+            priceChart.update('none');
+        }
+        window._updatePriceChart = updatePriceChart;
 
         // ============================================================
         //  RENDER TABS
@@ -1195,85 +1604,111 @@
             switch (tab) {
                 case 'dashboard':
                     content.innerHTML = `
-                        <div class="card">
-                            <h3>Dashboard</h3>
-                            <div class="dash-grid">
-                                <div class="dash-card">
-                                    <div class="label">VOL 50</div>
-                                    <div class="value">93.7143</div>
-                                </div>
-                                <div class="dash-card">
-                                    <div class="label">VOL 75</div>
-                                    <div class="value">42278.2176</div>
-                                </div>
-                                <div class="dash-card">
-                                    <div class="label">VOL 100</div>
-                                    <div class="value">323.61</div>
-                                </div>
-                                <div class="dash-card">
-                                    <div class="label">VOL 150 (15)</div>
-                                    <div class="value">9834.950</div>
-                                </div>
-                            </div>
-                            <div class="dash-actions">
-                                <button class="btn-action accent" id="load-bot-btn">LOAD BOT</button>
-                                <button class="btn-action" id="speed-bot-btn">SPEED BOT</button>
-                                <button class="btn-action" id="premium-bots-btn">PREMIUM BOTS</button>
-                                <button class="btn-action" id="manual-trading-btn">MANUAL TRADING</button>
-                            </div>
-                            <div style="margin-top:12px;display:flex;justify-content:flex-end;">
-                                <span class="ai-badge">AI</span>
+                        <div class="card" style="padding:12px 16px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                                <span style="font-weight:600;font-size:14px;color:#fff;">Dashboard</span>
+                                <span style="font-size:12px;color:var(--text-dim);">USD <span class="text-accent" id="balance-display">${balance ? balance.toFixed(2) : '0.00'}</span></span>
                             </div>
                         </div>
-                        <div class="card">
-                            <h3>📊 Live Market</h3>
-                            <div id="last-result-dash" class="result-highlight">No trades yet.</div>
-                            <div id="balance-display" style="font-size:22px;font-weight:700;margin-top:8px;">—</div>
+
+                        <div class="dash-grid">
+                            <div class="dash-vol">
+                                <div class="vol-label">VOL 50</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/50).toFixed(1) : '0.0'}</span></div>
+                                <div class="vol-sub">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/totalTicks*100).toFixed(1) : '0.0'}%</div>
+                            </div>
+                            <div class="dash-vol">
+                                <div class="vol-label">VOL 75</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 75 ? tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
+                                <div class="vol-sub">${totalTicks > 75 ? (tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0)/75).toFixed(2) : '0.00'}</div>
+                            </div>
+                            <div class="dash-vol">
+                                <div class="vol-label">VOL 100</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 100 ? tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
+                                <div class="vol-sub">${totalTicks > 100 ? (tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0)/100).toFixed(2) : '0.00'}</div>
+                            </div>
+                            <div class="dash-vol">
+                                <div class="vol-label">VOL 150 (15)</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 150 ? tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
+                                <div class="vol-sub">${totalTicks > 150 ? (tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0)/150).toFixed(2) : '0.00'}</div>
+                            </div>
                         </div>
-                        <div class="card">
+
+                        <div class="action-buttons">
+                            <button class="action-btn primary" onclick="log('Loading bot...','trade');">LOAD BOT</button>
+                            <button class="action-btn warning" onclick="log('Speed bot activated.','trade');">SPEED BOT</button>
+                            <button class="action-btn secondary" onclick="renderTab('botbuilder');">PREMIUM BOTS</button>
+                            <button class="action-btn secondary" onclick="renderTab('manualtrader');">MANUAL TRADING</button>
+                        </div>
+
+                        <div class="card" style="margin-top:4px;">
                             <h3>📋 Open Positions</h3>
                             <div id="portfolio-list"><p class="text-dim">No open contracts.</p></div>
                         </div>
+
+                        <div id="log"></div>
                     `;
-                    // Attach button listeners
-                    document.getElementById('load-bot-btn')?.addEventListener('click', () => renderTab('botbuilder'));
-                    document.getElementById('speed-bot-btn')?.addEventListener('click', () => alert('Speed Bot activated (demo)'));
-                    document.getElementById('premium-bots-btn')?.addEventListener('click', () => renderTab('premium'));
-                    document.getElementById('manual-trading-btn')?.addEventListener('click', () => renderTab('manualtrader'));
-                    // Update volume cards periodically
-                    updateVolumeCards();
-                    // Update portfolio count
-                    setTimeout(() => {
-                        const countEl = document.getElementById('open-count');
-                        if (countEl) countEl.textContent = openContracts.length;
-                    }, 300);
+                    // Update portfolio after render
+                    setTimeout(() => renderPortfolio(), 100);
+                    // Update balance
+                    const balEl = document.getElementById('balance-display');
+                    if (balEl) balEl.textContent = balance ? balance.toFixed(2) : '0.00';
                     break;
 
                 case 'botbuilder':
                     content.innerHTML = `
                         <div class="card"><h3>🤖 Bot Builder</h3>
-                            <div class="inline"><strong>Enable:</strong>
-                                <input type="checkbox" id="bot-enabled" onchange="toggleBot()" ${botEnabled ? 'checked' : ''}>
-                                <span id="bot-status" style="font-size:13px;color:var(--text-dim);">${botEnabled ? 'Running' : 'Stopped'}</span>
+                            <div class="bot-builder-grid">
+                                <div class="bot-stat">
+                                    <div class="label">VOL 50</div>
+                                    <div class="value"><span class="accent">93.7143</span></div>
+                                    <div class="sub">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/50).toFixed(4) : '0.0000'}</div>
+                                </div>
+                                <div class="bot-stat">
+                                    <div class="label">VOL 75</div>
+                                    <div class="value"><span class="accent">42278.2176</span></div>
+                                    <div class="sub">${totalTicks > 75 ? tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0).toFixed(4) : '0.0000'}</div>
+                                </div>
+                                <div class="bot-stat">
+                                    <div class="label">VOL 100</div>
+                                    <div class="value"><span class="accent">323.61</span></div>
+                                    <div class="sub">${totalTicks > 100 ? tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0).toFixed(2) : '0.00'}</div>
+                                </div>
+                                <div class="bot-stat">
+                                    <div class="label">VOL 150 (15)</div>
+                                    <div class="value"><span class="accent">9834.950</span></div>
+                                    <div class="sub">${totalTicks > 150 ? tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0).toFixed(3) : '0.000'}</div>
+                                </div>
                             </div>
-                            <div class="inline"><strong>Stake:</strong><input type="number" id="bot-stake" value="0.5" step="0.1" style="flex:0 0 80px;"></div>
-                            <div class="inline"><strong>Contract:</strong>
-                                <select id="bot-contract-type">
-                                    <option value="DIGITMATCH">Matches</option>
-                                    <option value="DIGITDIFF">Differs</option>
-                                    <option value="DIGITODD">Odd</option>
-                                    <option value="DIGITEVEN">Even</option>
-                                    <option value="DIGITOVER">Over</option>
-                                    <option value="DIGITUNDER">Under</option>
-                                </select>
-                            </div>
-                            <textarea id="bot-script" rows="6">${localStorage.getItem('botScript') || 'function onTick(data) {\n  if (data.digitStreak >= 3) {\n    return { contract_type: "DIGITMATCH", stake: 0.5, digit: data.lastDigit };\n  }\n  return null;\n}'}</textarea>
-                            <div class="inline" style="margin-top:8px;">
-                                <button onclick="loadExampleBot()">Example</button>
-                                <button onclick="document.getElementById('import-file-input').click()">Import .js</button>
-                                <input type="file" id="import-file-input" accept=".js" onchange="importBot(event)" hidden>
-                                <button onclick="saveBot()">Save</button>
-                                <button onclick="compileBot()">Compile</button>
+                            <div style="margin-top:12px;">
+                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
+                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Enable:</strong>
+                                    <input type="checkbox" id="bot-enabled" onchange="toggleBot()" ${botEnabled ? 'checked' : ''}>
+                                    <span id="bot-status" style="font-size:13px;color:var(--text-dim);">${botEnabled ? 'Running' : 'Stopped'}</span>
+                                </div>
+                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
+                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Stake:</strong>
+                                    <input type="number" id="bot-stake" value="0.5" step="0.1" style="flex:0 0 80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                                </div>
+                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
+                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Contract:</strong>
+                                    <select id="bot-contract-type" style="flex:1;min-width:80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                                        <option value="DIGITMATCH">Matches</option>
+                                        <option value="DIGITDIFF">Differs</option>
+                                        <option value="DIGITODD">Odd</option>
+                                        <option value="DIGITEVEN">Even</option>
+                                        <option value="DIGITOVER">Over</option>
+                                        <option value="DIGITUNDER">Under</option>
+                                    </select>
+                                </div>
+                                <textarea id="bot-script" rows="5" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:#fff;font-size:13px;outline:none;font-family:'SF Mono','Fira Code',monospace;resize:vertical;margin:6px 0;">${localStorage.getItem('pema_botScript') || 'function onTick(data) {\n  if (data.digitStreak >= 3) {\n    return { contract_type: "DIGITMATCH", stake: 0.5, digit: data.lastDigit };\n  }\n  return null;\n}'}</textarea>
+                                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                                    <button onclick="loadExampleBot()" style="padding:8px 16px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:12px;cursor:pointer;">Example</button>
+                                    <button onclick="document.getElementById('import-file-input').click()" style="padding:8px 16px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:12px;cursor:pointer;">Import .js</button>
+                                    <input type="file" id="import-file-input" accept=".js" onchange="importBot(event)" style="display:none;">
+                                    <button onclick="saveBot()" style="padding:8px 16px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:12px;cursor:pointer;">Save</button>
+                                    <button onclick="compileBot()" style="padding:8px 16px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:12px;cursor:pointer;">Compile</button>
+                                </div>
                             </div>
                         </div>
                         <div id="log"></div>
@@ -1283,9 +1718,20 @@
 
                 case 'manualtrader':
                     content.innerHTML = `
-                        <div class="card"><h3>🖐️ Manual Trade</h3>
-                            <div class="inline"><strong>Contract:</strong>
-                                <select id="manual-contract-type" onchange="updateTradeUI()">
+                        <div class="card">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                                <h3 style="margin:0;">🖐️ Manual Trader</h3>
+                                <div class="manual-ai" style="padding:0;">
+                                    <span class="ai-badge" style="font-size:32px;">AI</span>
+                                    <span class="ai-label">AI Assistant</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
+                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Contract:</strong>
+                                <select id="manual-contract-type" onchange="updateTradeUI()" style="flex:1;min-width:100px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
                                     <option value="DIGITMATCH">Matches</option>
                                     <option value="DIGITDIFF">Differs</option>
                                     <option value="DIGITODD">Odd</option>
@@ -1294,64 +1740,51 @@
                                     <option value="DIGITUNDER">Under</option>
                                 </select>
                             </div>
-                            <div class="inline" id="digit-group"><strong>Digit:</strong>
-                                <select id="manual-digit">${[...Array(10)].map((_,i) => `<option value="${i}">${i}</option>`).join('')}</select>
-                                <button class="warning" onclick="suggestDigit()">💡 Suggest</button>
-                                <input type="number" id="suggest-window" value="50" style="flex:0 0 60px;" title="Ticks window">
+                            <div class="inline" id="digit-group" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
+                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Digit:</strong>
+                                <select id="manual-digit" style="flex:1;min-width:80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                                    ${[...Array(10)].map((_,i) => `<option value="${i}">${i}</option>`).join('')}
+                                </select>
+                                <button class="warning" onclick="suggestDigit()" style="padding:8px 14px;border:none;border-radius:30px;background:var(--warning);color:#000;font-weight:600;font-size:12px;cursor:pointer;">💡 Suggest</button>
+                                <input type="number" id="suggest-window" value="50" style="flex:0 0 60px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;" title="Ticks window">
                             </div>
-                            <div class="inline"><strong>Stake ($):</strong><input type="number" id="manual-stake" value="0.5" step="0.1" style="flex:0 0 80px;"></div>
-                            <div class="inline"><strong>Duration (ticks):</strong><input type="number" id="duration-ticks" value="1" min="1" style="flex:0 0 60px;"></div>
-                            <div class="inline">
-                                <button onclick="getProposal()">📊 Proposal</button>
-                                <button class="big" onclick="manualTrade()" style="flex:1;">Place Trade</button>
+                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
+                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Stake ($):</strong>
+                                <input type="number" id="manual-stake" value="0.5" step="0.1" style="flex:0 0 80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
                             </div>
-                            <div id="proposal-display" class="hidden card" style="margin-top:10px;padding:12px;">
+                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
+                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Duration:</strong>
+                                <input type="number" id="duration-ticks" value="1" min="1" style="flex:0 0 60px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                                <span style="font-size:12px;color:var(--text-dim);">ticks</span>
+                            </div>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                                <button onclick="getProposal()" style="padding:10px 20px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:13px;cursor:pointer;">📊 Proposal</button>
+                                <button class="big" onclick="manualTrade()" style="flex:1;padding:12px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:700;font-size:15px;cursor:pointer;">Place Trade</button>
+                            </div>
+                            <div id="proposal-display" class="hidden card" style="margin-top:10px;padding:12px;background:rgba(255,255,255,0.03);border-radius:12px;">
                                 <span id="proposal-details"></span>
-                                <button onclick="buyProposal()" style="margin-top:8px;">Buy</button>
+                                <button onclick="buyProposal()" style="margin-top:8px;padding:8px 20px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:13px;cursor:pointer;">Buy</button>
                             </div>
                         </div>
-                        <div class="card"><h3>Live Tick</h3><p style="font-size:28px;font-weight:700;" class="text-accent" id="last-digit">—</p></div>
+
+                        <div class="card">
+                            <h3>Live Tick</h3>
+                            <p style="font-size:28px;font-weight:700;" class="text-accent" id="last-digit">—</p>
+                        </div>
+
                         <div id="log"></div>
                     `;
                     updateTradeUI();
                     break;
 
-                case 'premium':
+                case 'chart':
                     content.innerHTML = `
-                        <div class="card"><h3>⭐ Premium Bots</h3>
-                            <p class="text-dim">Access advanced AI-driven strategies and premium automation tools.</p>
-                            <div style="margin-top:12px;">
-                                <button class="btn-action" style="width:100%;padding:12px;" onclick="alert('Premium Bot 1 activated (demo)')">Premium Bot 1</button>
-                                <button class="btn-action" style="width:100%;padding:12px;margin-top:8px;" onclick="alert('Premium Bot 2 activated (demo)')">Premium Bot 2</button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-
-                case 'bulktrader':
-                    content.innerHTML = `
-                        <div class="card"><h3>📦 Bulk Trader</h3>
-                            <p class="text-dim" style="font-size:13px;">One trade per line: <code>contract_type, stake, digit [, barrier]</code></p>
-                            <textarea id="bulk-input" rows="5" placeholder="DIGITMATCH, 0.5, 7&#10;DIGITDIFF, 0.5, 3"></textarea>
-                            <button class="big" onclick="executeBulkTrades()">Execute All</button>
+                        <div class="card"><h3>📈 Price Chart</h3>
+                            <div class="chart-wrap" style="height:280px;position:relative;"><canvas id="price-chart"></canvas></div>
                         </div>
                         <div id="log"></div>
                     `;
-                    break;
-
-                case 'copytrader':
-                    content.innerHTML = `
-                        <div class="card"><h3>👥 Copy Trader</h3>
-                            <p class="text-dim" style="font-size:13px;">Simulated copy trading. Enter a master account ID and start copying.</p>
-                            <input type="text" id="master-id" placeholder="Master Account ID">
-                            <div class="inline">
-                                <button onclick="startCopyTrader(document.getElementById('master-id').value)">Start Copying</button>
-                                <button class="danger" onclick="stopCopyTrader()">Stop</button>
-                            </div>
-                            <p>Status: <span id="copy-status" class="text-dim">Inactive</span></p>
-                        </div>
-                        <div id="log"></div>
-                    `;
+                    setTimeout(initPriceChart, 100);
                     break;
 
                 case 'analysis':
@@ -1359,25 +1792,11 @@
                     setTimeout(renderAnalysis, 150);
                     break;
 
-                case 'chart':
-                    content.innerHTML = `
-                        <div class="card"><h3>📈 Price Chart</h3>
-                            <div class="chart-wrap"><canvas id="price-chart"></canvas></div>
-                        </div>
-                    `;
-                    setTimeout(initPriceChart, 50);
-                    break;
-
-                case 'tradingview':
-                    content.innerHTML = `
-                        <div class="card"><h3>📺 TradingView</h3>
-                            <div id="tradingview-container"><p class="text-dim">Loading chart…</p></div>
-                        </div>
-                    `;
-                    loadTradingView(currentMarket);
-                    break;
+                default:
+                    content.innerHTML = `<div class="card"><p>Tab: ${tab}</p></div>`;
             }
 
+            // Highlight active nav
             document.querySelectorAll('.top-nav button').forEach(b => b.classList.remove('active'));
             const activeBtn = document.querySelector(`.top-nav button[data-tab="${tab}"]`);
             if (activeBtn) activeBtn.classList.add('active');
@@ -1390,12 +1809,12 @@
         });
 
         // ============================================================
-        //  HELPER FUNCTIONS (manual trade, bot, etc.)
+        //  HELPER FUNCTIONS
         // ============================================================
         function updateTradeUI() {
             const type = document.getElementById('manual-contract-type')?.value;
             const dg = document.getElementById('digit-group');
-            if (dg) dg.classList.toggle('disabled', ['DIGITODD', 'DIGITEVEN'].includes(type));
+            if (dg) dg.style.display = ['DIGITODD', 'DIGITEVEN'].includes(type) ? 'none' : 'flex';
         }
 
         function suggestDigit() {
@@ -1440,8 +1859,9 @@
 
         function toggleBot() {
             botEnabled = document.getElementById('bot-enabled').checked;
-            localStorage.setItem('botEnabled', botEnabled);
-            document.getElementById('bot-status').textContent = botEnabled ? 'Running' : 'Stopped';
+            localStorage.setItem('pema_botEnabled', botEnabled);
+            const st = document.getElementById('bot-status');
+            if (st) st.textContent = botEnabled ? 'Running' : 'Stopped';
             if (botEnabled) compileBot();
         }
 
@@ -1470,248 +1890,21 @@
             try {
                 const wrapped = `"use strict"; ${script}; return typeof onTick === 'function' ? onTick : null;`;
                 botFunction = new Function(wrapped)();
-                const status = document.getElementById('bot-status');
-                if (status) status.textContent = botFunction ? (botEnabled ? 'Running' : 'Ready') : 'Compile Error';
+                const st = document.getElementById('bot-status');
+                if (st) st.textContent = botFunction ? (botEnabled ? 'Running' : 'Ready') : 'Compile Error';
                 if (!botFunction) log('Bot compiled but no onTick() found.', 'error');
             } catch (e) {
                 log('Bot compile error: ' + e.message, 'error');
-                const status = document.getElementById('bot-status');
-                if (status) status.textContent = 'Error';
+                const st = document.getElementById('bot-status');
+                if (st) st.textContent = 'Error';
             }
         }
 
         function saveBot() {
             const script = document.getElementById('bot-script').value;
-            localStorage.setItem('botScript', script);
+            localStorage.setItem('pema_botScript', script);
             log('Bot script saved.');
         }
-
-        function startCopyTrader(masterId) {
-            window.copyTraderActive = true;
-            window.copyTraderFn = (digit, quote) => {
-                placeTrade('DIGITMATCH', 0.5, 5);
-            };
-            log('Copy trader active — following master ' + masterId, 'trade');
-            document.getElementById('copy-status').textContent = 'Active (simulated)';
-        }
-
-        function stopCopyTrader() {
-            window.copyTraderActive = false;
-            window.copyTraderFn = null;
-            log('Copy trader stopped.');
-            document.getElementById('copy-status').textContent = 'Inactive';
-        }
-
-        function executeBulkTrades() {
-            const input = document.getElementById('bulk-input').value.trim();
-            if (!input) { log('Enter trade list.', 'error'); return; }
-            const lines = input.split('\n').filter(l => l.trim());
-            lines.forEach(line => {
-                const parts = line.split(',').map(s => s.trim());
-                if (parts.length < 3) return;
-                const contractType = parts[0];
-                const stake = parseFloat(parts[1]);
-                const digit = parseInt(parts[2]);
-                const barrier = parts[3] ? parseInt(parts[3]) : 4;
-                if (isNaN(stake) || isNaN(digit)) return;
-                placeTrade(contractType, stake, digit, barrier);
-            });
-            log(`Bulk trade: ${lines.length} orders sent.`, 'trade');
-        }
-
-        // ============================================================
-        //  ANALYSIS & CHART
-        // ============================================================
-        function renderAnalysis() {
-            const el = document.getElementById('analysis-content');
-            if (!el) return;
-            if (totalTicks === 0) {
-                el.innerHTML = '<p class="text-dim">No tick data yet.</p>';
-                return;
-            }
-            const { hot, cold, freq } = getHotCold(50);
-            let html = `
-                <div class="card"><h3>🔢 Digit Frequency</h3>
-                <div class="freq-grid">`;
-            for (let i = 0; i < 10; i++) {
-                const pct = totalTicks > 0 ? (counts[i] / totalTicks * 100).toFixed(1) : 0;
-                html += `<div class="freq-cell">
-                    <div class="digit">${i}</div>
-                    <div>${counts[i]}</div>
-                    <div style="font-size:10px;color:var(--text-dim);">${pct}%</div>
-                    <div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;"></div></div>
-                </div>`;
-            }
-            html += `</div></div>`;
-            html += `
-                <div class="card"><h3>🔥❄️ Hot & Cold</h3>
-                <div class="stat-grid">
-                    <div class="stat-item"><div class="num text-accent">${hot}</div><div class="label">Hottest (last 50)</div></div>
-                    <div class="stat-item"><div class="num text-warning">${cold}</div><div class="label">Coldest (last 50)</div></div>
-                </div>
-                </div>`;
-            html += `
-                <div class="card"><h3>📈 Streak & Gap</h3>
-                <div style="overflow-x:auto;">
-                <table style="width:100%;font-size:12px;border-collapse:collapse;">
-                <tr><th>Digit</th><th>Current</th><th>Longest</th><th>Avg Gap</th></tr>`;
-            for (let i = 0; i < 10; i++) {
-                const avgGap = gapSamples[i].length > 0 ? (gapSamples[i].reduce((a, b) => a + b, 0) / gapSamples[i].length)
-                    .toFixed(1) : '-';
-                html += `<tr><td><strong>${i}</strong></td><td>${digitCurrentStreaks[i]}</td><td>${digitLongestStreaks[i]}</td><td>${avgGap}</td></tr>`;
-            }
-            html += `</table></div></div>`;
-            el.innerHTML = html;
-        }
-
-        function getHotCold(windowSize) {
-            const recent = tickHistory.slice(-windowSize);
-            const freq = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            recent.forEach(t => freq[t.digit]++);
-            let hot = 0,
-                cold = 0,
-                max = -1,
-                min = Infinity;
-            for (let i = 0; i < 10; i++) {
-                if (freq[i] > max) { max = freq[i];
-                    hot = i; }
-                if (freq[i] < min) { min = freq[i];
-                    cold = i; }
-            }
-            return { hot, cold, freq };
-        }
-
-        function initPriceChart() {
-            const ctx = document.getElementById('price-chart')?.getContext('2d');
-            if (!ctx) return;
-            if (priceChart) priceChart.destroy();
-            priceChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: [], datasets: [{ data: [], borderColor: '#00e5a0', borderWidth: 2, pointRadius: 0,
-                        fill: false, tension: 0.2 }] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: { x: { display: false }, y: { ticks: { color: '#8892a8' } } },
-                    plugins: { legend: { display: false } },
-                    animation: { duration: 0 }
-                }
-            });
-        }
-
-        function updatePriceChart(price) {
-            if (!priceChart) return;
-            priceChart.data.labels.push('');
-            priceChart.data.datasets[0].data.push(price);
-            if (priceChart.data.labels.length > 120) {
-                priceChart.data.labels.shift();
-                priceChart.data.datasets[0].data.shift();
-            }
-            priceChart.update('none');
-        }
-        window._updatePriceChart = updatePriceChart;
-
-        function loadTradingView(symbol) {
-            const container = document.getElementById('tradingview-container');
-            if (!container) return;
-            container.innerHTML = `<div id="tv-chart" style="height:380px;"></div>`;
-            const old = document.getElementById('tv-script');
-            if (old) old.remove();
-            const script = document.createElement('script');
-            script.id = 'tv-script';
-            script.src = 'https://s3.tradingview.com/tv.js';
-            script.onload = () => {
-                if (typeof TradingView !== 'undefined') {
-                    new TradingView.widget({
-                        width: '100%',
-                        height: 380,
-                        symbol: `Deriv:${symbol}`,
-                        interval: '1',
-                        timezone: 'Etc/UTC',
-                        theme: 'dark',
-                        style: '1',
-                        locale: 'en',
-                        enable_publishing: false,
-                        allow_symbol_change: true,
-                        container_id: 'tv-chart'
-                    });
-                }
-            };
-            document.head.appendChild(script);
-        }
-
-        // ============================================================
-        //  AUTO SETUP (after login)
-        // ============================================================
-        async function autoSetup() {
-            const success = await fetchAndDisplayAccounts();
-            if (!success) {
-                log('Failed to fetch accounts. Check credentials.', 'error');
-                renderTab('dashboard');
-                return;
-            }
-            if (selectedAccountId) {
-                await connectWebSocket();
-            }
-            renderTab('dashboard');
-
-            botEnabled = localStorage.getItem('botEnabled') === 'true';
-            const savedScript = localStorage.getItem('botScript');
-            if (botEnabled && savedScript) {
-                setTimeout(() => {
-                    const ta = document.getElementById('bot-script');
-                    if (ta) {
-                        ta.value = savedScript;
-                        compileBot();
-                        const cb = document.getElementById('bot-enabled');
-                        if (cb) cb.checked = true;
-                        const st = document.getElementById('bot-status');
-                        if (st) st.textContent = 'Running';
-                    }
-                }, 600);
-            }
-        }
-
-        // If credentials exist on page load, we skip the initial landing?
-        // But we already have the loading sequence: first loading 10s, then landing.
-        // If user already logged in, we want to skip landing and go straight to app after login.
-        // But we haven't stored a "logged in" flag; we just have saved creds.
-        // We'll handle it: after the initial 10s loading, if saved creds exist, we auto-login.
-        // Override the initial loading timeout to check saved creds.
-        // We'll modify the setTimeout above.
-
-        // Actually, we already have a setTimeout for the initial loading. We'll replace it with a check.
-        // Let's restructure: after initial loading, check saved creds.
-        // If saved, show loading again (post-login) and then app.
-        // But we already have the logic in the login button.
-
-        // Let's override: after initial 10s, if saved creds, auto-login.
-        // We'll store a flag to not show landing.
-        setTimeout(() => {
-            loadingOverlay.classList.add('hidden');
-            const savedApp = localStorage.getItem('deriv_app_id');
-            const savedPat = localStorage.getItem('deriv_pat_token');
-            if (savedApp && savedPat) {
-                // Auto-login: show loading again, then app
-                loadingOverlay.classList.remove('hidden');
-                loadingOverlay.querySelector('.progress-text').textContent = 'Connecting to Deriv...';
-                setTimeout(async () => {
-                    window.APP_ID = savedApp;
-                    window.PAT_TOKEN = savedPat;
-                    loadingOverlay.classList.add('hidden');
-                    appContainer.classList.add('active');
-                    await autoSetup();
-                }, 10000);
-            } else {
-                landingOverlay.classList.remove('hidden');
-            }
-        }, 10000);
-
-        // Note: we need to ensure the first loading overlay is visible initially; it is.
-        // Also, we must define APP_ID and PAT_TOKEN globally for autoSetup.
-        // We'll attach to window.
-        window.APP_ID = '';
-        window.PAT_TOKEN = '';
     </script>
 </body>
 </html>
