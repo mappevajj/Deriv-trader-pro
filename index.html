@@ -999,15 +999,13 @@
         <div class="cred-card">
             <button class="close-btn" id="close-cred">×</button>
             <h3>Log In to Trade</h3>
-            <div class="sub">Enter your Deriv App ID and Personal Access Token</div>
-            <label>App ID</label>
-            <input id="cred-app-id" type="text" placeholder="e.g. 12345" />
+            <div class="sub">Enter your Personal Access Token</div>
             <label>Personal Access Token</label>
             <input id="cred-pat-token" type="password" placeholder="Your PAT token" />
-            <div class="error-msg" id="cred-error">Invalid credentials. Please check your App ID and PAT token.</div>
+            <div class="error-msg" id="cred-error">Invalid token. Please check your PAT.</div>
             <button class="btn-login" id="cred-submit">Connect &amp; Trade</button>
             <div class="hint">
-                Don't have an account? <a href="#" id="signup-hint">Create one here</a>
+                Don't have a PAT? <a href="#" id="signup-hint">Create one in your Deriv account</a>
             </div>
         </div>
     </div>
@@ -1066,9 +1064,8 @@
         // ============================================================
         //  GLOBAL STATE
         // ============================================================
-        let APP_ID = '',
-            PAT_TOKEN = '',
-            selectedAccountId = '';
+        let PAT_TOKEN = '';
+        let selectedAccountId = '';
         let ws = null,
             pingInterval = null;
         let currentMarket = 'R_10';
@@ -1085,6 +1082,7 @@
         let lastTradeResult = { status: '', profit: 0, time: '' };
         let balance = 0;
         let allAccounts = [];
+        let isAuthorized = false;
 
         // Analysis
         let digitCurrentStreaks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -1106,8 +1104,7 @@
         const appContainer = document.getElementById('app-container');
         const credModal = document.getElementById('cred-modal');
 
-        // Check for saved credentials
-        const savedApp = localStorage.getItem('pema_app_id');
+        // Check for saved token
         const savedPat = localStorage.getItem('pema_pat_token');
 
         function showLoading1() {
@@ -1128,7 +1125,6 @@
                     bar.style.width = progress + '%';
                     text.textContent = progress + '%';
                 }, 100);
-                // Strict 10 seconds
                 setTimeout(() => {
                     clearInterval(interval);
                     bar.style.width = '100%';
@@ -1170,7 +1166,6 @@
                     else if (progress < 90) status.textContent = 'Fetching market data...';
                     else status.textContent = 'Almost ready...';
                 }, 100);
-                // Strict 10 seconds
                 setTimeout(() => {
                     clearInterval(interval);
                     bar.style.width = '100%';
@@ -1194,12 +1189,10 @@
         }
 
         // ============================================================
-        //  LOGIN FLOW
+        //  LOGIN FLOW (WebSocket only, no REST)
         // ============================================================
-        async function handleLogin(appId, pat) {
-            APP_ID = appId;
+        async function handleLogin(pat) {
             PAT_TOKEN = pat;
-            localStorage.setItem('pema_app_id', appId);
             localStorage.setItem('pema_pat_token', pat);
             credModal.classList.remove('active');
             document.getElementById('cred-error').classList.remove('show');
@@ -1207,29 +1200,37 @@
             // Show second loading (10s)
             await showLoading2();
 
-            // Now connect and setup
-            const success = await fetchAndDisplayAccounts();
+            // Connect via WebSocket and authorize
+            const success = await connectWebSocketWithPAT(pat);
             if (!success) {
-                log('Failed to fetch accounts. Please check your credentials.', 'error');
-                document.getElementById('cred-error').textContent = 'Failed to fetch accounts. Please check your App ID and PAT token.';
+                log('Authentication failed. Please check your PAT token.', 'error');
+                document.getElementById('cred-error').textContent = 'Invalid token. Please check your PAT.';
                 document.getElementById('cred-error').classList.add('show');
                 loginScreen.classList.remove('hidden');
                 loading2.classList.add('hidden');
                 return;
             }
+
+            // Fetch accounts after authorization
+            await fetchAccountsViaWS();
 
             if (allAccounts.length === 0) {
-                log('No accounts found. Please create a Deriv account first.', 'error');
-                document.getElementById('cred-error').textContent = 'No accounts found. Please create a Deriv account first.';
+                log('No accounts found. Please create a Deriv account.', 'error');
+                document.getElementById('cred-error').textContent = 'No accounts found.';
                 document.getElementById('cred-error').classList.add('show');
                 loginScreen.classList.remove('hidden');
                 loading2.classList.add('hidden');
                 return;
             }
 
-            if (selectedAccountId) {
-                await connectWebSocket();
-            }
+            // Select first account (prefer demo)
+            const demo = allAccounts.find(a => a.account_type === 'demo');
+            selectedAccountId = demo ? demo.account_id : allAccounts[0].account_id;
+            updateAccountDropdown();
+
+            // Subscribe to data for selected account
+            subscribeToAccount(selectedAccountId);
+
             showApp();
             // Restore bot state
             botEnabled = localStorage.getItem('pema_botEnabled') === 'true';
@@ -1253,8 +1254,6 @@
         document.getElementById('login-trade-btn').addEventListener('click', () => {
             credModal.classList.add('active');
             document.getElementById('cred-error').classList.remove('show');
-            // Pre-fill from saved if exists
-            if (savedApp) document.getElementById('cred-app-id').value = savedApp;
             if (savedPat) document.getElementById('cred-pat-token').value = savedPat;
         });
 
@@ -1269,7 +1268,7 @@
         // ── Signup ──
         document.getElementById('signup-hint').addEventListener('click', (e) => {
             e.preventDefault();
-            window.open('https://deriv.com/signup', '_blank');
+            window.open('https://deriv.com', '_blank');
         });
         document.getElementById('create-account-btn').addEventListener('click', () => {
             window.open('https://deriv.com/signup', '_blank');
@@ -1277,28 +1276,22 @@
 
         // ── Submit credentials ──
         document.getElementById('cred-submit').addEventListener('click', async () => {
-            const appId = document.getElementById('cred-app-id').value.trim();
             const pat = document.getElementById('cred-pat-token').value.trim();
-            if (!appId || !pat) {
-                document.getElementById('cred-error').textContent = 'Please enter both App ID and PAT token.';
+            if (!pat) {
+                document.getElementById('cred-error').textContent = 'Please enter your PAT token.';
                 document.getElementById('cred-error').classList.add('show');
                 return;
             }
             document.getElementById('cred-error').classList.remove('show');
-            await handleLogin(appId, pat);
+            await handleLogin(pat);
         });
 
-        // Enter key support in modal
         document.getElementById('cred-pat-token').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') document.getElementById('cred-submit').click();
-        });
-        document.getElementById('cred-app-id').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') document.getElementById('cred-pat-token').focus();
         });
 
         // ── Logout ──
         document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('pema_app_id');
             localStorage.removeItem('pema_pat_token');
             localStorage.removeItem('pema_selected_account');
             localStorage.removeItem('pema_botEnabled');
@@ -1306,268 +1299,189 @@
                 ws = null; }
             stopPing();
             setStatus(false);
-            APP_ID = '';
             PAT_TOKEN = '';
             selectedAccountId = '';
             allAccounts = [];
             appContainer.classList.remove('active');
             showLoginScreen();
-            document.getElementById('cred-app-id').value = '';
             document.getElementById('cred-pat-token').value = '';
             document.getElementById('cred-error').classList.remove('show');
         });
 
         // ============================================================
-        //  STARTUP SEQUENCE
+        //  WEBSOCKET CONNECTION (using PAT directly)
         // ============================================================
-        async function startup() {
-            // First loading (10s)
-            await showLoading1();
-
-            if (savedApp && savedPat) {
-                // Auto-login: skip login screen, go straight to second loading
-                APP_ID = savedApp;
-                PAT_TOKEN = savedPat;
-                await showLoading2();
-                const success = await fetchAndDisplayAccounts();
-                if (!success) {
-                    log('Failed to fetch accounts. Please log in again.', 'error');
-                    showLoginScreen();
-                    return;
-                }
-                if (allAccounts.length === 0) {
-                    log('No accounts found.', 'error');
-                    showLoginScreen();
-                    return;
-                }
-                if (selectedAccountId) {
-                    await connectWebSocket();
-                }
-                showApp();
-                // Restore bot
-                botEnabled = localStorage.getItem('pema_botEnabled') === 'true';
-                const savedScript = localStorage.getItem('pema_botScript');
-                if (botEnabled && savedScript) {
-                    setTimeout(() => {
-                        const ta = document.getElementById('bot-script');
-                        if (ta) {
-                            ta.value = savedScript;
-                            compileBot();
-                            const cb = document.getElementById('bot-enabled');
-                            if (cb) cb.checked = true;
-                            const st = document.getElementById('bot-status');
-                            if (st) st.textContent = 'Running';
-                        }
-                    }, 600);
-                }
-            } else {
-                // Show login screen
-                showLoginScreen();
-            }
-        }
-
-        // ── Start ──
-        startup();
-
-        // ============================================================
-        //  UTILITY FUNCTIONS
-        // ============================================================
-        function log(msg, type = 'info') {
-            const el = document.getElementById('log');
-            if (!el) return;
-            const time = new Date().toLocaleTimeString();
-            const div = document.createElement('div');
-            div.textContent = `[${time}] ${msg}`;
-            div.className = type;
-            el.appendChild(div);
-            el.scrollTop = el.scrollHeight;
-            while (el.children.length > 120) el.removeChild(el.firstChild);
-        }
-
-        function setStatus(online) {
-            const dot = document.getElementById('status-dot');
-            const label = document.getElementById('status-label');
-            if (online) {
-                dot.className = 'dot online';
-                label.textContent = 'Online';
-            } else {
-                dot.className = 'dot offline';
-                label.textContent = 'Offline';
-            }
-        }
-
-        // ── FIXED API FETCH: uses correct base URL ──
-        async function apiFetch(url, method = 'GET', body = null) {
-            const headers = {
-                'Deriv-App-ID': APP_ID,
-                'Authorization': `Bearer ${PAT_TOKEN}`,
-                'Content-Type': 'application/json'
-            };
-            // Use the correct Deriv REST API endpoint
-            const baseUrl = 'https://api.deriv.com';
-            const fullUrl = `${baseUrl}${url}`;
-            const options = {
-                method,
-                headers,
-                body: body ? JSON.stringify(body) : undefined
-            };
-            try {
-                const response = await fetch(fullUrl, options);
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
-                }
-                return await response.json();
-            } catch (e) {
-                log(`API request failed: ${e.message}`, 'error');
-                throw e;
-            }
-        }
-
-        // ============================================================
-        //  ACCOUNT MANAGEMENT
-        // ============================================================
-        async function fetchAndDisplayAccounts() {
-            if (!APP_ID || !PAT_TOKEN) {
-                log('Missing credentials.', 'error');
-                return false;
-            }
-            try {
-                log('Fetching accounts...', 'info');
-                // The correct endpoint for listing accounts
-                const data = await apiFetch('/trading/v1/options/accounts');
-
-                if (data.errors) {
-                    log('API error: ' + data.errors[0]?.message || 'Unknown error', 'error');
-                    return false;
-                }
-
-                const accounts = data.data || [];
-                allAccounts = accounts;
-
-                const select = document.getElementById('account-select-header');
-                select.innerHTML = '';
-
-                if (accounts.length === 0) {
-                    const opt = document.createElement('option');
-                    opt.value = '';
-                    opt.textContent = 'No accounts found';
-                    select.appendChild(opt);
-                    log('No accounts found. Please create a Deriv account.', 'error');
-                    return false;
-                }
-
-                // Sort: demo first, then real
-                accounts.sort((a, b) => {
-                    if (a.account_type === 'demo' && b.account_type !== 'demo') return -1;
-                    if (a.account_type !== 'demo' && b.account_type === 'demo') return 1;
-                    return 0;
-                });
-
-                let hasDemo = false,
-                    hasReal = false;
-                accounts.forEach(acc => {
-                    const typeLabel = acc.account_type === 'demo' ? '🟢 Demo' : '🔴 Real';
-                    const opt = document.createElement('option');
-                    opt.value = acc.account_id;
-                    opt.textContent = `${typeLabel} ${acc.account_id} – $${acc.balance}`;
-                    if (acc.account_type === 'demo') hasDemo = true;
-                    if (acc.account_type !== 'demo') hasReal = true;
-                    select.appendChild(opt);
-                });
-
-                log(`Found ${accounts.length} account(s): ${hasDemo ? 'Demo' : ''}${hasDemo && hasReal ? ' & ' : ''}${hasReal ? 'Real' : ''}`, 'trade');
-
-                const saved = localStorage.getItem('pema_selected_account');
-                if (saved && accounts.some(a => a.account_id === saved)) {
-                    select.value = saved;
-                    selectedAccountId = saved;
-                } else if (accounts.length) {
-                    // Prefer demo account if available
-                    const demoAcc = accounts.find(a => a.account_type === 'demo');
-                    if (demoAcc) {
-                        select.value = demoAcc.account_id;
-                        selectedAccountId = demoAcc.account_id;
-                    } else {
-                        select.value = accounts[0].account_id;
-                        selectedAccountId = accounts[0].account_id;
-                    }
-                }
-                return true;
-            } catch (e) {
-                log('Account fetch error: ' + e.message, 'error');
-                return false;
-            }
-        }
-
-        function disconnectWebSocket() {
-            if (ws) { ws.onclose = null;
-                ws.close();
-                ws = null; }
-            stopPing();
-            setStatus(false);
-        }
-
-        async function reconnectWithAccount(accountId) {
-            if (selectedAccountId === accountId) return;
-            selectedAccountId = accountId;
-            localStorage.setItem('pema_selected_account', accountId);
-            disconnectWebSocket();
-            log(`Switching to account ${accountId}…`);
-            await connectWebSocket();
-        }
-
-        document.getElementById('account-select-header').addEventListener('change', function() {
-            const id = this.value;
-            if (id && id !== selectedAccountId) reconnectWithAccount(id);
-        });
-
-        // ============================================================
-        //  WEBSOCKET
-        // ============================================================
-        async function connectWebSocket() {
-            if (!selectedAccountId) { log('No account selected.', 'error'); return; }
-            log('Connecting to Deriv WebSocket...');
-            try {
-                // Get OTP token for WebSocket
-                const data = await apiFetch(`/trading/v1/options/accounts/${selectedAccountId}/otp`, 'POST');
-                if (data.errors) {
-                    log('OTP error: ' + data.errors[0]?.message || 'Unknown', 'error');
-                    return;
-                }
-                const wsUrl = data.data.url; // This should be the WebSocket URL
+        function connectWebSocketWithPAT(pat) {
+            return new Promise((resolve) => {
+                const wsUrl = 'wss://ws.deriv.com';
                 ws = new WebSocket(wsUrl);
+
                 ws.onopen = () => {
-                    log('Connected to Deriv!', 'trade');
-                    setStatus(true);
-                    ws.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
-                    ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
-                    ws.send(JSON.stringify({ proposal_open_contract: 1, subscribe: 1 }));
-                    startPing();
+                    log('WebSocket connected.', 'info');
+                    // Send authorize request
+                    ws.send(JSON.stringify({
+                        authorize: pat
+                    }));
                 };
-                ws.onmessage = handleWSMessage;
-                ws.onerror = () => log('WebSocket error', 'error');
+
+                ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    if (msg.msg_type === 'authorize') {
+                        if (msg.error) {
+                            log('Auth error: ' + msg.error.message, 'error');
+                            resolve(false);
+                            return;
+                        }
+                        isAuthorized = true;
+                        log('Authorization successful.', 'trade');
+                        setStatus(true);
+                        resolve(true);
+                    } else if (msg.msg_type === 'get_accounts') {
+                        // Handle accounts response
+                        if (msg.error) {
+                            log('Accounts error: ' + msg.error.message, 'error');
+                            return;
+                        }
+                        allAccounts = msg.accounts || [];
+                        updateAccountDropdown();
+                        // If we have accounts, select first and subscribe
+                        if (allAccounts.length > 0) {
+                            const demo = allAccounts.find(a => a.account_type === 'demo');
+                            selectedAccountId = demo ? demo.account_id : allAccounts[0].account_id;
+                            updateAccountDropdown();
+                            // Subscribe to ticks, balance, portfolio for this account
+                            subscribeToAccount(selectedAccountId);
+                        }
+                    } else {
+                        // Handle other messages (ticks, balance, etc.) in the main handler
+                        handleWSMessage(event);
+                    }
+                };
+
+                ws.onerror = () => {
+                    log('WebSocket error.', 'error');
+                    resolve(false);
+                };
+
                 ws.onclose = () => {
-                    log('Connection closed.', 'error');
+                    log('WebSocket closed.', 'error');
                     setStatus(false);
                     stopPing();
                 };
-            } catch (e) { log('Connection failed: ' + e.message, 'error'); }
+            });
         }
 
-        function startPing() {
-            pingInterval = setInterval(() => {
-                if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ ping: 1 }));
-            }, 45000);
+        // ── Subscribe to account data ──
+        function subscribeToAccount(accountId) {
+            if (!ws || ws.readyState !== WebSocket.OPEN) return;
+            // Send subscribe messages
+            ws.send(JSON.stringify({
+                ticks: currentMarket,
+                subscribe: 1
+            }));
+            ws.send(JSON.stringify({
+                balance: 1,
+                subscribe: 1
+            }));
+            ws.send(JSON.stringify({
+                proposal_open_contract: 1,
+                subscribe: 1
+            }));
+            // Also request portfolio
+            ws.send(JSON.stringify({
+                portfolio: 1
+            }));
         }
 
-        function stopPing() { clearInterval(pingInterval); }
+        // ── Fetch accounts via WebSocket ──
+        function fetchAccountsViaWS() {
+            return new Promise((resolve) => {
+                if (!ws || ws.readyState !== WebSocket.OPEN) {
+                    resolve(false);
+                    return;
+                }
+                ws.send(JSON.stringify({
+                    get_accounts: 1
+                }));
+                // We'll handle the response in the onmessage handler
+                // Since we already have a listener, we just resolve after a short delay
+                // But we need to wait for the response. We'll use a one-time listener.
+                const handler = (event) => {
+                    const msg = JSON.parse(event.data);
+                    if (msg.msg_type === 'get_accounts') {
+                        ws.removeEventListener('message', handler);
+                        if (msg.error) {
+                            resolve(false);
+                            return;
+                        }
+                        allAccounts = msg.accounts || [];
+                        updateAccountDropdown();
+                        resolve(true);
+                    }
+                };
+                ws.addEventListener('message', handler);
+                // Timeout fallback
+                setTimeout(() => {
+                    ws.removeEventListener('message', handler);
+                    resolve(false);
+                }, 5000);
+            });
+        }
+
+        // ── Update account dropdown ──
+        function updateAccountDropdown() {
+            const select = document.getElementById('account-select-header');
+            select.innerHTML = '';
+            if (allAccounts.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'No accounts';
+                select.appendChild(opt);
+                return;
+            }
+            allAccounts.sort((a, b) => {
+                if (a.account_type === 'demo' && b.account_type !== 'demo') return -1;
+                if (a.account_type !== 'demo' && b.account_type === 'demo') return 1;
+                return 0;
+            });
+            allAccounts.forEach(acc => {
+                const typeLabel = acc.account_type === 'demo' ? '🟢 Demo' : '🔴 Real';
+                const opt = document.createElement('option');
+                opt.value = acc.account_id;
+                opt.textContent = `${typeLabel} ${acc.account_id} – $${acc.balance}`;
+                select.appendChild(opt);
+            });
+            if (selectedAccountId) {
+                select.value = selectedAccountId;
+            } else if (allAccounts.length > 0) {
+                select.value = allAccounts[0].account_id;
+                selectedAccountId = allAccounts[0].account_id;
+            }
+        }
+
+        // ── Account switch ──
+        document.getElementById('account-select-header').addEventListener('change', function() {
+            const id = this.value;
+            if (id && id !== selectedAccountId) {
+                selectedAccountId = id;
+                localStorage.setItem('pema_selected_account', id);
+                // Re-subscribe
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    // Unsubscribe from old? For simplicity, just send new subscriptions
+                    subscribeToAccount(id);
+                }
+                log(`Switched to account ${id}`, 'trade');
+            }
+        });
 
         // ============================================================
-        //  WEBSOCKET MESSAGE HANDLER
+        //  MAIN WEBSOCKET MESSAGE HANDLER
         // ============================================================
         function handleWSMessage(event) {
             const msg = JSON.parse(event.data);
+
+            // Skip authorize and get_accounts handled elsewhere
+            if (msg.msg_type === 'authorize' || msg.msg_type === 'get_accounts') return;
 
             if (msg.tick) {
                 const digit = parseInt(msg.tick.quote.toString().slice(-1));
@@ -1678,6 +1592,9 @@
                 if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.statement.transactions, null, 2) + '</pre>';
             }
         }
+
+        // ── Override the global onmessage to use our handler ──
+        // We already set the handler in connectWebSocketWithPAT
 
         // ============================================================
         //  ANALYSIS STATE
@@ -2211,14 +2128,96 @@
             log('Bot script saved.');
         }
 
-        // ============================================================
-        //  ACCOUNT UPDATE POLLING
-        // ============================================================
-        setInterval(() => {
-            if (APP_ID && PAT_TOKEN && document.getElementById('app-container').classList.contains('active')) {
-                fetchAndDisplayAccounts().catch(() => {});
+        // ── Utility functions ──
+        function setStatus(online) {
+            const dot = document.getElementById('status-dot');
+            const label = document.getElementById('status-label');
+            if (online) {
+                dot.className = 'dot online';
+                label.textContent = 'Online';
+            } else {
+                dot.className = 'dot offline';
+                label.textContent = 'Offline';
             }
-        }, 60000);
+        }
+
+        function stopPing() {
+            if (pingInterval) {
+                clearInterval(pingInterval);
+                pingInterval = null;
+            }
+        }
+
+        // ── Reusable log ──
+        function log(msg, type = 'info') {
+            const el = document.getElementById('log');
+            if (!el) return;
+            const time = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.textContent = `[${time}] ${msg}`;
+            div.className = type;
+            el.appendChild(div);
+            el.scrollTop = el.scrollHeight;
+            while (el.children.length > 120) el.removeChild(el.firstChild);
+        }
+
+        // ============================================================
+        //  STARTUP SEQUENCE
+        // ============================================================
+        async function startup() {
+            // First loading (10s)
+            await showLoading1();
+
+            if (savedPat) {
+                // Auto-login: skip login screen, go straight to second loading
+                PAT_TOKEN = savedPat;
+                await showLoading2();
+
+                // Connect via WebSocket and authorize
+                const success = await connectWebSocketWithPAT(PAT_TOKEN);
+                if (!success) {
+                    log('Auto-login failed. Please log in manually.', 'error');
+                    showLoginScreen();
+                    return;
+                }
+
+                // Fetch accounts
+                await fetchAccountsViaWS();
+                if (allAccounts.length === 0) {
+                    log('No accounts found.', 'error');
+                    showLoginScreen();
+                    return;
+                }
+
+                const demo = allAccounts.find(a => a.account_type === 'demo');
+                selectedAccountId = demo ? demo.account_id : allAccounts[0].account_id;
+                updateAccountDropdown();
+                subscribeToAccount(selectedAccountId);
+
+                showApp();
+                // Restore bot
+                botEnabled = localStorage.getItem('pema_botEnabled') === 'true';
+                const savedScript = localStorage.getItem('pema_botScript');
+                if (botEnabled && savedScript) {
+                    setTimeout(() => {
+                        const ta = document.getElementById('bot-script');
+                        if (ta) {
+                            ta.value = savedScript;
+                            compileBot();
+                            const cb = document.getElementById('bot-enabled');
+                            if (cb) cb.checked = true;
+                            const st = document.getElementById('bot-status');
+                            if (st) st.textContent = 'Running';
+                        }
+                    }, 600);
+                }
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        // ── Start ──
+        startup();
     </script>
 </body>
 </html>
