@@ -537,7 +537,7 @@
         }
 
         // ============================================================
-        //  NEW API: REST + OTP WebSocket
+        //  NEW API: REST + OTP WebSocket (Strictly per docs pages 6,9)
         // ============================================================
         async function fetchAccountsREST() {
             try {
@@ -550,9 +550,15 @@
                     }
                 });
                 const data = await res.json();
-                if (data.errors) { log('REST error: ' + data.errors[0].message, 'error'); return null; }
-                return data.data || [];
-            } catch (e) { log('REST fetch failed: ' + e.message, 'error'); return null; }
+                if (data.errors) {
+                    log('REST error: ' + data.errors[0].message, 'error');
+                    return { error: data.errors[0].message };
+                }
+                return { data: data.data || [] };
+            } catch (e) {
+                log('REST fetch failed: ' + e.message, 'error');
+                return { error: e.message };
+            }
         }
 
         async function connectViaOTP(accountId) {
@@ -567,7 +573,11 @@
                         }
                     });
                     const data = await res.json();
-                    if (data.errors) { log('OTP error: ' + data.errors[0].message, 'error'); resolve(false); return; }
+                    if (data.errors) {
+                        log('OTP error: ' + data.errors[0].message, 'error');
+                        resolve(false);
+                        return;
+                    }
 
                     const wsUrl = data.data.url;
                     log('Connecting to WebSocket...');
@@ -577,7 +587,7 @@
                         log('Connected!', 'trade');
                         setStatus(true);
                         isAuthorized = true;
-                        // Subscribe to data
+                        // Subscribe to data (exact format from page 33)
                         ws.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
                         ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
                         ws.send(JSON.stringify({ proposal_open_contract: 1, subscribe: 1 }));
@@ -614,10 +624,18 @@
 
             await showLoading2();
 
-            const accounts = await fetchAccountsREST();
-            if (!accounts || accounts.length === 0) {
-                log('No accounts found.', 'error');
-                document.getElementById('cred-error').textContent = 'No accounts found. Check your App ID and PAT.';
+            const result = await fetchAccountsREST();
+            if (result.error) {
+                // Show error in modal
+                document.getElementById('cred-error').textContent = result.error;
+                document.getElementById('cred-error').classList.add('show');
+                loginScreen.classList.remove('hidden');
+                loading2.classList.add('hidden');
+                return;
+            }
+            const accounts = result.data;
+            if (accounts.length === 0) {
+                document.getElementById('cred-error').textContent = 'No Options accounts found. Please create an Options account on Deriv.';
                 document.getElementById('cred-error').classList.add('show');
                 loginScreen.classList.remove('hidden');
                 loading2.classList.add('hidden');
@@ -631,8 +649,7 @@
 
             const connected = await connectViaOTP(selectedAccountId);
             if (!connected) {
-                log('Connection failed.', 'error');
-                document.getElementById('cred-error').textContent = 'Could not connect. Check credentials.';
+                document.getElementById('cred-error').textContent = 'Could not connect to WebSocket. Check your credentials.';
                 document.getElementById('cred-error').classList.add('show');
                 loginScreen.classList.remove('hidden');
                 loading2.classList.add('hidden');
@@ -1260,13 +1277,12 @@
                 PAT_TOKEN = savedPat;
                 await showLoading2();
 
-                const accounts = await fetchAccountsREST();
-                if (!accounts || accounts.length === 0) {
-                    log('No accounts found. Please log in again.', 'error');
+                const result = await fetchAccountsREST();
+                if (result.error || !result.data || result.data.length === 0) {
                     showLoginScreen();
                     return;
                 }
-                allAccounts = accounts;
+                allAccounts = result.data;
                 const demo = allAccounts.find(a => a.account_type === 'demo');
                 selectedAccountId = demo ? demo.account_id : allAccounts[0].account_id;
                 updateAccountDropdown();
