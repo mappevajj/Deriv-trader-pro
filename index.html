@@ -60,6 +60,8 @@
             align-items: center;
             justify-content: center;
             transition: opacity 0.5s ease, visibility 0.5s ease;
+            padding: 20px;
+            text-align: center;
         }
         .loading-overlay.hidden {
             opacity: 0;
@@ -67,22 +69,26 @@
             pointer-events: none;
         }
         .loading-overlay .brand {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent), #00c896);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
-            margin-bottom: 20px;
         }
-        .loading-overlay .brand small {
-            font-size: 16px;
-            font-weight: 400;
-            -webkit-text-fill-color: var(--text-dim);
-            background: none;
+        .loading-overlay .welcome-text {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+        }
+        .loading-overlay .welcome-text small {
             display: block;
-            text-align: center;
-            margin-top: 4px;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-dim);
+            margin-top: 2px;
         }
         .loading-overlay .spinner {
             width: 48px;
@@ -91,7 +97,7 @@
             border-top: 3px solid var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 16px 0;
+            margin: 20px 0 12px;
         }
         @keyframes spin {
             to {
@@ -101,15 +107,16 @@
         .loading-overlay .status-text {
             color: var(--text-dim);
             font-size: 14px;
-            margin-top: 8px;
+            margin-top: 4px;
             letter-spacing: 0.3px;
         }
         .loading-overlay .progress-bar {
-            width: 200px;
+            width: 220px;
+            max-width: 80%;
             height: 4px;
             background: rgba(255, 255, 255, 0.06);
             border-radius: 4px;
-            margin-top: 16px;
+            margin-top: 14px;
             overflow: hidden;
         }
         .loading-overlay .progress-bar .fill {
@@ -123,6 +130,12 @@
             color: var(--text-dim);
             font-size: 12px;
             margin-top: 6px;
+        }
+        .loading-overlay .sub-brand {
+            color: var(--text-dim);
+            font-size: 13px;
+            margin-top: 4px;
+            opacity: 0.7;
         }
 
         /* ── LOGIN SCREEN ── */
@@ -156,10 +169,10 @@
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
         }
-        .login-container .sub {
+        .login-container .brand-sub {
             color: var(--text-dim);
             font-size: 15px;
-            margin: 6px 0 30px;
+            margin: 4px 0 24px;
         }
         .login-container .stats-row {
             display: grid;
@@ -236,7 +249,7 @@
             opacity: 0.7;
         }
 
-        /* ── LOGIN MODAL (for credentials) ── */
+        /* ── CREDENTIALS MODAL ── */
         #cred-modal {
             display: none;
             position: fixed;
@@ -331,6 +344,16 @@
             color: var(--accent);
             text-decoration: none;
         }
+        .cred-card .error-msg {
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        .cred-card .error-msg.show {
+            display: block;
+        }
 
         /* ── MAIN APP ── */
         #app-container {
@@ -344,7 +367,7 @@
 
         /* ── Header ── */
         .header {
-            padding: 10px 16px;
+            padding: 8px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -353,42 +376,44 @@
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             z-index: 10;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
+            flex-wrap: wrap;
         }
         .header .logo {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent), #00c896);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.2px;
         }
         .header .logo .badge {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             background: rgba(0, 229, 160, 0.12);
             color: var(--accent);
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 30px;
-            margin-left: 6px;
+            margin-left: 4px;
             -webkit-text-fill-color: var(--accent);
             letter-spacing: 0.3px;
         }
         .header-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
         .header-right .balance-display {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #fff;
             background: rgba(255, 255, 255, 0.05);
-            padding: 4px 14px;
+            padding: 3px 12px;
             border-radius: 30px;
             border: 1px solid var(--border);
+            white-space: nowrap;
         }
         .header-right .balance-display .amt {
             color: var(--accent);
@@ -397,12 +422,17 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 4px 10px;
+            padding: 4px 8px;
             color: #fff;
             font-size: 11px;
-            min-width: 100px;
+            min-width: 90px;
             outline: none;
             cursor: pointer;
+            max-width: 160px;
+        }
+        .header-right select option {
+            background: #1a2233;
+            color: #fff;
         }
         .status-badge {
             font-size: 10px;
@@ -452,7 +482,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            padding: 0 8px;
+            padding: 0 6px;
             flex-shrink: 0;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
@@ -464,8 +494,8 @@
             background: none;
             border: none;
             color: var(--text-dim);
-            padding: 10px 16px;
-            font-size: 12px;
+            padding: 8px 12px;
+            font-size: 11px;
             font-weight: 600;
             white-space: nowrap;
             border-bottom: 2px solid transparent;
@@ -487,7 +517,7 @@
         .main-content {
             flex: 1;
             overflow-y: auto;
-            padding: 14px 16px 24px;
+            padding: 12px 14px 20px;
             scroll-behavior: smooth;
             background: radial-gradient(ellipse at 20% 20%, rgba(0, 229, 160, 0.02), transparent 70%);
         }
@@ -499,8 +529,8 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 16px 18px;
-            margin-bottom: 14px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
         .card h3 {
@@ -518,23 +548,23 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .dash-vol {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1px solid var(--border);
             text-align: center;
         }
         .dash-vol .vol-label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
         .dash-vol .vol-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #fff;
             margin-top: 2px;
@@ -543,7 +573,7 @@
             color: var(--accent);
         }
         .dash-vol .vol-sub {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-dim);
             margin-top: 2px;
         }
@@ -551,15 +581,15 @@
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 6px 0 4px;
+            gap: 8px;
+            margin: 4px 0 2px;
         }
         .action-btn {
-            padding: 12px;
+            padding: 10px;
             border: none;
             border-radius: 12px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: 0.2s;
             font-family: inherit;
@@ -592,23 +622,23 @@
         .bot-builder-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
         }
         .bot-stat {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1px solid var(--border);
             text-align: center;
         }
         .bot-stat .label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
         .bot-stat .value {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: #fff;
             margin-top: 2px;
@@ -622,16 +652,57 @@
             margin-top: 2px;
         }
 
+        .inline-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 4px 0;
+        }
+        .inline-group label {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-weight: 500;
+            min-width: 50px;
+        }
+        .inline-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .inline-group input[type="number"],
+        .inline-group select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 10px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            font-family: inherit;
+        }
+        .inline-group input[type="number"]:focus,
+        .inline-group select:focus {
+            border-color: var(--accent);
+        }
+        .inline-group select {
+            min-width: 100px;
+        }
+        .inline-group input[type="number"] {
+            width: 70px;
+        }
+
         /* ── Manual Trader ── */
         .manual-ai {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            padding: 20px 0;
+            padding: 12px 0;
         }
         .manual-ai .ai-badge {
-            font-size: 48px;
+            font-size: 40px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent), #00c896);
             -webkit-background-clip: text;
@@ -639,7 +710,7 @@
             letter-spacing: -2px;
         }
         .manual-ai .ai-label {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-dim);
             font-weight: 600;
         }
@@ -648,14 +719,14 @@
         #log {
             background: rgba(0, 0, 0, 0.5);
             border-radius: 12px;
-            padding: 10px 12px;
+            padding: 8px 12px;
             font-family: 'SF Mono', 'Fira Code', monospace;
             font-size: 11px;
-            height: 80px;
+            height: 70px;
             overflow-y: auto;
             color: var(--text-dim);
             border: 1px solid var(--border);
-            margin-top: 10px;
+            margin-top: 8px;
             line-height: 1.6;
         }
         #log .trade {
@@ -677,6 +748,9 @@
         .text-dim {
             color: var(--text-dim);
         }
+        .text-danger {
+            color: var(--danger);
+        }
         .mt-8 {
             margin-top: 8px;
         }
@@ -689,10 +763,110 @@
             align-items: center;
         }
 
-        /* ── Responsive ── */
+        .chart-wrap {
+            height: 240px;
+            position: relative;
+        }
+        .chart-wrap canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .portfolio-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+        }
+        .portfolio-item .meta {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .freq-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+        .freq-cell {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 6px 4px;
+            text-align: center;
+        }
+        .freq-cell .digit {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .mini-bar {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .mini-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        .bigram-grid {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            gap: 2px;
+            font-size: 9px;
+        }
+        .bigram-cell {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 3px;
+            padding: 3px 2px;
+            text-align: center;
+        }
+        .bigram-header {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 10px;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.06);
+            color: #ccc;
+            transition: 0.2s;
+        }
+        .btn-sm:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .btn-sm.primary {
+            background: linear-gradient(135deg, #00c896, #00a87e);
+            color: #000;
+        }
+
+        .no-accounts-msg {
+            color: var(--text-dim);
+            font-size: 13px;
+            padding: 12px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px dashed var(--border);
+        }
+
         @media (max-width: 600px) {
             .loading-overlay .brand {
                 font-size: 28px;
+            }
+            .loading-overlay .welcome-text {
+                font-size: 18px;
             }
             .login-container .brand {
                 font-size: 26px;
@@ -705,48 +879,69 @@
             }
             .dash-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 8px;
+                gap: 6px;
             }
             .action-buttons {
                 grid-template-columns: 1fr 1fr;
-                gap: 8px;
+                gap: 6px;
             }
             .action-btn {
-                font-size: 11px;
-                padding: 10px;
+                font-size: 10px;
+                padding: 8px;
             }
             .bot-builder-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 8px;
+                gap: 6px;
             }
             .header .logo {
-                font-size: 15px;
+                font-size: 14px;
             }
             .header .logo .badge {
                 font-size: 8px;
                 padding: 1px 6px;
             }
             .header-right .balance-display {
-                font-size: 12px;
-                padding: 2px 10px;
+                font-size: 11px;
+                padding: 2px 8px;
             }
             .header-right select {
-                min-width: 70px;
                 font-size: 10px;
+                min-width: 70px;
                 padding: 3px 6px;
             }
             .top-nav button {
-                font-size: 10px;
-                padding: 8px 10px;
+                font-size: 9px;
+                padding: 6px 8px;
             }
             .main-content {
-                padding: 10px 12px 20px;
+                padding: 8px 10px 16px;
             }
             .card {
-                padding: 12px 14px;
+                padding: 10px 12px;
             }
             .dash-vol .vol-value {
-                font-size: 16px;
+                font-size: 15px;
+            }
+            .inline-group label {
+                font-size: 11px;
+                min-width: 40px;
+            }
+            .inline-group input[type="number"] {
+                width: 60px;
+            }
+            .inline-group select {
+                min-width: 80px;
+                font-size: 12px;
+            }
+            .manual-ai .ai-badge {
+                font-size: 32px;
+            }
+            .freq-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 4px;
+            }
+            .freq-cell .digit {
+                font-size: 15px;
             }
         }
     </style>
@@ -755,21 +950,23 @@
 
     <!-- ─── FIRST LOADING SCREEN (10s) ─── -->
     <div class="loading-overlay" id="loading1">
-        <div class="brand">
-            pemaanalysispro
+        <div class="brand">pemaanalysispro</div>
+        <div class="welcome-text">
+            welcome to pemaanalysispro
             <small>Deriv Trading Workspace</small>
         </div>
         <div class="spinner"></div>
         <div class="status-text">Initializing workspace...</div>
         <div class="progress-bar"><div class="fill" id="progress1"></div></div>
         <div class="progress-text" id="progressText1">0%</div>
+        <div class="sub-brand">preparing your trading environment</div>
     </div>
 
     <!-- ─── LOGIN SCREEN ─── -->
     <div id="login-screen">
         <div class="login-container">
             <div class="brand">pemaanalysispro</div>
-            <div class="sub">Empowering your financial journey</div>
+            <div class="brand-sub">Empowering your financial journey</div>
 
             <div class="stats-row">
                 <div class="stat-box">
@@ -802,12 +999,13 @@
         <div class="cred-card">
             <button class="close-btn" id="close-cred">×</button>
             <h3>Log In to Trade</h3>
-            <div class="sub">Enter your Deriv credentials</div>
+            <div class="sub">Enter your Deriv App ID and Personal Access Token</div>
             <label>App ID</label>
             <input id="cred-app-id" type="text" placeholder="e.g. 12345" />
             <label>Personal Access Token</label>
             <input id="cred-pat-token" type="password" placeholder="Your PAT token" />
-            <button class="btn-login" id="cred-submit">Connect & Trade</button>
+            <div class="error-msg" id="cred-error">Invalid credentials. Please check your App ID and PAT token.</div>
+            <button class="btn-login" id="cred-submit">Connect &amp; Trade</button>
             <div class="hint">
                 Don't have an account? <a href="#" id="signup-hint">Create one here</a>
             </div>
@@ -816,14 +1014,16 @@
 
     <!-- ─── SECOND LOADING SCREEN (10s) ─── -->
     <div class="loading-overlay hidden" id="loading2">
-        <div class="brand">
-            pemaanalysispro
+        <div class="brand">pemaanalysispro</div>
+        <div class="welcome-text">
+            welcome to pemaanalysispro
             <small>Connecting to Deriv...</small>
         </div>
         <div class="spinner"></div>
         <div class="status-text" id="conn-status">Establishing secure connection...</div>
         <div class="progress-bar"><div class="fill" id="progress2"></div></div>
         <div class="progress-text" id="progressText2">0%</div>
+        <div class="sub-brand">fetching your accounts &amp; market data</div>
     </div>
 
     <!-- ─── MAIN APP ─── -->
@@ -836,7 +1036,9 @@
             </div>
             <div class="header-right">
                 <div class="balance-display">USD <span class="amt" id="header-balance">0.00</span></div>
-                <select id="account-select-header"><option value="">No account</option></select>
+                <select id="account-select-header">
+                    <option value="">No account</option>
+                </select>
                 <div class="status-badge" id="connection-status">
                     <span class="dot offline" id="status-dot"></span>
                     <span id="status-label">Offline</span>
@@ -882,6 +1084,7 @@
         let lastProposalId = null;
         let lastTradeResult = { status: '', profit: 0, time: '' };
         let balance = 0;
+        let allAccounts = [];
 
         // Analysis
         let digitCurrentStreaks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -961,9 +1164,10 @@
                     }
                     bar.style.width = progress + '%';
                     text.textContent = progress + '%';
-                    if (progress < 30) status.textContent = 'Connecting to Deriv servers...';
-                    else if (progress < 60) status.textContent = 'Authenticating account...';
-                    else if (progress < 85) status.textContent = 'Loading market data...';
+                    if (progress < 25) status.textContent = 'Connecting to Deriv servers...';
+                    else if (progress < 50) status.textContent = 'Authenticating your account...';
+                    else if (progress < 75) status.textContent = 'Loading your trading accounts...';
+                    else if (progress < 90) status.textContent = 'Fetching market data...';
                     else status.textContent = 'Almost ready...';
                 }, 100);
                 // Strict 10 seconds
@@ -986,6 +1190,8 @@
             loading1.classList.add('hidden');
             loading2.classList.add('hidden');
             renderTab('dashboard');
+            // Update portfolio after render
+            setTimeout(renderPortfolio, 300);
         }
 
         // ============================================================
@@ -997,18 +1203,32 @@
             localStorage.setItem('pema_app_id', appId);
             localStorage.setItem('pema_pat_token', pat);
             credModal.classList.remove('active');
+            document.getElementById('cred-error').classList.remove('show');
 
-            // Show second loading (10s) and connect to Deriv
+            // Show second loading (10s)
             await showLoading2();
 
             // Now connect and setup
             const success = await fetchAndDisplayAccounts();
             if (!success) {
-                log('Failed to fetch accounts. Check credentials.', 'error');
-                // Retry or show error
-                showLoginScreen();
+                log('Failed to fetch accounts. Please check your credentials.', 'error');
+                document.getElementById('cred-error').textContent = 'Failed to fetch accounts. Please check your App ID and PAT token.';
+                document.getElementById('cred-error').classList.add('show');
+                // Go back to login
+                loginScreen.classList.remove('hidden');
+                loading2.classList.add('hidden');
                 return;
             }
+
+            if (allAccounts.length === 0) {
+                log('No accounts found. Please create a Deriv account first.', 'error');
+                document.getElementById('cred-error').textContent = 'No accounts found. Please create a Deriv account first.';
+                document.getElementById('cred-error').classList.add('show');
+                loginScreen.classList.remove('hidden');
+                loading2.classList.add('hidden');
+                return;
+            }
+
             if (selectedAccountId) {
                 await connectWebSocket();
             }
@@ -1034,6 +1254,7 @@
         // ── Login button ──
         document.getElementById('login-trade-btn').addEventListener('click', () => {
             credModal.classList.add('active');
+            document.getElementById('cred-error').classList.remove('show');
         });
 
         // ── Close cred modal ──
@@ -1058,10 +1279,20 @@
             const appId = document.getElementById('cred-app-id').value.trim();
             const pat = document.getElementById('cred-pat-token').value.trim();
             if (!appId || !pat) {
-                alert('Please enter both App ID and PAT token.');
+                document.getElementById('cred-error').textContent = 'Please enter both App ID and PAT token.';
+                document.getElementById('cred-error').classList.add('show');
                 return;
             }
+            document.getElementById('cred-error').classList.remove('show');
             await handleLogin(appId, pat);
+        });
+
+        // Enter key support in modal
+        document.getElementById('cred-pat-token').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('cred-submit').click();
+        });
+        document.getElementById('cred-app-id').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('cred-pat-token').focus();
         });
 
         // ── Logout ──
@@ -1077,10 +1308,12 @@
             APP_ID = '';
             PAT_TOKEN = '';
             selectedAccountId = '';
+            allAccounts = [];
             appContainer.classList.remove('active');
             showLoginScreen();
             document.getElementById('cred-app-id').value = '';
             document.getElementById('cred-pat-token').value = '';
+            document.getElementById('cred-error').classList.remove('show');
         });
 
         // ============================================================
@@ -1098,6 +1331,11 @@
                 const success = await fetchAndDisplayAccounts();
                 if (!success) {
                     log('Failed to fetch accounts. Please log in again.', 'error');
+                    showLoginScreen();
+                    return;
+                }
+                if (allAccounts.length === 0) {
+                    log('No accounts found.', 'error');
                     showLoginScreen();
                     return;
                 }
@@ -1171,31 +1409,76 @@
         //  ACCOUNT MANAGEMENT
         // ============================================================
         async function fetchAndDisplayAccounts() {
-            if (!APP_ID || !PAT_TOKEN) return false;
+            if (!APP_ID || !PAT_TOKEN) {
+                log('Missing credentials.', 'error');
+                return false;
+            }
             try {
+                log('Fetching accounts...', 'info');
                 const res = await apiFetch('/trading/v1/options/accounts');
                 const data = await res.json();
-                if (data.errors) return false;
+
+                if (data.errors) {
+                    log('API error: ' + data.errors[0]?.message || 'Unknown error', 'error');
+                    return false;
+                }
+
                 const accounts = data.data || [];
+                allAccounts = accounts;
+
                 const select = document.getElementById('account-select-header');
                 select.innerHTML = '';
+
+                if (accounts.length === 0) {
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.textContent = 'No accounts found';
+                    select.appendChild(opt);
+                    log('No accounts found. Please create a Deriv account.', 'error');
+                    return false;
+                }
+
+                // Sort: demo first, then real
+                accounts.sort((a, b) => {
+                    if (a.account_type === 'demo' && b.account_type !== 'demo') return -1;
+                    if (a.account_type !== 'demo' && b.account_type === 'demo') return 1;
+                    return 0;
+                });
+
+                let hasDemo = false,
+                    hasReal = false;
                 accounts.forEach(acc => {
+                    const typeLabel = acc.account_type === 'demo' ? '🟢 Demo' : '🔴 Real';
                     const opt = document.createElement('option');
                     opt.value = acc.account_id;
-                    const label = acc.account_type === 'demo' ? '🟢 Demo' : '🔴 Real';
-                    opt.textContent = `${label} ${acc.account_id} – $${acc.balance}`;
+                    opt.textContent = `${typeLabel} ${acc.account_id} – $${acc.balance}`;
+                    if (acc.account_type === 'demo') hasDemo = true;
+                    if (acc.account_type !== 'demo') hasReal = true;
                     select.appendChild(opt);
                 });
+
+                log(`Found ${accounts.length} account(s): ${hasDemo ? 'Demo' : ''}${hasDemo && hasReal ? ' & ' : ''}${hasReal ? 'Real' : ''}`, 'trade');
+
                 const saved = localStorage.getItem('pema_selected_account');
                 if (saved && accounts.some(a => a.account_id === saved)) {
                     select.value = saved;
                     selectedAccountId = saved;
                 } else if (accounts.length) {
-                    select.value = accounts[0].account_id;
-                    selectedAccountId = accounts[0].account_id;
+                    // Prefer demo account if available
+                    const demoAcc = accounts.find(a => a.account_type === 'demo');
+                    if (demoAcc) {
+                        select.value = demoAcc.account_id;
+                        selectedAccountId = demoAcc.account_id;
+                    } else {
+                        select.value = accounts[0].account_id;
+                        selectedAccountId = accounts[0].account_id;
+                    }
                 }
                 return true;
-            } catch (e) { log('Account fetch error: ' + e.message, 'error'); return false; }
+            } catch (e) {
+                log('Account fetch error: ' + e.message, 'error');
+                return false;
+            }
         }
 
         function disconnectWebSocket() {
@@ -1211,7 +1494,7 @@
             selectedAccountId = accountId;
             localStorage.setItem('pema_selected_account', accountId);
             disconnectWebSocket();
-            log(`Switching to ${accountId}…`);
+            log(`Switching to account ${accountId}…`);
             await connectWebSocket();
         }
 
@@ -1225,11 +1508,14 @@
         // ============================================================
         async function connectWebSocket() {
             if (!selectedAccountId) { log('No account selected.', 'error'); return; }
-            log('Connecting to Deriv…');
+            log('Connecting to Deriv WebSocket...');
             try {
                 const res = await apiFetch(`/trading/v1/options/accounts/${selectedAccountId}/otp`, 'POST');
                 const data = await res.json();
-                if (data.errors) { log('OTP error: ' + data.errors[0].message, 'error'); return; }
+                if (data.errors) {
+                    log('OTP error: ' + data.errors[0]?.message || 'Unknown', 'error');
+                    return;
+                }
                 ws = new WebSocket(data.data.url);
                 ws.onopen = () => {
                     log('Connected to Deriv!', 'trade');
@@ -1445,11 +1731,11 @@
             if (!el) return;
             if (!openContracts.length) { el.innerHTML = '<p class="text-dim">No open contracts.</p>'; return; }
             el.innerHTML = openContracts.map(c => `
-                <div class="portfolio-item" style="background:rgba(255,255,255,0.02);border-radius:12px;padding:10px 12px;margin-bottom:8px;border:1px solid var(--border);">
+                <div class="portfolio-item">
                     <div><strong>${c.longcode}</strong></div>
-                    <div style="font-size:12px;color:var(--text-dim);">ID: ${c.contract_id} · Status: ${c.status} · Profit: <span class="${c.profit >= 0 ? 'text-accent' : 'text-danger'}">$${c.profit}</span></div>
-                    <div style="font-size:12px;color:var(--text-dim);">Buy: $${c.buy_price} · Bid: $${c.bid_price}</div>
-                    <button class="secondary" onclick="sellContract(${c.contract_id})" style="margin-top:6px;padding:6px 14px;font-size:11px;">Sell</button>
+                    <div class="meta">ID: ${c.contract_id} · Status: ${c.status} · Profit: <span class="${c.profit >= 0 ? 'text-accent' : 'text-danger'}">$${c.profit}</span></div>
+                    <div class="meta">Buy: $${c.buy_price} · Bid: $${c.bid_price}</div>
+                    <button class="btn-sm" onclick="sellContract(${c.contract_id})" style="margin-top:4px;">Sell</button>
                 </div>
             `).join('');
         }
@@ -1509,14 +1795,14 @@
             const { hot, cold, freq } = getHotCold(50);
             let html = `
                 <div class="card"><h3>🔢 Digit Frequency</h3>
-                <div class="freq-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">`;
+                <div class="freq-grid">`;
             for (let i = 0; i < 10; i++) {
                 const pct = totalTicks > 0 ? (counts[i] / totalTicks * 100).toFixed(1) : 0;
-                html += `<div class="freq-cell" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:8px 4px;text-align:center;">
-                    <div style="font-size:20px;font-weight:700;color:#fff;">${i}</div>
+                html += `<div class="freq-cell">
+                    <div class="digit">${i}</div>
                     <div style="font-size:12px;">${counts[i]}</div>
                     <div style="font-size:10px;color:var(--text-dim);">${pct}%</div>
-                    <div class="mini-bar" style="height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-top:4px;overflow:hidden;"><div class="mini-bar-fill" style="height:100%;width:${pct}%;background:var(--accent);border-radius:4px;"></div></div>
+                    <div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;"></div></div>
                 </div>`;
             }
             html += `</div></div>`;
@@ -1524,8 +1810,8 @@
             html += `
                 <div class="card"><h3>🔥❄️ Hot & Cold</h3>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--accent);">${hot}</div><div style="font-size:12px;color:var(--text-dim);">Hottest (last 50)</div></div>
-                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--warning);">${cold}</div><div style="font-size:12px;color:var(--text-dim);">Coldest (last 50)</div></div>
+                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:700;color:var(--accent);">${hot}</div><div style="font-size:12px;color:var(--text-dim);">Hottest (last 50)</div></div>
+                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:700;color:var(--warning);">${cold}</div><div style="font-size:12px;color:var(--text-dim);">Coldest (last 50)</div></div>
                 </div>
                 </div>`;
 
@@ -1543,18 +1829,14 @@
 
             html += `
                 <div class="card"><h3>🧩 Bigram Matrix</h3>
-                <div class="bigram-grid" style="display:grid;grid-template-columns:repeat(11,1fr);gap:3px;font-size:10px;">
-                <div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;"></div>`;
-            for (let j = 0; j < 10; j++) html +=
-                `<div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;">${j}</div>`;
+                <div class="bigram-grid"><div class="bigram-cell bigram-header"></div>`;
+            for (let j = 0; j < 10; j++) html += `<div class="bigram-cell bigram-header">${j}</div>`;
             for (let i = 0; i < 10; i++) {
-                html +=
-                    `<div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;">${i}</div>`;
+                html += `<div class="bigram-cell bigram-header">${i}</div>`;
                 for (let j = 0; j < 10; j++) {
                     const count = bigramCounts[i][j];
                     const opacity = count > 0 ? Math.min(1, 0.15 + count * 0.04) : 0.05;
-                    html +=
-                        `<div class="bigram-cell" style="background:rgba(0,229,160,${opacity});text-align:center;padding:4px 2px;border-radius:4px;">${count}</div>`;
+                    html += `<div class="bigram-cell" style="background:rgba(0,229,160,${opacity});">${count}</div>`;
                 }
             }
             html += `</div></div>`;
@@ -1601,11 +1883,17 @@
         function renderTab(tab) {
             const content = document.getElementById('tab-content');
 
+            // Update balance display in dashboard
+            const updateBal = () => {
+                const el = document.getElementById('balance-display');
+                if (el) el.textContent = balance ? balance.toFixed(2) : '0.00';
+            };
+
             switch (tab) {
                 case 'dashboard':
                     content.innerHTML = `
-                        <div class="card" style="padding:12px 16px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                        <div class="card" style="padding:10px 14px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
                                 <span style="font-weight:600;font-size:14px;color:#fff;">Dashboard</span>
                                 <span style="font-size:12px;color:var(--text-dim);">USD <span class="text-accent" id="balance-display">${balance ? balance.toFixed(2) : '0.00'}</span></span>
                             </div>
@@ -1614,23 +1902,23 @@
                         <div class="dash-grid">
                             <div class="dash-vol">
                                 <div class="vol-label">VOL 50</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/50).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/totalTicks*100).toFixed(1) : '0.0'}%</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 0 ? (tickHistory.slice(-50).reduce((s,t)=>s+t.digit,0)/50).toFixed(4) : '0.0000'}</span></div>
+                                <div class="vol-sub">${totalTicks > 0 ? (tickHistory.slice(-50).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                             </div>
                             <div class="dash-vol">
                                 <div class="vol-label">VOL 75</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 75 ? tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 75 ? (tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0)/75).toFixed(2) : '0.00'}</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 75 ? (tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0)/75).toFixed(4) : '0.0000'}</span></div>
+                                <div class="vol-sub">${totalTicks > 75 ? (tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                             </div>
                             <div class="dash-vol">
                                 <div class="vol-label">VOL 100</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 100 ? tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 100 ? (tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0)/100).toFixed(2) : '0.00'}</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 100 ? (tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0)/100).toFixed(4) : '0.0000'}</span></div>
+                                <div class="vol-sub">${totalTicks > 100 ? (tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                             </div>
                             <div class="dash-vol">
                                 <div class="vol-label">VOL 150 (15)</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 150 ? tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 150 ? (tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0)/150).toFixed(2) : '0.00'}</div>
+                                <div class="vol-value"><span class="accent">${totalTicks > 150 ? (tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0)/150).toFixed(4) : '0.0000'}</span></div>
+                                <div class="vol-sub">${totalTicks > 150 ? (tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                             </div>
                         </div>
 
@@ -1641,18 +1929,15 @@
                             <button class="action-btn secondary" onclick="renderTab('manualtrader');">MANUAL TRADING</button>
                         </div>
 
-                        <div class="card" style="margin-top:4px;">
+                        <div class="card" style="margin-top:2px;">
                             <h3>📋 Open Positions</h3>
                             <div id="portfolio-list"><p class="text-dim">No open contracts.</p></div>
                         </div>
 
                         <div id="log"></div>
                     `;
-                    // Update portfolio after render
-                    setTimeout(() => renderPortfolio(), 100);
-                    // Update balance
-                    const balEl = document.getElementById('balance-display');
-                    if (balEl) balEl.textContent = balance ? balance.toFixed(2) : '0.00';
+                    setTimeout(renderPortfolio, 150);
+                    updateBal();
                     break;
 
                 case 'botbuilder':
@@ -1661,38 +1946,38 @@
                             <div class="bot-builder-grid">
                                 <div class="bot-stat">
                                     <div class="label">VOL 50</div>
-                                    <div class="value"><span class="accent">93.7143</span></div>
-                                    <div class="sub">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/50).toFixed(4) : '0.0000'}</div>
+                                    <div class="value"><span class="accent">${totalTicks > 0 ? (tickHistory.slice(-50).reduce((s,t)=>s+t.digit,0)/50).toFixed(4) : '93.7143'}</span></div>
+                                    <div class="sub">${totalTicks > 0 ? (tickHistory.slice(-50).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                                 </div>
                                 <div class="bot-stat">
                                     <div class="label">VOL 75</div>
-                                    <div class="value"><span class="accent">42278.2176</span></div>
-                                    <div class="sub">${totalTicks > 75 ? tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0).toFixed(4) : '0.0000'}</div>
+                                    <div class="value"><span class="accent">${totalTicks > 75 ? (tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0)/75).toFixed(4) : '42278.2176'}</span></div>
+                                    <div class="sub">${totalTicks > 75 ? (tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                                 </div>
                                 <div class="bot-stat">
                                     <div class="label">VOL 100</div>
-                                    <div class="value"><span class="accent">323.61</span></div>
-                                    <div class="sub">${totalTicks > 100 ? tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0).toFixed(2) : '0.00'}</div>
+                                    <div class="value"><span class="accent">${totalTicks > 100 ? (tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0)/100).toFixed(4) : '323.6100'}</span></div>
+                                    <div class="sub">${totalTicks > 100 ? (tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                                 </div>
                                 <div class="bot-stat">
                                     <div class="label">VOL 150 (15)</div>
-                                    <div class="value"><span class="accent">9834.950</span></div>
-                                    <div class="sub">${totalTicks > 150 ? tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0).toFixed(3) : '0.000'}</div>
+                                    <div class="value"><span class="accent">${totalTicks > 150 ? (tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0)/150).toFixed(4) : '9834.9500'}</span></div>
+                                    <div class="sub">${totalTicks > 150 ? (tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0)).toFixed(4) : '0.0000'}</div>
                                 </div>
                             </div>
                             <div style="margin-top:12px;">
-                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Enable:</strong>
+                                <div class="inline-group">
+                                    <label>Enable:</label>
                                     <input type="checkbox" id="bot-enabled" onchange="toggleBot()" ${botEnabled ? 'checked' : ''}>
-                                    <span id="bot-status" style="font-size:13px;color:var(--text-dim);">${botEnabled ? 'Running' : 'Stopped'}</span>
+                                    <span id="bot-status" style="font-size:12px;color:var(--text-dim);">${botEnabled ? 'Running' : 'Stopped'}</span>
                                 </div>
-                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Stake:</strong>
-                                    <input type="number" id="bot-stake" value="0.5" step="0.1" style="flex:0 0 80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                                <div class="inline-group">
+                                    <label>Stake:</label>
+                                    <input type="number" id="bot-stake" value="0.5" step="0.1">
                                 </div>
-                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Contract:</strong>
-                                    <select id="bot-contract-type" style="flex:1;min-width:80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                                <div class="inline-group">
+                                    <label>Contract:</label>
+                                    <select id="bot-contract-type">
                                         <option value="DIGITMATCH">Matches</option>
                                         <option value="DIGITDIFF">Differs</option>
                                         <option value="DIGITODD">Odd</option>
@@ -1701,13 +1986,13 @@
                                         <option value="DIGITUNDER">Under</option>
                                     </select>
                                 </div>
-                                <textarea id="bot-script" rows="5" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:#fff;font-size:13px;outline:none;font-family:'SF Mono','Fira Code',monospace;resize:vertical;margin:6px 0;">${localStorage.getItem('pema_botScript') || 'function onTick(data) {\n  if (data.digitStreak >= 3) {\n    return { contract_type: "DIGITMATCH", stake: 0.5, digit: data.lastDigit };\n  }\n  return null;\n}'}</textarea>
-                                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-                                    <button onclick="loadExampleBot()" style="padding:8px 16px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:12px;cursor:pointer;">Example</button>
-                                    <button onclick="document.getElementById('import-file-input').click()" style="padding:8px 16px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:12px;cursor:pointer;">Import .js</button>
+                                <textarea id="bot-script" rows="4" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:#fff;font-size:12px;outline:none;font-family:'SF Mono','Fira Code',monospace;resize:vertical;margin:6px 0;">${localStorage.getItem('pema_botScript') || 'function onTick(data) {\n  if (data.digitStreak >= 3) {\n    return { contract_type: "DIGITMATCH", stake: 0.5, digit: data.lastDigit };\n  }\n  return null;\n}'}</textarea>
+                                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                                    <button class="btn-sm" onclick="loadExampleBot()">Example</button>
+                                    <button class="btn-sm" onclick="document.getElementById('import-file-input').click()">Import .js</button>
                                     <input type="file" id="import-file-input" accept=".js" onchange="importBot(event)" style="display:none;">
-                                    <button onclick="saveBot()" style="padding:8px 16px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:12px;cursor:pointer;">Save</button>
-                                    <button onclick="compileBot()" style="padding:8px 16px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:12px;cursor:pointer;">Compile</button>
+                                    <button class="btn-sm primary" onclick="saveBot()">Save</button>
+                                    <button class="btn-sm primary" onclick="compileBot()">Compile</button>
                                 </div>
                             </div>
                         </div>
@@ -1719,19 +2004,19 @@
                 case 'manualtrader':
                     content.innerHTML = `
                         <div class="card">
-                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
                                 <h3 style="margin:0;">🖐️ Manual Trader</h3>
                                 <div class="manual-ai" style="padding:0;">
-                                    <span class="ai-badge" style="font-size:32px;">AI</span>
+                                    <span class="ai-badge" style="font-size:28px;">AI</span>
                                     <span class="ai-label">AI Assistant</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card">
-                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Contract:</strong>
-                                <select id="manual-contract-type" onchange="updateTradeUI()" style="flex:1;min-width:100px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                            <div class="inline-group">
+                                <label>Contract:</label>
+                                <select id="manual-contract-type" onchange="updateTradeUI()" style="flex:1;">
                                     <option value="DIGITMATCH">Matches</option>
                                     <option value="DIGITDIFF">Differs</option>
                                     <option value="DIGITODD">Odd</option>
@@ -1740,36 +2025,36 @@
                                     <option value="DIGITUNDER">Under</option>
                                 </select>
                             </div>
-                            <div class="inline" id="digit-group" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Digit:</strong>
-                                <select id="manual-digit" style="flex:1;min-width:80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                            <div class="inline-group" id="digit-group">
+                                <label>Digit:</label>
+                                <select id="manual-digit" style="flex:1;">
                                     ${[...Array(10)].map((_,i) => `<option value="${i}">${i}</option>`).join('')}
                                 </select>
-                                <button class="warning" onclick="suggestDigit()" style="padding:8px 14px;border:none;border-radius:30px;background:var(--warning);color:#000;font-weight:600;font-size:12px;cursor:pointer;">💡 Suggest</button>
-                                <input type="number" id="suggest-window" value="50" style="flex:0 0 60px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;" title="Ticks window">
+                                <button class="btn-sm warning" onclick="suggestDigit()" style="background:var(--warning);color:#000;font-weight:600;">💡 Suggest</button>
+                                <input type="number" id="suggest-window" value="50" style="width:60px;" title="Ticks window">
                             </div>
-                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Stake ($):</strong>
-                                <input type="number" id="manual-stake" value="0.5" step="0.1" style="flex:0 0 80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
+                            <div class="inline-group">
+                                <label>Stake ($):</label>
+                                <input type="number" id="manual-stake" value="0.5" step="0.1">
                             </div>
-                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Duration:</strong>
-                                <input type="number" id="duration-ticks" value="1" min="1" style="flex:0 0 60px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
-                                <span style="font-size:12px;color:var(--text-dim);">ticks</span>
+                            <div class="inline-group">
+                                <label>Duration:</label>
+                                <input type="number" id="duration-ticks" value="1" min="1" style="width:60px;">
+                                <span style="font-size:11px;color:var(--text-dim);">ticks</span>
                             </div>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-                                <button onclick="getProposal()" style="padding:10px 20px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:13px;cursor:pointer;">📊 Proposal</button>
-                                <button class="big" onclick="manualTrade()" style="flex:1;padding:12px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:700;font-size:15px;cursor:pointer;">Place Trade</button>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                                <button class="btn-sm" onclick="getProposal()">📊 Proposal</button>
+                                <button class="btn-sm primary" onclick="manualTrade()" style="flex:1;padding:10px;font-size:14px;">Place Trade</button>
                             </div>
-                            <div id="proposal-display" class="hidden card" style="margin-top:10px;padding:12px;background:rgba(255,255,255,0.03);border-radius:12px;">
+                            <div id="proposal-display" class="hidden" style="margin-top:8px;padding:10px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border);">
                                 <span id="proposal-details"></span>
-                                <button onclick="buyProposal()" style="margin-top:8px;padding:8px 20px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:13px;cursor:pointer;">Buy</button>
+                                <button class="btn-sm primary" onclick="buyProposal()" style="margin-top:6px;">Buy</button>
                             </div>
                         </div>
 
                         <div class="card">
                             <h3>Live Tick</h3>
-                            <p style="font-size:28px;font-weight:700;" class="text-accent" id="last-digit">—</p>
+                            <p style="font-size:24px;font-weight:700;" class="text-accent" id="last-digit">—</p>
                         </div>
 
                         <div id="log"></div>
@@ -1780,16 +2065,16 @@
                 case 'chart':
                     content.innerHTML = `
                         <div class="card"><h3>📈 Price Chart</h3>
-                            <div class="chart-wrap" style="height:280px;position:relative;"><canvas id="price-chart"></canvas></div>
+                            <div class="chart-wrap"><canvas id="price-chart"></canvas></div>
                         </div>
                         <div id="log"></div>
                     `;
-                    setTimeout(initPriceChart, 100);
+                    setTimeout(initPriceChart, 150);
                     break;
 
                 case 'analysis':
                     content.innerHTML = `<div id="analysis-content"><p class="text-dim">Loading analysis…</p></div>`;
-                    setTimeout(renderAnalysis, 150);
+                    setTimeout(renderAnalysis, 200);
                     break;
 
                 default:
@@ -1905,1861 +2190,18 @@
             localStorage.setItem('pema_botScript', script);
             log('Bot script saved.');
         }
-    </script>
-</body>
-</html>
-            background: var(--bg);
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .loading-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .loading-overlay .brand {
-            font-size: 42px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), #00c896);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-            margin-bottom: 20px;
-        }
-        .loading-overlay .brand small {
-            font-size: 16px;
-            font-weight: 400;
-            -webkit-text-fill-color: var(--text-dim);
-            background: none;
-            display: block;
-            text-align: center;
-            margin-top: 4px;
-        }
-        .loading-overlay .spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid rgba(255, 255, 255, 0.05);
-            border-top: 3px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 16px 0;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .loading-overlay .status-text {
-            color: var(--text-dim);
-            font-size: 14px;
-            margin-top: 8px;
-            letter-spacing: 0.3px;
-        }
-        .loading-overlay .progress-bar {
-            width: 200px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 4px;
-            margin-top: 16px;
-            overflow: hidden;
-        }
-        .loading-overlay .progress-bar .fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--accent), #00c896);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-        .loading-overlay .progress-text {
-            color: var(--text-dim);
-            font-size: 12px;
-            margin-top: 6px;
-        }
-
-        /* ── LOGIN SCREEN ── */
-        #login-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            z-index: 99998;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-        #login-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .login-container {
-            max-width: 480px;
-            width: 100%;
-            text-align: center;
-        }
-        .login-container .brand {
-            font-size: 34px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), #00c896);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-        .login-container .sub {
-            color: var(--text-dim);
-            font-size: 15px;
-            margin: 6px 0 30px;
-        }
-        .login-container .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 28px;
-        }
-        .login-container .stat-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 8px;
-        }
-        .login-container .stat-box .label {
-            font-size: 10px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-        .login-container .stat-box .value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-            margin-top: 2px;
-        }
-        .login-container .stat-box .value.up {
-            color: var(--accent);
-        }
-        .login-container .stat-box .value.down {
-            color: var(--danger);
-        }
-
-        .login-container .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin: 20px 0 16px;
-        }
-        .btn-landing {
-            padding: 16px 34px;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 17px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            width: 100%;
-        }
-        .btn-landing.primary {
-            background: linear-gradient(135deg, var(--accent), #00a87e);
-            color: #000;
-            box-shadow: 0 4px 24px rgba(0, 229, 160, 0.25);
-        }
-        .btn-landing.primary:active {
-            transform: scale(0.97);
-        }
-        .btn-landing.secondary {
-            background: rgba(255, 255, 255, 0.07);
-            color: #fff;
-            border: 1px solid var(--border);
-        }
-        .btn-landing.secondary:active {
-            transform: scale(0.97);
-            background: rgba(255, 255, 255, 0.14);
-        }
-        .login-container .risk {
-            font-size: 10px;
-            color: var(--text-dim);
-            line-height: 1.5;
-            margin-top: 16px;
-            opacity: 0.7;
-        }
-
-        /* ── LOGIN MODAL (for credentials) ── */
-        #cred-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 99997;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        #cred-modal.active {
-            display: flex;
-        }
-        .cred-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 32px 28px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-        .cred-card .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: var(--text-dim);
-            font-size: 24px;
-            cursor: pointer;
-        }
-        .cred-card h3 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        .cred-card .sub {
-            color: var(--text-dim);
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .cred-card label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-dim);
-            margin: 14px 0 4px;
-        }
-        .cred-card input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: border 0.2s;
-        }
-        .cred-card input:focus {
-            border-color: var(--accent);
-        }
-        .cred-card .btn-login {
-            width: 100%;
-            margin-top: 24px;
-            padding: 14px;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(135deg, var(--accent), #00a87e);
-            color: #000;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .cred-card .btn-login:active {
-            transform: scale(0.97);
-        }
-        .cred-card .hint {
-            font-size: 12px;
-            color: var(--text-dim);
-            margin-top: 16px;
-            text-align: center;
-            line-height: 1.5;
-        }
-        .cred-card .hint a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        /* ── MAIN APP ── */
-        #app-container {
-            display: none;
-            flex-direction: column;
-            height: 100vh;
-        }
-        #app-container.active {
-            display: flex;
-        }
-
-        /* ── Header ── */
-        .header {
-            padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(11, 15, 26, 0.96);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            z-index: 10;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        .header .logo {
-            font-size: 18px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), #00c896);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.3px;
-        }
-        .header .logo .badge {
-            font-size: 10px;
-            font-weight: 600;
-            background: rgba(0, 229, 160, 0.12);
-            color: var(--accent);
-            padding: 2px 10px;
-            border-radius: 30px;
-            margin-left: 6px;
-            -webkit-text-fill-color: var(--accent);
-            letter-spacing: 0.3px;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .header-right .balance-display {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px 14px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-        }
-        .header-right .balance-display .amt {
-            color: var(--accent);
-        }
-        .header-right select {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 4px 10px;
-            color: #fff;
-            font-size: 11px;
-            min-width: 100px;
-            outline: none;
-            cursor: pointer;
-        }
-        .status-badge {
-            font-size: 10px;
-            padding: 3px 10px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .status-badge .dot {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-        .status-badge .dot.online {
-            background: var(--accent);
-            box-shadow: 0 0 8px var(--accent-glow);
-        }
-        .status-badge .dot.offline {
-            background: var(--text-dim);
-        }
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: none;
-            color: var(--text-dim);
-            padding: 3px 12px;
-            border-radius: 30px;
-            font-size: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
-        }
-
-        /* ── Top Nav ── */
-        .top-nav {
-            display: flex;
-            overflow-x: auto;
-            background: rgba(11, 15, 26, 0.96);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 0 8px;
-            flex-shrink: 0;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .top-nav::-webkit-scrollbar {
-            display: none;
-        }
-        .top-nav button {
-            background: none;
-            border: none;
-            color: var(--text-dim);
-            padding: 10px 16px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-        .top-nav button.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-        .top-nav button:active {
-            opacity: 0.6;
-        }
-
-        /* ── Main Content ── */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 14px 16px 24px;
-            scroll-behavior: smooth;
-            background: radial-gradient(ellipse at 20% 20%, rgba(0, 229, 160, 0.02), transparent 70%);
-        }
-
-        /* ── Cards ── */
-        .card {
-            background: var(--surface);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-        .card h3 {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #fff;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ── Dashboard specific ── */
-        .dash-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        .dash-vol {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-        .dash-vol .vol-label {
-            font-size: 11px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .dash-vol .vol-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            margin-top: 2px;
-        }
-        .dash-vol .vol-value .accent {
-            color: var(--accent);
-        }
-        .dash-vol .vol-sub {
-            font-size: 11px;
-            color: var(--text-dim);
-            margin-top: 2px;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 6px 0 4px;
-        }
-        .action-btn {
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            text-align: center;
-        }
-        .action-btn.primary {
-            background: linear-gradient(135deg, var(--accent), #00a87e);
-            color: #000;
-        }
-        .action-btn.secondary {
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            border: 1px solid var(--border);
-        }
-        .action-btn.warning {
-            background: var(--warning);
-            color: #000;
-        }
-        .action-btn.danger {
-            background: var(--danger);
-            color: #fff;
-        }
-        .action-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* ── Bot Builder ── */
-        .bot-builder-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .bot-stat {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-        .bot-stat .label {
-            font-size: 11px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .bot-stat .value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-            margin-top: 2px;
-        }
-        .bot-stat .value .accent {
-            color: var(--accent);
-        }
-        .bot-stat .sub {
-            font-size: 10px;
-            color: var(--text-dim);
-            margin-top: 2px;
-        }
-
-        /* ── Manual Trader ── */
-        .manual-ai {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 20px 0;
-        }
-        .manual-ai .ai-badge {
-            font-size: 48px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), #00c896);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
-        }
-        .manual-ai .ai-label {
-            font-size: 14px;
-            color: var(--text-dim);
-            font-weight: 600;
-        }
-
-        /* ── Log ── */
-        #log {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 11px;
-            height: 80px;
-            overflow-y: auto;
-            color: var(--text-dim);
-            border: 1px solid var(--border);
-            margin-top: 10px;
-            line-height: 1.6;
-        }
-        #log .trade {
-            color: var(--accent);
-        }
-        #log .error {
-            color: var(--danger);
-        }
-        #log .info {
-            color: #88b0ff;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-        .text-accent {
-            color: var(--accent);
-        }
-        .text-dim {
-            color: var(--text-dim);
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mb-8 {
-            margin-bottom: 8px;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 600px) {
-            .loading-overlay .brand {
-                font-size: 28px;
-            }
-            .login-container .brand {
-                font-size: 26px;
-            }
-            .login-container .stats-row {
-                grid-template-columns: 1fr 1fr;
-            }
-            .login-container .stats-row .stat-box:last-child {
-                grid-column: span 2;
-            }
-            .dash-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .action-buttons {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .action-btn {
-                font-size: 11px;
-                padding: 10px;
-            }
-            .bot-builder-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .header .logo {
-                font-size: 15px;
-            }
-            .header .logo .badge {
-                font-size: 8px;
-                padding: 1px 6px;
-            }
-            .header-right .balance-display {
-                font-size: 12px;
-                padding: 2px 10px;
-            }
-            .header-right select {
-                min-width: 70px;
-                font-size: 10px;
-                padding: 3px 6px;
-            }
-            .top-nav button {
-                font-size: 10px;
-                padding: 8px 10px;
-            }
-            .main-content {
-                padding: 10px 12px 20px;
-            }
-            .card {
-                padding: 12px 14px;
-            }
-            .dash-vol .vol-value {
-                font-size: 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- ─── FIRST LOADING SCREEN (10s) ─── -->
-    <div class="loading-overlay" id="loading1">
-        <div class="brand">
-            pemaanalysispro
-            <small>Deriv Trading Workspace</small>
-        </div>
-        <div class="spinner"></div>
-        <div class="status-text">Initializing workspace...</div>
-        <div class="progress-bar"><div class="fill" id="progress1"></div></div>
-        <div class="progress-text" id="progressText1">0%</div>
-    </div>
-
-    <!-- ─── LOGIN SCREEN ─── -->
-    <div id="login-screen">
-        <div class="login-container">
-            <div class="brand">pemaanalysispro</div>
-            <div class="sub">Empowering your financial journey</div>
-
-            <div class="stats-row">
-                <div class="stat-box">
-                    <div class="label">Visibility</div>
-                    <div class="value up">25 +0.68%</div>
-                </div>
-                <div class="stat-box">
-                    <div class="label">Bear Market Index</div>
-                    <div class="value up">+2.09%</div>
-                </div>
-                <div class="stat-box">
-                    <div class="label">Bull Market Index</div>
-                    <div class="value down">-0.31%</div>
-                </div>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn-landing primary" id="login-trade-btn">Log In and Trade</button>
-                <button class="btn-landing secondary" id="create-account-btn">Create New Account</button>
-            </div>
-
-            <div class="risk">
-                "Risk Disclaimer. Deriv offers complex derivatives, such as options and contracts for difference ("CFDs"). These products may not be suitable for all clients, and trading them puts you at risk. Please make sure that you understand the full financial risks before trading."
-            </div>
-        </div>
-    </div>
-
-    <!-- ─── CREDENTIALS MODAL ─── -->
-    <div id="cred-modal">
-        <div class="cred-card">
-            <button class="close-btn" id="close-cred">×</button>
-            <h3>Log In to Trade</h3>
-            <div class="sub">Enter your Deriv credentials</div>
-            <label>App ID</label>
-            <input id="cred-app-id" type="text" placeholder="e.g. 12345" />
-            <label>Personal Access Token</label>
-            <input id="cred-pat-token" type="password" placeholder="Your PAT token" />
-            <button class="btn-login" id="cred-submit">Connect & Trade</button>
-            <div class="hint">
-                Don't have an account? <a href="#" id="signup-hint">Create one here</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ─── SECOND LOADING SCREEN (10s) ─── -->
-    <div class="loading-overlay hidden" id="loading2">
-        <div class="brand">
-            pemaanalysispro
-            <small>Connecting to Deriv...</small>
-        </div>
-        <div class="spinner"></div>
-        <div class="status-text" id="conn-status">Establishing secure connection...</div>
-        <div class="progress-bar"><div class="fill" id="progress2"></div></div>
-        <div class="progress-text" id="progressText2">0%</div>
-    </div>
-
-    <!-- ─── MAIN APP ─── -->
-    <div id="app-container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo">
-                pemaanalysispro
-                <span class="badge">LIVE</span>
-            </div>
-            <div class="header-right">
-                <div class="balance-display">USD <span class="amt" id="header-balance">0.00</span></div>
-                <select id="account-select-header"><option value="">No account</option></select>
-                <div class="status-badge" id="connection-status">
-                    <span class="dot offline" id="status-dot"></span>
-                    <span id="status-label">Offline</span>
-                </div>
-                <button class="logout-btn" id="logout-btn">Logout</button>
-            </div>
-        </div>
-
-        <!-- Top Nav -->
-        <div class="top-nav" id="top-nav">
-            <button class="nav-item active" data-tab="dashboard">Dashboard</button>
-            <button class="nav-item" data-tab="botbuilder">Bot Builder</button>
-            <button class="nav-item" data-tab="manualtrader">Manual Trader</button>
-            <button class="nav-item" data-tab="chart">Chart</button>
-            <button class="nav-item" data-tab="analysis">Analysis</button>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content" id="main-content">
-            <div id="tab-content"></div>
-        </div>
-    </div>
-
-    <script>
-        // ============================================================
-        //  GLOBAL STATE
-        // ============================================================
-        let APP_ID = '',
-            PAT_TOKEN = '',
-            selectedAccountId = '';
-        let ws = null,
-            pingInterval = null;
-        let currentMarket = 'R_10';
-        let openContracts = [];
-        let tickHistory = [];
-        let counts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            totalTicks = 0;
-        let lastDigitValue = null,
-            currentDigitStreak = 0,
-            longestDigitStreak = 0;
-        let botEnabled = false,
-            botFunction = null;
-        let lastProposalId = null;
-        let lastTradeResult = { status: '', profit: 0, time: '' };
-        let balance = 0;
-
-        // Analysis
-        let digitCurrentStreaks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        let digitLongestStreaks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        let bigramCounts = Array(10).fill().map(() => Array(10).fill(0));
-        let lastDigitForBigram = null;
-        let gapCounter = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        let gapSamples = Array(10).fill().map(() => []);
-
-        // Chart
-        let priceChart = null;
 
         // ============================================================
-        //  LOADING SEQUENCE
+        //  ACCOUNT UPDATE POLLING (keep accounts in sync)
         // ============================================================
-        const loading1 = document.getElementById('loading1');
-        const loading2 = document.getElementById('loading2');
-        const loginScreen = document.getElementById('login-screen');
-        const appContainer = document.getElementById('app-container');
-        const credModal = document.getElementById('cred-modal');
-
-        // Check for saved credentials
-        const savedApp = localStorage.getItem('pema_app_id');
-        const savedPat = localStorage.getItem('pema_pat_token');
-
-        function showLoading1() {
-            loading1.classList.remove('hidden');
-            loginScreen.classList.add('hidden');
-            loading2.classList.add('hidden');
-            appContainer.classList.remove('active');
-            return new Promise((resolve) => {
-                const bar = document.getElementById('progress1');
-                const text = document.getElementById('progressText1');
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 1;
-                    if (progress >= 100) {
-                        progress = 100;
-                        clearInterval(interval);
-                    }
-                    bar.style.width = progress + '%';
-                    text.textContent = progress + '%';
-                }, 100);
-                // Strict 10 seconds
-                setTimeout(() => {
-                    clearInterval(interval);
-                    bar.style.width = '100%';
-                    text.textContent = '100%';
-                    loading1.classList.add('hidden');
-                    resolve();
-                }, 10000);
-            });
-        }
-
-        function showLoginScreen() {
-            loginScreen.classList.remove('hidden');
-            loading1.classList.add('hidden');
-            loading2.classList.add('hidden');
-            appContainer.classList.remove('active');
-        }
-
-        function showLoading2() {
-            loading2.classList.remove('hidden');
-            loginScreen.classList.add('hidden');
-            loading1.classList.add('hidden');
-            appContainer.classList.remove('active');
-            return new Promise((resolve) => {
-                const bar = document.getElementById('progress2');
-                const text = document.getElementById('progressText2');
-                const status = document.getElementById('conn-status');
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 1;
-                    if (progress >= 100) {
-                        progress = 100;
-                        clearInterval(interval);
-                    }
-                    bar.style.width = progress + '%';
-                    text.textContent = progress + '%';
-                    if (progress < 30) status.textContent = 'Connecting to Deriv servers...';
-                    else if (progress < 60) status.textContent = 'Authenticating account...';
-                    else if (progress < 85) status.textContent = 'Loading market data...';
-                    else status.textContent = 'Almost ready...';
-                }, 100);
-                // Strict 10 seconds
-                setTimeout(() => {
-                    clearInterval(interval);
-                    bar.style.width = '100%';
-                    text.textContent = '100%';
-                    status.textContent = 'Connected!';
-                    setTimeout(() => {
-                        loading2.classList.add('hidden');
-                        resolve();
-                    }, 400);
-                }, 10000);
-            });
-        }
-
-        function showApp() {
-            appContainer.classList.add('active');
-            loginScreen.classList.add('hidden');
-            loading1.classList.add('hidden');
-            loading2.classList.add('hidden');
-            renderTab('dashboard');
-        }
-
-        // ============================================================
-        //  LOGIN FLOW
-        // ============================================================
-        async function handleLogin(appId, pat) {
-            APP_ID = appId;
-            PAT_TOKEN = pat;
-            localStorage.setItem('pema_app_id', appId);
-            localStorage.setItem('pema_pat_token', pat);
-            credModal.classList.remove('active');
-
-            // Show second loading (10s) and connect to Deriv
-            await showLoading2();
-
-            // Now connect and setup
-            const success = await fetchAndDisplayAccounts();
-            if (!success) {
-                log('Failed to fetch accounts. Check credentials.', 'error');
-                // Retry or show error
-                showLoginScreen();
-                return;
+        // Refresh accounts periodically when connected
+        setInterval(() => {
+            if (APP_ID && PAT_TOKEN && document.getElementById('app-container').classList.contains('active')) {
+                // Refresh account balance via WebSocket is already handled
+                // Just make sure dropdown has latest accounts
+                fetchAndDisplayAccounts().catch(() => {});
             }
-            if (selectedAccountId) {
-                await connectWebSocket();
-            }
-            showApp();
-            // Restore bot state
-            botEnabled = localStorage.getItem('pema_botEnabled') === 'true';
-            const savedScript = localStorage.getItem('pema_botScript');
-            if (botEnabled && savedScript) {
-                setTimeout(() => {
-                    const ta = document.getElementById('bot-script');
-                    if (ta) {
-                        ta.value = savedScript;
-                        compileBot();
-                        const cb = document.getElementById('bot-enabled');
-                        if (cb) cb.checked = true;
-                        const st = document.getElementById('bot-status');
-                        if (st) st.textContent = 'Running';
-                    }
-                }, 600);
-            }
-        }
-
-        // ── Login button ──
-        document.getElementById('login-trade-btn').addEventListener('click', () => {
-            credModal.classList.add('active');
-        });
-
-        // ── Close cred modal ──
-        document.getElementById('close-cred').addEventListener('click', () => {
-            credModal.classList.remove('active');
-        });
-        credModal.addEventListener('click', (e) => {
-            if (e.target === credModal) credModal.classList.remove('active');
-        });
-
-        // ── Signup ──
-        document.getElementById('signup-hint').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open('https://deriv.com/signup', '_blank');
-        });
-        document.getElementById('create-account-btn').addEventListener('click', () => {
-            window.open('https://deriv.com/signup', '_blank');
-        });
-
-        // ── Submit credentials ──
-        document.getElementById('cred-submit').addEventListener('click', async () => {
-            const appId = document.getElementById('cred-app-id').value.trim();
-            const pat = document.getElementById('cred-pat-token').value.trim();
-            if (!appId || !pat) {
-                alert('Please enter both App ID and PAT token.');
-                return;
-            }
-            await handleLogin(appId, pat);
-        });
-
-        // ── Logout ──
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('pema_app_id');
-            localStorage.removeItem('pema_pat_token');
-            localStorage.removeItem('pema_selected_account');
-            localStorage.removeItem('pema_botEnabled');
-            if (ws) { ws.close();
-                ws = null; }
-            stopPing();
-            setStatus(false);
-            APP_ID = '';
-            PAT_TOKEN = '';
-            selectedAccountId = '';
-            appContainer.classList.remove('active');
-            showLoginScreen();
-            document.getElementById('cred-app-id').value = '';
-            document.getElementById('cred-pat-token').value = '';
-        });
-
-        // ============================================================
-        //  STARTUP SEQUENCE
-        // ============================================================
-        async function startup() {
-            // First loading (10s)
-            await showLoading1();
-
-            if (savedApp && savedPat) {
-                // Auto-login: skip login screen, go straight to second loading
-                APP_ID = savedApp;
-                PAT_TOKEN = savedPat;
-                await showLoading2();
-                const success = await fetchAndDisplayAccounts();
-                if (!success) {
-                    log('Failed to fetch accounts. Please log in again.', 'error');
-                    showLoginScreen();
-                    return;
-                }
-                if (selectedAccountId) {
-                    await connectWebSocket();
-                }
-                showApp();
-                // Restore bot
-                botEnabled = localStorage.getItem('pema_botEnabled') === 'true';
-                const savedScript = localStorage.getItem('pema_botScript');
-                if (botEnabled && savedScript) {
-                    setTimeout(() => {
-                        const ta = document.getElementById('bot-script');
-                        if (ta) {
-                            ta.value = savedScript;
-                            compileBot();
-                            const cb = document.getElementById('bot-enabled');
-                            if (cb) cb.checked = true;
-                            const st = document.getElementById('bot-status');
-                            if (st) st.textContent = 'Running';
-                        }
-                    }, 600);
-                }
-            } else {
-                // Show login screen
-                showLoginScreen();
-            }
-        }
-
-        // ── Start ──
-        startup();
-
-        // ============================================================
-        //  UTILITY FUNCTIONS
-        // ============================================================
-        function log(msg, type = 'info') {
-            const el = document.getElementById('log');
-            if (!el) return;
-            const time = new Date().toLocaleTimeString();
-            const div = document.createElement('div');
-            div.textContent = `[${time}] ${msg}`;
-            div.className = type;
-            el.appendChild(div);
-            el.scrollTop = el.scrollHeight;
-            while (el.children.length > 120) el.removeChild(el.firstChild);
-        }
-
-        function setStatus(online) {
-            const dot = document.getElementById('status-dot');
-            const label = document.getElementById('status-label');
-            if (online) {
-                dot.className = 'dot online';
-                label.textContent = 'Online';
-            } else {
-                dot.className = 'dot offline';
-                label.textContent = 'Offline';
-            }
-        }
-
-        async function apiFetch(url, method = 'GET', body = null) {
-            const headers = {
-                'Deriv-App-ID': APP_ID,
-                'Authorization': `Bearer ${PAT_TOKEN}`,
-                'Content-Type': 'application/json'
-            };
-            return await fetch(`https://api.derivws.com${url}`, { method, headers, body: body ? JSON.stringify(body) :
-                    null });
-        }
-
-        // ============================================================
-        //  ACCOUNT MANAGEMENT
-        // ============================================================
-        async function fetchAndDisplayAccounts() {
-            if (!APP_ID || !PAT_TOKEN) return false;
-            try {
-                const res = await apiFetch('/trading/v1/options/accounts');
-                const data = await res.json();
-                if (data.errors) return false;
-                const accounts = data.data || [];
-                const select = document.getElementById('account-select-header');
-                select.innerHTML = '';
-                accounts.forEach(acc => {
-                    const opt = document.createElement('option');
-                    opt.value = acc.account_id;
-                    const label = acc.account_type === 'demo' ? '🟢 Demo' : '🔴 Real';
-                    opt.textContent = `${label} ${acc.account_id} – $${acc.balance}`;
-                    select.appendChild(opt);
-                });
-                const saved = localStorage.getItem('pema_selected_account');
-                if (saved && accounts.some(a => a.account_id === saved)) {
-                    select.value = saved;
-                    selectedAccountId = saved;
-                } else if (accounts.length) {
-                    select.value = accounts[0].account_id;
-                    selectedAccountId = accounts[0].account_id;
-                }
-                return true;
-            } catch (e) { log('Account fetch error: ' + e.message, 'error'); return false; }
-        }
-
-        function disconnectWebSocket() {
-            if (ws) { ws.onclose = null;
-                ws.close();
-                ws = null; }
-            stopPing();
-            setStatus(false);
-        }
-
-        async function reconnectWithAccount(accountId) {
-            if (selectedAccountId === accountId) return;
-            selectedAccountId = accountId;
-            localStorage.setItem('pema_selected_account', accountId);
-            disconnectWebSocket();
-            log(`Switching to ${accountId}…`);
-            await connectWebSocket();
-        }
-
-        document.getElementById('account-select-header').addEventListener('change', function() {
-            const id = this.value;
-            if (id && id !== selectedAccountId) reconnectWithAccount(id);
-        });
-
-        // ============================================================
-        //  WEBSOCKET
-        // ============================================================
-        async function connectWebSocket() {
-            if (!selectedAccountId) { log('No account selected.', 'error'); return; }
-            log('Connecting to Deriv…');
-            try {
-                const res = await apiFetch(`/trading/v1/options/accounts/${selectedAccountId}/otp`, 'POST');
-                const data = await res.json();
-                if (data.errors) { log('OTP error: ' + data.errors[0].message, 'error'); return; }
-                ws = new WebSocket(data.data.url);
-                ws.onopen = () => {
-                    log('Connected to Deriv!', 'trade');
-                    setStatus(true);
-                    ws.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
-                    ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
-                    ws.send(JSON.stringify({ proposal_open_contract: 1, subscribe: 1 }));
-                    startPing();
-                };
-                ws.onmessage = handleWSMessage;
-                ws.onerror = () => log('WebSocket error', 'error');
-                ws.onclose = () => {
-                    log('Connection closed.', 'error');
-                    setStatus(false);
-                    stopPing();
-                };
-            } catch (e) { log('Connection failed: ' + e.message, 'error'); }
-        }
-
-        function startPing() {
-            pingInterval = setInterval(() => {
-                if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ ping: 1 }));
-            }, 45000);
-        }
-
-        function stopPing() { clearInterval(pingInterval); }
-
-        // ============================================================
-        //  WEBSOCKET MESSAGE HANDLER
-        // ============================================================
-        function handleWSMessage(event) {
-            const msg = JSON.parse(event.data);
-
-            if (msg.tick) {
-                const digit = parseInt(msg.tick.quote.toString().slice(-1));
-                const lastDigitEl = document.getElementById('last-digit');
-                if (lastDigitEl) lastDigitEl.textContent = digit;
-
-                tickHistory.push({ time: new Date().toISOString(), digit, quote: msg.tick.quote });
-                counts[digit]++;
-                totalTicks++;
-
-                if (lastDigitValue === digit) currentDigitStreak++;
-                else currentDigitStreak = 1;
-                lastDigitValue = digit;
-                if (currentDigitStreak > longestDigitStreak) longestDigitStreak = currentDigitStreak;
-
-                updateAnalysisState(digit);
-
-                if (window._updatePriceChart) window._updatePriceChart(msg.tick.quote);
-
-                if (botEnabled && botFunction) {
-                    try {
-                        const decision = botFunction({
-                            lastDigit: digit,
-                            digitStreak: currentDigitStreak,
-                            match: digit === parseInt(document.getElementById('match-digit')?.value || 9),
-                        });
-                        if (decision && typeof decision === 'object') {
-                            const cType = decision.contract_type || document.getElementById('bot-contract-type')?.value;
-                            const stake = decision.stake !== undefined ? decision.stake : parseFloat(document
-                                .getElementById('bot-stake')?.value || 0.5);
-                            placeTrade(cType, stake, decision.digit, decision.barrier);
-                        }
-                    } catch (e) { log('Bot error: ' + e.message, 'error'); }
-                }
-                return;
-            }
-
-            if (msg.msg_type === 'balance') {
-                balance = msg.balance.balance;
-                const el = document.getElementById('header-balance');
-                if (el) el.textContent = balance.toFixed(2);
-                const el2 = document.getElementById('balance-display');
-                if (el2) el2.innerHTML = `<span class="text-accent">$${balance.toFixed(2)}</span> ${msg.balance.currency}`;
-                return;
-            }
-
-            if (msg.buy) {
-                log(`Trade executed: ID ${msg.buy.contract_id}`, 'trade');
-                return;
-            }
-
-            if (msg.error) {
-                log('Error: ' + msg.error.message, 'error');
-                return;
-            }
-
-            if (msg.msg_type === 'proposal_open_contract' && msg.proposal_open_contract) {
-                const c = msg.proposal_open_contract;
-                updatePortfolioFromStream(c);
-                if (c.is_expired || c.status === 'won' || c.status === 'lost' || c.status === 'sold') {
-                    const profit = parseFloat(c.profit);
-                    if (!isNaN(profit)) {
-                        const resultMsg = profit >= 0 ? `Won $${profit.toFixed(2)}` : `Lost -$${Math.abs(profit).toFixed(2)}`;
-                        log(`Trade result: ${resultMsg}`, profit >= 0 ? 'trade' : 'error');
-                        lastTradeResult = { status: profit >= 0 ? 'won' : 'lost', profit, time: new Date()
-                            .toLocaleTimeString() };
-                        updateTradeResultDisplay();
-                    }
-                }
-                return;
-            }
-
-            if (msg.active_symbols) {
-                activeSymbolsCache = msg.active_symbols;
-                displaySymbols(activeSymbolsCache);
-            }
-
-            if (msg.contracts_for) {
-                const el = document.getElementById('contracts-result');
-                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.contracts_for.available, null, 2) + '</pre>';
-            }
-
-            if (msg.history) {
-                const el = document.getElementById('history-result');
-                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.history.prices, null, 2) + '</pre>';
-            }
-
-            if (msg.proposal) {
-                const el = document.getElementById('proposal-details');
-                if (el) el.textContent = `Payout: $${msg.proposal.payout}  |  Cost: $${msg.proposal.ask_price}`;
-                const disp = document.getElementById('proposal-display');
-                if (disp) disp.classList.remove('hidden');
-                lastProposalId = msg.proposal.id;
-            }
-
-            if (msg.portfolio) {
-                openContracts = msg.portfolio.contracts || [];
-                renderPortfolio();
-            }
-
-            if (msg.profit_table) {
-                const el = document.getElementById('profit-table-result');
-                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.profit_table.transactions, null, 2) + '</pre>';
-            }
-
-            if (msg.statement) {
-                const el = document.getElementById('statement-result');
-                if (el) el.innerHTML = '<pre>' + JSON.stringify(msg.statement.transactions, null, 2) + '</pre>';
-            }
-        }
-
-        // ============================================================
-        //  ANALYSIS STATE
-        // ============================================================
-        function updateAnalysisState(digit) {
-            if (lastDigitForBigram !== null) bigramCounts[lastDigitForBigram][digit]++;
-            lastDigitForBigram = digit;
-
-            for (let i = 0; i < 10; i++) {
-                if (i === digit) {
-                    digitCurrentStreaks[i]++;
-                    if (digitCurrentStreaks[i] > digitLongestStreaks[i]) digitLongestStreaks[i] = digitCurrentStreaks[i];
-                } else {
-                    digitCurrentStreaks[i] = 0;
-                }
-            }
-
-            for (let i = 0; i < 10; i++) gapCounter[i]++;
-            gapSamples[digit].push(gapCounter[digit]);
-            gapCounter[digit] = 0;
-        }
-
-        // ============================================================
-        //  TRADE FUNCTIONS
-        // ============================================================
-        function placeTrade(contractType, stake, digit = null, barrier = null) {
-            if (!ws || ws.readyState !== WebSocket.OPEN) { log('Not connected.', 'error'); return; }
-            const params = {
-                buy: "1",
-                price: stake,
-                parameters: {
-                    contract_type: contractType,
-                    underlying_symbol: currentMarket,
-                    currency: 'USD',
-                    amount: stake,
-                    basis: 'stake',
-                    duration: 1,
-                    duration_unit: 't'
-                }
-            };
-            if (['DIGITMATCH', 'DIGITDIFF'].includes(contractType)) {
-                if (digit === null || digit < 0 || digit > 9) { log('Digit 0-9 required.', 'error'); return; }
-                params.parameters.barrier = String(digit);
-            } else if (['DIGITOVER', 'DIGITUNDER'].includes(contractType)) {
-                if (barrier === null || barrier < 0 || barrier > 9) { log('Barrier 0-9 required.', 'error'); return; }
-                params.parameters.barrier = String(barrier);
-            }
-            ws.send(JSON.stringify(params));
-            log(`Trade sent: ${contractType} $${stake}`, 'trade');
-        }
-
-        function updateTradeResultDisplay() {
-            const el = document.getElementById('last-result-dash');
-            if (!el) return;
-            if (!lastTradeResult.time) { el.innerHTML = 'No trades yet.'; return; }
-            const cls = lastTradeResult.profit >= 0 ? 'text-accent' : 'text-danger';
-            el.innerHTML = `<span class="${cls}">${lastTradeResult.profit >= 0 ? 'Won' : 'Lost'} $${Math.abs(lastTradeResult.profit).toFixed(2)}</span>`;
-        }
-
-        // ============================================================
-        //  PORTFOLIO
-        // ============================================================
-        function updatePortfolioFromStream(contract) {
-            openContracts = openContracts.filter(c => c.contract_id !== contract.contract_id);
-            if (contract.status === 'open') openContracts.push(contract);
-            renderPortfolio();
-        }
-
-        function renderPortfolio() {
-            const el = document.getElementById('portfolio-list');
-            if (!el) return;
-            if (!openContracts.length) { el.innerHTML = '<p class="text-dim">No open contracts.</p>'; return; }
-            el.innerHTML = openContracts.map(c => `
-                <div class="portfolio-item" style="background:rgba(255,255,255,0.02);border-radius:12px;padding:10px 12px;margin-bottom:8px;border:1px solid var(--border);">
-                    <div><strong>${c.longcode}</strong></div>
-                    <div style="font-size:12px;color:var(--text-dim);">ID: ${c.contract_id} · Status: ${c.status} · Profit: <span class="${c.profit >= 0 ? 'text-accent' : 'text-danger'}">$${c.profit}</span></div>
-                    <div style="font-size:12px;color:var(--text-dim);">Buy: $${c.buy_price} · Bid: $${c.bid_price}</div>
-                    <button class="secondary" onclick="sellContract(${c.contract_id})" style="margin-top:6px;padding:6px 14px;font-size:11px;">Sell</button>
-                </div>
-            `).join('');
-        }
-
-        function sellContract(contractId) {
-            if (!ws) { log('Not connected.', 'error'); return; }
-            ws.send(JSON.stringify({ sell: contractId, price: 0 }));
-            log('Sell request sent for ' + contractId, 'trade');
-        }
-
-        // ============================================================
-        //  MARKET DATA
-        // ============================================================
-        function fetchActiveSymbols() {
-            if (!ws) { log('Connect first.', 'error'); return; }
-            ws.send(JSON.stringify({ active_symbols: "brief" }));
-        }
-
-        function displaySymbols(symbols) {
-            const search = document.getElementById('symbol-search')?.value?.toLowerCase() || '';
-            const el = document.getElementById('active-symbols-list');
-            if (!el) return;
-            el.innerHTML = symbols.filter(s => s.underlying_symbol.toLowerCase().includes(search)).map(s =>
-                `<div class="symbol-item" onclick="currentMarket='${s.underlying_symbol}'; log('Market set to ${s.underlying_symbol}')">
-                    <strong>${s.underlying_symbol}</strong> — ${s.underlying_symbol_name} <span class="text-dim">(${s.market})</span>
-                </div>`
-            ).join('');
-        }
-
-        // ============================================================
-        //  ANALYSIS
-        // ============================================================
-        function getHotCold(windowSize = 50) {
-            const recent = tickHistory.slice(-windowSize);
-            const freq = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            recent.forEach(t => freq[t.digit]++);
-            let hot = 0,
-                cold = 0,
-                max = -1,
-                min = Infinity;
-            for (let i = 0; i < 10; i++) {
-                if (freq[i] > max) { max = freq[i];
-                    hot = i; }
-                if (freq[i] < min) { min = freq[i];
-                    cold = i; }
-            }
-            return { hot, cold, freq };
-        }
-
-        function renderAnalysis() {
-            const el = document.getElementById('analysis-content');
-            if (!el) return;
-            if (totalTicks === 0) {
-                el.innerHTML = '<p class="text-dim">No tick data yet. Connect and let the stream run.</p>';
-                return;
-            }
-            const { hot, cold, freq } = getHotCold(50);
-            let html = `
-                <div class="card"><h3>🔢 Digit Frequency</h3>
-                <div class="freq-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">`;
-            for (let i = 0; i < 10; i++) {
-                const pct = totalTicks > 0 ? (counts[i] / totalTicks * 100).toFixed(1) : 0;
-                html += `<div class="freq-cell" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:8px 4px;text-align:center;">
-                    <div style="font-size:20px;font-weight:700;color:#fff;">${i}</div>
-                    <div style="font-size:12px;">${counts[i]}</div>
-                    <div style="font-size:10px;color:var(--text-dim);">${pct}%</div>
-                    <div class="mini-bar" style="height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-top:4px;overflow:hidden;"><div class="mini-bar-fill" style="height:100%;width:${pct}%;background:var(--accent);border-radius:4px;"></div></div>
-                </div>`;
-            }
-            html += `</div></div>`;
-
-            html += `
-                <div class="card"><h3>🔥❄️ Hot & Cold</h3>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--accent);">${hot}</div><div style="font-size:12px;color:var(--text-dim);">Hottest (last 50)</div></div>
-                    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--warning);">${cold}</div><div style="font-size:12px;color:var(--text-dim);">Coldest (last 50)</div></div>
-                </div>
-                </div>`;
-
-            html += `
-                <div class="card"><h3>📈 Streak & Gap</h3>
-                <div style="overflow-x:auto;">
-                <table style="width:100%;font-size:12px;border-collapse:collapse;">
-                <tr><th style="text-align:left;color:var(--text-dim);">Digit</th><th style="text-align:left;color:var(--text-dim);">Current</th><th style="text-align:left;color:var(--text-dim);">Longest</th><th style="text-align:left;color:var(--text-dim);">Avg Gap</th></tr>`;
-            for (let i = 0; i < 10; i++) {
-                const avgGap = gapSamples[i].length > 0 ? (gapSamples[i].reduce((a, b) => a + b, 0) / gapSamples[i].length)
-                    .toFixed(1) : '-';
-                html += `<tr><td><strong>${i}</strong></td><td>${digitCurrentStreaks[i]}</td><td>${digitLongestStreaks[i]}</td><td>${avgGap}</td></tr>`;
-            }
-            html += `</table></div></div>`;
-
-            html += `
-                <div class="card"><h3>🧩 Bigram Matrix</h3>
-                <div class="bigram-grid" style="display:grid;grid-template-columns:repeat(11,1fr);gap:3px;font-size:10px;">
-                <div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;"></div>`;
-            for (let j = 0; j < 10; j++) html +=
-                `<div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;">${j}</div>`;
-            for (let i = 0; i < 10; i++) {
-                html +=
-                    `<div class="bigram-cell bigram-header" style="font-weight:700;color:var(--accent);font-size:11px;text-align:center;">${i}</div>`;
-                for (let j = 0; j < 10; j++) {
-                    const count = bigramCounts[i][j];
-                    const opacity = count > 0 ? Math.min(1, 0.15 + count * 0.04) : 0.05;
-                    html +=
-                        `<div class="bigram-cell" style="background:rgba(0,229,160,${opacity});text-align:center;padding:4px 2px;border-radius:4px;">${count}</div>`;
-                }
-            }
-            html += `</div></div>`;
-
-            el.innerHTML = html;
-        }
-
-        // ============================================================
-        //  CHART
-        // ============================================================
-        function initPriceChart() {
-            const ctx = document.getElementById('price-chart')?.getContext('2d');
-            if (!ctx) return;
-            if (priceChart) priceChart.destroy();
-            priceChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: [], datasets: [{ data: [], borderColor: '#00e5a0', borderWidth: 2, pointRadius: 0,
-                        fill: false, tension: 0.2 }] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: { x: { display: false }, y: { ticks: { color: '#8892a8' } } },
-                    plugins: { legend: { display: false } },
-                    animation: { duration: 0 }
-                }
-            });
-        }
-
-        function updatePriceChart(price) {
-            if (!priceChart) return;
-            priceChart.data.labels.push('');
-            priceChart.data.datasets[0].data.push(price);
-            if (priceChart.data.labels.length > 120) {
-                priceChart.data.labels.shift();
-                priceChart.data.datasets[0].data.shift();
-            }
-            priceChart.update('none');
-        }
-        window._updatePriceChart = updatePriceChart;
-
-        // ============================================================
-        //  RENDER TABS
-        // ============================================================
-        function renderTab(tab) {
-            const content = document.getElementById('tab-content');
-
-            switch (tab) {
-                case 'dashboard':
-                    content.innerHTML = `
-                        <div class="card" style="padding:12px 16px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-                                <span style="font-weight:600;font-size:14px;color:#fff;">Dashboard</span>
-                                <span style="font-size:12px;color:var(--text-dim);">USD <span class="text-accent" id="balance-display">${balance ? balance.toFixed(2) : '0.00'}</span></span>
-                            </div>
-                        </div>
-
-                        <div class="dash-grid">
-                            <div class="dash-vol">
-                                <div class="vol-label">VOL 50</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/50).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/totalTicks*100).toFixed(1) : '0.0'}%</div>
-                            </div>
-                            <div class="dash-vol">
-                                <div class="vol-label">VOL 75</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 75 ? tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 75 ? (tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0)/75).toFixed(2) : '0.00'}</div>
-                            </div>
-                            <div class="dash-vol">
-                                <div class="vol-label">VOL 100</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 100 ? tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 100 ? (tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0)/100).toFixed(2) : '0.00'}</div>
-                            </div>
-                            <div class="dash-vol">
-                                <div class="vol-label">VOL 150 (15)</div>
-                                <div class="vol-value"><span class="accent">${totalTicks > 150 ? tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0).toFixed(1) : '0.0'}</span></div>
-                                <div class="vol-sub">${totalTicks > 150 ? (tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0)/150).toFixed(2) : '0.00'}</div>
-                            </div>
-                        </div>
-
-                        <div class="action-buttons">
-                            <button class="action-btn primary" onclick="log('Loading bot...','trade');">LOAD BOT</button>
-                            <button class="action-btn warning" onclick="log('Speed bot activated.','trade');">SPEED BOT</button>
-                            <button class="action-btn secondary" onclick="renderTab('botbuilder');">PREMIUM BOTS</button>
-                            <button class="action-btn secondary" onclick="renderTab('manualtrader');">MANUAL TRADING</button>
-                        </div>
-
-                        <div class="card" style="margin-top:4px;">
-                            <h3>📋 Open Positions</h3>
-                            <div id="portfolio-list"><p class="text-dim">No open contracts.</p></div>
-                        </div>
-
-                        <div id="log"></div>
-                    `;
-                    // Update portfolio after render
-                    setTimeout(() => renderPortfolio(), 100);
-                    // Update balance
-                    const balEl = document.getElementById('balance-display');
-                    if (balEl) balEl.textContent = balance ? balance.toFixed(2) : '0.00';
-                    break;
-
-                case 'botbuilder':
-                    content.innerHTML = `
-                        <div class="card"><h3>🤖 Bot Builder</h3>
-                            <div class="bot-builder-grid">
-                                <div class="bot-stat">
-                                    <div class="label">VOL 50</div>
-                                    <div class="value"><span class="accent">93.7143</span></div>
-                                    <div class="sub">${totalTicks > 0 ? (counts.reduce((a,b)=>a+b,0)/50).toFixed(4) : '0.0000'}</div>
-                                </div>
-                                <div class="bot-stat">
-                                    <div class="label">VOL 75</div>
-                                    <div class="value"><span class="accent">42278.2176</span></div>
-                                    <div class="sub">${totalTicks > 75 ? tickHistory.slice(-75).reduce((s,t)=>s+t.digit,0).toFixed(4) : '0.0000'}</div>
-                                </div>
-                                <div class="bot-stat">
-                                    <div class="label">VOL 100</div>
-                                    <div class="value"><span class="accent">323.61</span></div>
-                                    <div class="sub">${totalTicks > 100 ? tickHistory.slice(-100).reduce((s,t)=>s+t.digit,0).toFixed(2) : '0.00'}</div>
-                                </div>
-                                <div class="bot-stat">
-                                    <div class="label">VOL 150 (15)</div>
-                                    <div class="value"><span class="accent">9834.950</span></div>
-                                    <div class="sub">${totalTicks > 150 ? tickHistory.slice(-150).reduce((s,t)=>s+t.digit,0).toFixed(3) : '0.000'}</div>
-                                </div>
-                            </div>
-                            <div style="margin-top:12px;">
-                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Enable:</strong>
-                                    <input type="checkbox" id="bot-enabled" onchange="toggleBot()" ${botEnabled ? 'checked' : ''}>
-                                    <span id="bot-status" style="font-size:13px;color:var(--text-dim);">${botEnabled ? 'Running' : 'Stopped'}</span>
-                                </div>
-                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Stake:</strong>
-                                    <input type="number" id="bot-stake" value="0.5" step="0.1" style="flex:0 0 80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
-                                </div>
-                                <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                    <strong style="min-width:60px;color:var(--text-dim);font-size:13px;">Contract:</strong>
-                                    <select id="bot-contract-type" style="flex:1;min-width:80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
-                                        <option value="DIGITMATCH">Matches</option>
-                                        <option value="DIGITDIFF">Differs</option>
-                                        <option value="DIGITODD">Odd</option>
-                                        <option value="DIGITEVEN">Even</option>
-                                        <option value="DIGITOVER">Over</option>
-                                        <option value="DIGITUNDER">Under</option>
-                                    </select>
-                                </div>
-                                <textarea id="bot-script" rows="5" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:#fff;font-size:13px;outline:none;font-family:'SF Mono','Fira Code',monospace;resize:vertical;margin:6px 0;">${localStorage.getItem('pema_botScript') || 'function onTick(data) {\n  if (data.digitStreak >= 3) {\n    return { contract_type: "DIGITMATCH", stake: 0.5, digit: data.lastDigit };\n  }\n  return null;\n}'}</textarea>
-                                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-                                    <button onclick="loadExampleBot()" style="padding:8px 16px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:12px;cursor:pointer;">Example</button>
-                                    <button onclick="document.getElementById('import-file-input').click()" style="padding:8px 16px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:12px;cursor:pointer;">Import .js</button>
-                                    <input type="file" id="import-file-input" accept=".js" onchange="importBot(event)" style="display:none;">
-                                    <button onclick="saveBot()" style="padding:8px 16px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:12px;cursor:pointer;">Save</button>
-                                    <button onclick="compileBot()" style="padding:8px 16px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:12px;cursor:pointer;">Compile</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="log"></div>
-                    `;
-                    document.getElementById('bot-enabled').checked = botEnabled;
-                    break;
-
-                case 'manualtrader':
-                    content.innerHTML = `
-                        <div class="card">
-                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-                                <h3 style="margin:0;">🖐️ Manual Trader</h3>
-                                <div class="manual-ai" style="padding:0;">
-                                    <span class="ai-badge" style="font-size:32px;">AI</span>
-                                    <span class="ai-label">AI Assistant</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Contract:</strong>
-                                <select id="manual-contract-type" onchange="updateTradeUI()" style="flex:1;min-width:100px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
-                                    <option value="DIGITMATCH">Matches</option>
-                                    <option value="DIGITDIFF">Differs</option>
-                                    <option value="DIGITODD">Odd</option>
-                                    <option value="DIGITEVEN">Even</option>
-                                    <option value="DIGITOVER">Over</option>
-                                    <option value="DIGITUNDER">Under</option>
-                                </select>
-                            </div>
-                            <div class="inline" id="digit-group" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Digit:</strong>
-                                <select id="manual-digit" style="flex:1;min-width:80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
-                                    ${[...Array(10)].map((_,i) => `<option value="${i}">${i}</option>`).join('')}
-                                </select>
-                                <button class="warning" onclick="suggestDigit()" style="padding:8px 14px;border:none;border-radius:30px;background:var(--warning);color:#000;font-weight:600;font-size:12px;cursor:pointer;">💡 Suggest</button>
-                                <input type="number" id="suggest-window" value="50" style="flex:0 0 60px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;" title="Ticks window">
-                            </div>
-                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Stake ($):</strong>
-                                <input type="number" id="manual-stake" value="0.5" step="0.1" style="flex:0 0 80px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
-                            </div>
-                            <div class="inline" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0;">
-                                <strong style="min-width:70px;color:var(--text-dim);font-size:13px;">Duration:</strong>
-                                <input type="number" id="duration-ticks" value="1" min="1" style="flex:0 0 60px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:#fff;font-size:14px;outline:none;">
-                                <span style="font-size:12px;color:var(--text-dim);">ticks</span>
-                            </div>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-                                <button onclick="getProposal()" style="padding:10px 20px;border:none;border-radius:30px;background:rgba(255,255,255,0.06);color:#ccc;font-weight:600;font-size:13px;cursor:pointer;">📊 Proposal</button>
-                                <button class="big" onclick="manualTrade()" style="flex:1;padding:12px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:700;font-size:15px;cursor:pointer;">Place Trade</button>
-                            </div>
-                            <div id="proposal-display" class="hidden card" style="margin-top:10px;padding:12px;background:rgba(255,255,255,0.03);border-radius:12px;">
-                                <span id="proposal-details"></span>
-                                <button onclick="buyProposal()" style="margin-top:8px;padding:8px 20px;border:none;border-radius:30px;background:linear-gradient(135deg,#00c896,#00a87e);color:#000;font-weight:600;font-size:13px;cursor:pointer;">Buy</button>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <h3>Live Tick</h3>
-                            <p style="font-size:28px;font-weight:700;" class="text-accent" id="last-digit">—</p>
-                        </div>
-
-                        <div id="log"></div>
-                    `;
-                    updateTradeUI();
-                    break;
-
-                case 'chart':
-                    content.innerHTML = `
-                        <div class="card"><h3>📈 Price Chart</h3>
-                            <div class="chart-wrap" style="height:280px;position:relative;"><canvas id="price-chart"></canvas></div>
-                        </div>
-                        <div id="log"></div>
-                    `;
-                    setTimeout(initPriceChart, 100);
-                    break;
-
-                case 'analysis':
-                    content.innerHTML = `<div id="analysis-content"><p class="text-dim">Loading analysis…</p></div>`;
-                    setTimeout(renderAnalysis, 150);
-                    break;
-
-                default:
-                    content.innerHTML = `<div class="card"><p>Tab: ${tab}</p></div>`;
-            }
-
-            // Highlight active nav
-            document.querySelectorAll('.top-nav button').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.querySelector(`.top-nav button[data-tab="${tab}"]`);
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-
-        document.getElementById('top-nav').addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON' && e.target.dataset.tab) {
-                renderTab(e.target.dataset.tab);
-            }
-        });
-
-        // ============================================================
-        //  HELPER FUNCTIONS
-        // ============================================================
-        function updateTradeUI() {
-            const type = document.getElementById('manual-contract-type')?.value;
-            const dg = document.getElementById('digit-group');
-            if (dg) dg.style.display = ['DIGITODD', 'DIGITEVEN'].includes(type) ? 'none' : 'flex';
-        }
-
-        function suggestDigit() {
-            const windowSize = parseInt(document.getElementById('suggest-window')?.value) || 50;
-            const recent = tickHistory.slice(-windowSize);
-            const freq = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            recent.forEach(t => freq[t.digit]++);
-            let minDigit = 0,
-                minCount = Infinity;
-            freq.forEach((c, i) => { if (c < minCount) { minCount = c;
-                    minDigit = i; } });
-            document.getElementById('manual-digit').value = minDigit;
-            log(`Suggested digit: ${minDigit} (${minCount}/${recent.length} ticks)`);
-        }
-
-        function getProposal() {
-            const contractType = document.getElementById('manual-contract-type').value;
-            const stake = document.getElementById('manual-stake').value;
-            const digit = document.getElementById('manual-digit').value;
-            const duration = document.getElementById('duration-ticks')?.value || 1;
-            if (!ws) { log('Connect first.', 'error'); return; }
-            const params = { proposal: 1, amount: stake, basis: 'stake', contract_type: contractType,
-                underlying_symbol: currentMarket, currency: 'USD', duration: duration, duration_unit: 't' };
-            if (['DIGITMATCH', 'DIGITDIFF'].includes(contractType)) params.barrier = String(digit);
-            else if (['DIGITOVER', 'DIGITUNDER'].includes(contractType)) params.barrier = String(4);
-            ws.send(JSON.stringify(params));
-        }
-
-        function buyProposal() {
-            if (!lastProposalId) { log('Get a proposal first.', 'error'); return; }
-            ws.send(JSON.stringify({ buy: lastProposalId, price: document.getElementById('manual-stake').value }));
-            document.getElementById('proposal-display').classList.add('hidden');
-            log('Buying from proposal…', 'trade');
-        }
-
-        function manualTrade() {
-            const contractType = document.getElementById('manual-contract-type').value;
-            const stake = parseFloat(document.getElementById('manual-stake').value);
-            const digit = parseInt(document.getElementById('manual-digit').value);
-            placeTrade(contractType, stake, digit, 4);
-        }
-
-        function toggleBot() {
-            botEnabled = document.getElementById('bot-enabled').checked;
-            localStorage.setItem('pema_botEnabled', botEnabled);
-            const st = document.getElementById('bot-status');
-            if (st) st.textContent = botEnabled ? 'Running' : 'Stopped';
-            if (botEnabled) compileBot();
-        }
-
-        function loadExampleBot() {
-            document.getElementById('bot-script').value =
-                `function onTick(data) {\n  if (data.digitStreak >= 3) {\n    return { contract_type: "DIGITMATCH", stake: 0.5, digit: data.lastDigit };\n  }\n  return null;\n}`;
-            compileBot();
-            saveBot();
-        }
-
-        function importBot(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('bot-script').value = e.target.result;
-                compileBot();
-                saveBot();
-                log('Bot imported from file.');
-            };
-            reader.readAsText(file);
-        }
-
-        function compileBot() {
-            const script = document.getElementById('bot-script').value;
-            try {
-                const wrapped = `"use strict"; ${script}; return typeof onTick === 'function' ? onTick : null;`;
-                botFunction = new Function(wrapped)();
-                const st = document.getElementById('bot-status');
-                if (st) st.textContent = botFunction ? (botEnabled ? 'Running' : 'Ready') : 'Compile Error';
-                if (!botFunction) log('Bot compiled but no onTick() found.', 'error');
-            } catch (e) {
-                log('Bot compile error: ' + e.message, 'error');
-                const st = document.getElementById('bot-status');
-                if (st) st.textContent = 'Error';
-            }
-        }
-
-        function saveBot() {
-            const script = document.getElementById('bot-script').value;
-            localStorage.setItem('pema_botScript', script);
-            log('Bot script saved.');
-        }
+        }, 60000);
     </script>
 </body>
 </html>
