@@ -15,11 +15,7 @@
             --danger: #ff4d6a;
             --warning: #ffb700;
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
@@ -40,205 +36,84 @@
             border-bottom: 1px solid var(--border);
             z-index: 10;
         }
-        .header .logo {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-        }
+        .header .logo { font-size: 20px; font-weight: 700; color: #fff; }
         .header .status {
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
+            font-size: 12px; padding: 4px 12px; border-radius: 20px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
         }
         .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            padding-bottom: 90px;
+            flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px;
             scroll-behavior: smooth;
         }
         .card {
-            background: var(--surface);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 16px;
+            background: var(--surface); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); border: 1px solid var(--border);
+            border-radius: 20px; padding: 16px; margin-bottom: 16px;
             transition: border 0.2s;
         }
-        .card:hover {
-            border-color: rgba(0, 229, 160, 0.2);
-        }
+        .card:hover { border-color: rgba(0, 229, 160, 0.2); }
         .card h3 {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #fff;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 600; margin-bottom: 12px; color: #fff;
+            font-size: 16px; display: flex; align-items: center; gap: 8px;
         }
-        .accent {
-            color: var(--accent);
-        }
-        .danger {
-            color: var(--danger);
-        }
+        .accent { color: var(--accent); }
+        .danger { color: var(--danger); }
         button {
             background: linear-gradient(135deg, #00c896, #00a87e);
-            border: none;
-            color: #000;
-            font-weight: 600;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            margin: 3px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
+            border: none; color: #000; font-weight: 600;
+            padding: 10px 18px; border-radius: 30px; font-size: 14px;
+            cursor: pointer; transition: 0.2s; letter-spacing: 0.3px;
+            text-transform: uppercase; margin: 3px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 5px;
         }
-        button:active {
-            transform: scale(0.96);
-            filter: brightness(1.1);
-        }
-        button.secondary {
-            background: rgba(255,255,255,0.08);
-            color: #ccc;
-        }
-        button.warning {
-            background: var(--warning);
-            color: #000;
-        }
-        button.danger {
-            background: var(--danger);
-        }
-        button.big {
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
-        }
+        button:active { transform: scale(0.96); filter: brightness(1.1); }
+        button.secondary { background: rgba(255,255,255,0.08); color: #ccc; }
+        button.warning { background: var(--warning); color: #000; }
+        button.danger { background: var(--danger); }
+        button.big { width: 100%; padding: 14px; font-size: 16px; }
         select, input, textarea {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
-            color: #fff;
-            font-size: 14px;
-            width: 100%;
-            margin: 5px 0;
-            outline: none;
-            transition: border 0.2s;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            border-radius: 10px; padding: 12px; color: #fff; font-size: 14px;
+            width: 100%; margin: 5px 0; outline: none; transition: border 0.2s;
         }
-        select:focus, input:focus, textarea:focus {
-            border-color: var(--accent);
-        }
-        .inline {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 6px 0;
-        }
-        .inline strong {
-            min-width: 70px;
-            color: #aaa;
-        }
+        select:focus, input:focus, textarea:focus { border-color: var(--accent); }
+        .inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0; }
+        .inline strong { min-width: 70px; color: #aaa; }
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(15,20,30,0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            z-index: 100;
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(15,20,30,0.95); backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border); display: flex;
+            justify-content: space-around; padding: 8px 0; z-index: 100;
         }
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 10px;
-            color: #666;
-            background: none;
-            border: none;
-            padding: 5px;
-            transition: 0.2s;
-            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+            font-size: 10px; color: #666; background: none; border: none;
+            padding: 5px; transition: 0.2s; cursor: pointer;
         }
-        .nav-item.active {
-            color: var(--accent);
-        }
-        .nav-item span {
-            font-size: 20px;
-            margin-bottom: 2px;
-        }
+        .nav-item.active { color: var(--accent); }
+        .nav-item span { font-size: 20px; margin-bottom: 2px; }
         #log {
-            background: rgba(0,0,0,0.4);
-            border-radius: 12px;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 11px;
-            height: 120px;
-            overflow-y: auto;
-            color: #aaa;
-            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.4); border-radius: 12px; padding: 10px;
+            font-family: monospace; font-size: 11px; height: 120px;
+            overflow-y: auto; color: #aaa; border: 1px solid var(--border);
             margin-top: 10px;
         }
-        .log-trade {
-            color: var(--accent);
-        }
-        .log-error {
-            color: var(--danger);
-        }
-        .hidden {
-            display: none;
-        }
-        .disabled {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-        .symbol-item {
-            padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer;
-        }
-        .symbol-item:hover {
-            background: rgba(255,255,255,0.03);
-        }
-        .portfolio-item {
-            background: rgba(255,255,255,0.02);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
-        .badge {
-            font-size: 12px;
-            padding: 2px 10px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.08);
-            display: inline-block;
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 2px;
-        }
+        .log-trade { color: var(--accent); }
+        .log-error { color: var(--danger); }
+        .hidden { display: none; }
+        .disabled { opacity: 0.4; pointer-events: none; }
+        .symbol-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        .portfolio-item { background: rgba(255,255,255,0.02); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+        .badge { font-size: 12px; padding: 2px 10px; border-radius: 20px; background: rgba(255,255,255,0.08); display: inline-block; }
+        /* Analysis specific */
+        .freq-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
+        .freq-cell { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 6px; text-align: center; }
+        .mini-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 4px; overflow: hidden; }
+        .mini-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+        .bigram-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; font-size: 10px; margin: 10px 0; }
+        .bigram-cell { background: rgba(255,255,255,0.02); border-radius: 4px; padding: 2px; text-align: center; }
+        .bigram-header { font-weight: bold; color: var(--accent); }
+        .backtest-result { margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -253,6 +128,7 @@
         <button class="nav-item active" data-tab="setup"><span>🔑</span>Setup</button>
         <button class="nav-item" data-tab="dashboard"><span>📈</span>Dash</button>
         <button class="nav-item" data-tab="market"><span>📊</span>Market</button>
+        <button class="nav-item" data-tab="analysis"><span>🧪</span>Analysis</button>
         <button class="nav-item" data-tab="trade"><span>🖐️</span>Trade</button>
         <button class="nav-item" data-tab="portfolio"><span>📋</span>Portfolio</button>
         <button class="nav-item" data-tab="history"><span>📜</span>History</button>
@@ -270,6 +146,14 @@
         let botEnabled = false, botFunction = null;
         let activeSymbolsCache = [];
         let lastProposalId = null;
+
+        // Analysis state
+        let digitCurrentStreaks = [0,0,0,0,0,0,0,0,0,0];
+        let digitLongestStreaks = [0,0,0,0,0,0,0,0,0,0];
+        let bigramCounts = Array(10).fill().map(() => Array(10).fill(0)); // [prev][next]
+        let lastDigitForBigram = null;
+        let gapCounter = [0,0,0,0,0,0,0,0,0,0]; // ticks since each digit last appeared
+        let gapSamples = Array(10).fill().map(() => []); // array of gaps for each digit
 
         // ====================== UTILS ======================
         function log(msg, type='info') {
@@ -328,9 +212,12 @@
                 if (lastDigitEl) lastDigitEl.textContent = digit;
                 tickHistory.push({ time: new Date().toISOString(), digit });
                 counts[digit]++; totalTicks++;
+                // Basic streaks
                 if (lastDigitValue === digit) currentDigitStreak++; else currentDigitStreak = 1;
                 lastDigitValue = digit;
                 if (currentDigitStreak > longestDigitStreak) longestDigitStreak = currentDigitStreak;
+                // Update analysis state
+                updateAnalysisState(digit);
                 // Bot
                 if (botEnabled && botFunction) {
                     try {
@@ -383,6 +270,28 @@
             if (msg.statement) {
                 document.getElementById('statement-result').innerHTML = '<pre>' + JSON.stringify(msg.statement.transactions, null, 2) + '</pre>';
             }
+        }
+
+        function updateAnalysisState(digit) {
+            // Update bigram
+            if (lastDigitForBigram !== null) {
+                bigramCounts[lastDigitForBigram][digit]++;
+            }
+            lastDigitForBigram = digit;
+            // Update digit streaks
+            for (let i = 0; i < 10; i++) {
+                if (i === digit) {
+                    digitCurrentStreaks[i]++;
+                    if (digitCurrentStreaks[i] > digitLongestStreaks[i]) digitLongestStreaks[i] = digitCurrentStreaks[i];
+                } else {
+                    digitCurrentStreaks[i] = 0;
+                }
+            }
+            // Update gap counters
+            for (let i = 0; i < 10; i++) gapCounter[i]++;
+            // Record gap for the digit that appeared
+            gapSamples[digit].push(gapCounter[digit]);
+            gapCounter[digit] = 0;
         }
 
         function placeTrade(contractType, stake, digit=null, barrier=null) {
@@ -451,9 +360,7 @@
                 </div>`
             ).join('');
         }
-        function filterSymbols() {
-            if (activeSymbolsCache.length) displaySymbols(activeSymbolsCache);
-        }
+        function filterSymbols() { if (activeSymbolsCache.length) displaySymbols(activeSymbolsCache); }
         function getContracts() {
             const symbol = document.getElementById('contract-symbol-input').value.trim();
             if (!symbol) return;
@@ -467,99 +374,127 @@
             ws.send(JSON.stringify({ ticks_history: symbol, count: 10, end: "latest", style: "ticks" }));
         }
 
+        // ====================== ANALYSIS ======================
+        function getHotCold(windowSize=50) {
+            const recent = tickHistory.slice(-windowSize);
+            const freq = [0,0,0,0,0,0,0,0,0,0];
+            recent.forEach(t => freq[t.digit]++);
+            let hot = 0, cold = 0, max = -1, min = Infinity;
+            for (let i = 0; i < 10; i++) {
+                if (freq[i] > max) { max = freq[i]; hot = i; }
+                if (freq[i] < min) { min = freq[i]; cold = i; }
+            }
+            return { hot, cold, freq };
+        }
+
+        function renderAnalysis() {
+            const analysisDiv = document.getElementById('analysis-content');
+            if (!analysisDiv) return;
+            if (totalTicks === 0) {
+                analysisDiv.innerHTML = '<p>No tick data yet. Connect and let the stream run.</p>';
+                return;
+            }
+            const { hot, cold, freq } = getHotCold(50);
+            // Frequency grid
+            let freqGridHTML = '<div class="freq-grid">';
+            for (let i = 0; i < 10; i++) {
+                const pct = totalTicks > 0 ? (counts[i] / totalTicks * 100).toFixed(1) : 0;
+                freqGridHTML += `
+                    <div class="freq-cell">
+                        <strong>${i}</strong><br>
+                        <small>${counts[i]}</small><br>
+                        <small>${pct}%</small>
+                        <div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%"></div></div>
+                    </div>`;
+            }
+            freqGridHTML += '</div>';
+            // Hot/cold
+            let hotColdHTML = `<p>🔥 Hottest (last 50): <span class="accent">${hot}</span> (appeared ${freq[hot]} times)</p>`;
+            hotColdHTML += `<p>❄️ Coldest (last 50): <span class="warning">${cold}</span> (appeared ${freq[cold]} times)</p>`;
+            // Streak table
+            let streakHTML = '<table style="width:100%; font-size:12px; margin:10px 0;">';
+            streakHTML += '<tr><th>Digit</th><th>Current</th><th>Longest</th><th>Avg Gap</th></tr>';
+            for (let i = 0; i < 10; i++) {
+                const avgGap = gapSamples[i].length > 0 ? (gapSamples[i].reduce((a,b) => a+b, 0) / gapSamples[i].length).toFixed(1) : '-';
+                streakHTML += `
+                    <tr>
+                        <td><strong>${i}</strong></td>
+                        <td>${digitCurrentStreaks[i]}</td>
+                        <td>${digitLongestStreaks[i]}</td>
+                        <td>${avgGap}</td>
+                    </tr>`;
+            }
+            streakHTML += '</table>';
+            // Bigram heatmap (compact)
+            let bigramHTML = '<p><strong>Next-digit after...</strong></p>';
+            bigramHTML += '<div class="bigram-grid"><div class="bigram-cell bigram-header"></div>';
+            for (let j = 0; j < 10; j++) bigramHTML += `<div class="bigram-cell bigram-header">${j}</div>`;
+            for (let i = 0; i < 10; i++) {
+                bigramHTML += `<div class="bigram-cell bigram-header">${i}</div>`;
+                for (let j = 0; j < 10; j++) {
+                    const count = bigramCounts[i][j];
+                    const opacity = count > 0 ? Math.min(1, 0.2 + count * 0.05) : 0.1;
+                    bigramHTML += `<div class="bigram-cell" style="background:rgba(0,229,160,${opacity})">${count}</div>`;
+                }
+            }
+            bigramHTML += '</div>';
+            // Backtest
+            let backtestHTML = '<div class="inline"><strong>Backtest digit:</strong><select id="backtest-digit">';
+            for (let i = 0; i < 10; i++) backtestHTML += `<option value="${i}">${i}</option>`;
+            backtestHTML += '</select><button onclick="runBacktest()">Run</button></div>';
+            backtestHTML += '<div id="backtest-result" class="backtest-result"></div>';
+
+            analysisDiv.innerHTML = `
+                <div class="card"><h3>🔢 Digit Frequency</h3>${freqGridHTML}</div>
+                <div class="card"><h3>🔥❄️ Hot & Cold</h3>${hotColdHTML}</div>
+                <div class="card"><h3>📈 Streak & Gap</h3>${streakHTML}</div>
+                <div class="card"><h3>🧩 Bigram Matrix</h3>${bigramHTML}</div>
+                <div class="card"><h3>🧪 Quick Backtest</h3>${backtestHTML}</div>
+            `;
+        }
+
+        function runBacktest() {
+            const digit = parseInt(document.getElementById('backtest-digit').value);
+            // Simulate: bet $1 every tick on a Matches contract for that digit.
+            // Payout for a $1 stake is about $9.5 (we'll use a fixed 9.5 multiplier).
+            const MULTIPLIER = 9.5;
+            let balance = 0;
+            tickHistory.forEach(tick => {
+                balance -= 1; // cost of bet
+                if (tick.digit === digit) balance += MULTIPLIER; // win
+            });
+            const resultEl = document.getElementById('backtest-result');
+            if (balance > 0) {
+                resultEl.innerHTML = `<span class="accent">Profit: $${balance.toFixed(2)}</span> (on ${tickHistory.length} bets)`;
+            } else {
+                resultEl.innerHTML = `<span class="danger">Loss: -$${Math.abs(balance).toFixed(2)}</span> (on ${tickHistory.length} bets)`;
+            }
+        }
+
         // ====================== MANUAL TRADE ======================
         function updateTradeUI() {
             const type = document.getElementById('manual-contract-type').value;
             const digitGroup = document.getElementById('digit-group');
-            if (['DIGITODD','DIGITEVEN'].includes(type)) {
-                digitGroup.classList.add('disabled');
-            } else {
-                digitGroup.classList.remove('disabled');
-            }
+            if (['DIGITODD','DIGITEVEN'].includes(type)) digitGroup.classList.add('disabled');
+            else digitGroup.classList.remove('disabled');
         }
-        function getProposal() {
-            const contractType = document.getElementById('manual-contract-type').value;
-            const stake = document.getElementById('manual-stake').value;
-            const digit = document.getElementById('manual-digit').value;
-            const duration = document.getElementById('duration-ticks').value || 1;
-            if (!ws) { log('Connect first.', 'error'); return; }
-            const params = {
-                proposal: 1, amount: stake, basis: 'stake',
-                contract_type: contractType,
-                underlying_symbol: currentMarket,
-                currency: 'USD',
-                duration: duration, duration_unit: 't'
-            };
-            if (['DIGITMATCH','DIGITDIFF'].includes(contractType)) params.barrier = String(digit);
-            else if (['DIGITOVER','DIGITUNDER'].includes(contractType)) params.barrier = String(4);
-            ws.send(JSON.stringify(params));
-        }
-        function buyProposal() {
-            if (!lastProposalId) { log('Get a proposal first.', 'error'); return; }
-            const price = document.getElementById('manual-stake').value;
-            ws.send(JSON.stringify({ buy: lastProposalId, price: price }));
-            document.getElementById('proposal-display').classList.add('hidden');
-            log('Buying from proposal...', 'trade');
-        }
-        function manualTrade() {
-            const contractType = document.getElementById('manual-contract-type').value;
-            const stake = parseFloat(document.getElementById('manual-stake').value);
-            const digit = parseInt(document.getElementById('manual-digit').value);
-            placeTrade(contractType, stake, digit, 4);
-        }
-        function suggestDigit() {
-            const windowSize = parseInt(document.getElementById('suggest-window').value) || 50;
-            const recent = tickHistory.slice(-windowSize);
-            const freq = [0,0,0,0,0,0,0,0,0,0];
-            recent.forEach(t => freq[t.digit]++);
-            let minDigit = 0, minCount = Infinity;
-            freq.forEach((c, i) => { if (c < minCount) { minCount = c; minDigit = i; } });
-            document.getElementById('manual-digit').value = minDigit;
-            log(`Suggested digit: ${minDigit} (${minCount}/${recent.length} ticks)`);
-        }
+        function getProposal() { /* unchanged */ }
+        function buyProposal() { /* unchanged */ }
+        function manualTrade() { /* unchanged */ }
+        function suggestDigit() { /* unchanged */ }
+        // Keep existing manual trade functions (they are unchanged from previous version)
+        // I'll include placeholders here for brevity – they exist in the final file
 
         // ====================== HISTORY ======================
-        function getProfitTable() {
-            if (!ws) { log('Connect first.', 'error'); return; }
-            ws.send(JSON.stringify({ profit_table: 1, description: 1, limit: 10 }));
-        }
-        function getStatement() {
-            if (!ws) { log('Connect first.', 'error'); return; }
-            ws.send(JSON.stringify({ statement: 1, description: 1, limit: 10 }));
-        }
+        function getProfitTable() { if (!ws) { log('Connect first.','error'); return; } ws.send(JSON.stringify({ profit_table: 1, description: 1, limit: 10 })); }
+        function getStatement() { if (!ws) { log('Connect first.','error'); return; } ws.send(JSON.stringify({ statement: 1, description: 1, limit: 10 })); }
 
         // ====================== BOT ======================
-        function toggleBot() {
-            botEnabled = document.getElementById('bot-enabled').checked;
-            document.getElementById('bot-status').textContent = botEnabled ? 'Running' : 'Stopped';
-        }
-        function loadExampleBot() {
-            document.getElementById('bot-script').value = `function onTick(data) {\n    if (data.match && data.matchStreak === 3) return {};\n    return null;\n}`;
-            compileBot();
-        }
-        function importBot(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('bot-script').value = e.target.result;
-                    compileBot();
-                };
-                reader.readAsText(file);
-            }
-        }
-        function compileBot() {
-            const script = document.getElementById('bot-script').value;
-            try {
-                const wrapped = `"use strict"; ${script}; return typeof onTick === 'function' ? onTick : null;`;
-                botFunction = new Function(wrapped)();
-                document.getElementById('bot-status').textContent = botFunction ? 'Ready' : 'Error';
-            } catch(e) { log('Bot compile error: ' + e.message, 'error'); }
-        }
-        function saveBot() {
-            localStorage.setItem('botScript', document.getElementById('bot-script').value);
-            log('Bot saved.');
-        }
+        function toggleBot() { /* unchanged */ }
+        function loadExampleBot() { /* unchanged */ }
+        function importBot(event) { /* unchanged */ }
+        function compileBot() { /* unchanged */ }
+        function saveBot() { /* unchanged */ }
 
         // ====================== SETTINGS ======================
         async function saveKeys() {
@@ -591,15 +526,13 @@
             switch (tab) {
                 case 'setup':
                     content.innerHTML = `
-                        <div class="card">
-                            <h3>🔑 API Keys</h3>
+                        <div class="card"><h3>🔑 API Keys</h3>
                             <input type="text" id="app-id" placeholder="App ID" value="${APP_ID}">
                             <input type="password" id="pat-token" placeholder="PAT Token" value="${PAT_TOKEN}">
                             <button onclick="saveKeys()">Save & Fetch Accounts</button>
                             <div id="log"></div>
                         </div>
                         <div class="card">
-                            <h3>Account</h3>
                             <select id="account-select"><option>-- Fetch accounts first --</option></select>
                             <button id="connect-btn" onclick="connectWebSocket()" disabled>Connect</button>
                         </div>
@@ -629,6 +562,10 @@
                             <div id="history-result"></div>
                         </div>
                     `;
+                    break;
+                case 'analysis':
+                    content.innerHTML = `<div id="analysis-content"><p>Loading analysis...</p></div>`;
+                    setTimeout(renderAnalysis, 100);
                     break;
                 case 'trade':
                     content.innerHTML = `
@@ -701,16 +638,17 @@
             item.addEventListener('click', () => {
                 document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
                 item.classList.add('active');
-                renderTab(item.dataset.tab);
-                if (item.dataset.tab === 'market') fetchActiveSymbols();
+                const tab = item.dataset.tab;
+                renderTab(tab);
+                if (tab === 'market') fetchActiveSymbols();
+                if (tab === 'analysis') setTimeout(renderAnalysis, 100);
             });
         });
 
-        // Ping keep-alive
         function startPing() { pingInterval = setInterval(() => { if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ ping: 1 })); }, 45000); }
         function stopPing() { clearInterval(pingInterval); }
 
-        // Load saved keys
+        // Load saved data
         (function() {
             const savedAppId = localStorage.getItem('deriv_app_id');
             const savedPat = localStorage.getItem('deriv_pat_token');
@@ -720,6 +658,71 @@
             if (savedBot) setTimeout(() => { const ta = document.getElementById('bot-script'); if (ta) ta.value = savedBot; }, 200);
         })();
 
+        // Keep existing manual trade functions (unchanged)
+        function getProposal() {
+            const contractType = document.getElementById('manual-contract-type').value;
+            const stake = document.getElementById('manual-stake').value;
+            const digit = document.getElementById('manual-digit').value;
+            const duration = document.getElementById('duration-ticks').value || 1;
+            if (!ws) { log('Connect first.', 'error'); return; }
+            const params = {
+                proposal: 1, amount: stake, basis: 'stake',
+                contract_type: contractType,
+                underlying_symbol: currentMarket,
+                currency: 'USD',
+                duration: duration, duration_unit: 't'
+            };
+            if (['DIGITMATCH','DIGITDIFF'].includes(contractType)) params.barrier = String(digit);
+            else if (['DIGITOVER','DIGITUNDER'].includes(contractType)) params.barrier = String(4);
+            ws.send(JSON.stringify(params));
+        }
+        function buyProposal() {
+            if (!lastProposalId) { log('Get a proposal first.', 'error'); return; }
+            const price = document.getElementById('manual-stake').value;
+            ws.send(JSON.stringify({ buy: lastProposalId, price: price }));
+            document.getElementById('proposal-display').classList.add('hidden');
+            log('Buying from proposal...', 'trade');
+        }
+        function manualTrade() {
+            const contractType = document.getElementById('manual-contract-type').value;
+            const stake = parseFloat(document.getElementById('manual-stake').value);
+            const digit = parseInt(document.getElementById('manual-digit').value);
+            placeTrade(contractType, stake, digit, 4);
+        }
+        function suggestDigit() {
+            const windowSize = parseInt(document.getElementById('suggest-window').value) || 50;
+            const recent = tickHistory.slice(-windowSize);
+            const freq = [0,0,0,0,0,0,0,0,0,0];
+            recent.forEach(t => freq[t.digit]++);
+            let minDigit = 0, minCount = Infinity;
+            freq.forEach((c, i) => { if (c < minCount) { minCount = c; minDigit = i; } });
+            document.getElementById('manual-digit').value = minDigit;
+            log(`Suggested digit: ${minDigit} (${minCount}/${recent.length} ticks)`);
+        }
+        function toggleBot() { botEnabled = document.getElementById('bot-enabled').checked; document.getElementById('bot-status').textContent = botEnabled ? 'Running' : 'Stopped'; }
+        function loadExampleBot() {
+            document.getElementById('bot-script').value = `function onTick(data) {\n    if (data.match && data.matchStreak === 3) return {};\n    return null;\n}`;
+            compileBot();
+        }
+        function importBot(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => { document.getElementById('bot-script').value = e.target.result; compileBot(); };
+                reader.readAsText(file);
+            }
+        }
+        function compileBot() {
+            const script = document.getElementById('bot-script').value;
+            try {
+                const wrapped = `"use strict"; ${script}; return typeof onTick === 'function' ? onTick : null;`;
+                botFunction = new Function(wrapped)();
+                document.getElementById('bot-status').textContent = botFunction ? 'Ready' : 'Error';
+            } catch(e) { log('Bot compile error: ' + e.message, 'error'); }
+        }
+        function saveBot() { localStorage.setItem('botScript', document.getElementById('bot-script').value); log('Bot saved.'); }
+
+        // Initial render
         renderTab('setup');
     </script>
 </body>
