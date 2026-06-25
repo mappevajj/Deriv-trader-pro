@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>Deriv Trader Pro</title>
+    <title>digittools – Deriv Trading Workspace</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
     <style>
@@ -48,57 +48,325 @@
             background: transparent;
         }
 
-        /* ── Setup Overlay ── */
-        #setup-overlay {
+        /* ── Landing Overlay ── */
+        #landing-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: var(--bg);
             z-index: 9999;
+            overflow-y: auto;
             padding: 20px;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
-        #setup-overlay.hidden {
+        #landing-overlay.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
-        .setup-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 40px 32px;
-            max-width: 460px;
+        .landing-container {
+            max-width: 820px;
             width: 100%;
-            box-shadow: var(--shadow);
+            margin: 0 auto;
+            padding: 20px 0 40px;
         }
-        .setup-card .logo {
+        .landing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .landing-header .brand {
             font-size: 28px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent), #00c896);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .landing-header .brand small {
+            font-size: 14px;
+            font-weight: 400;
+            -webkit-text-fill-color: var(--text-dim);
+            background: none;
+            margin-left: 6px;
+        }
+        .landing-header .powered {
+            color: var(--text-dim);
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 12px;
             text-align: center;
+        }
+        .stat-box .label {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .stat-box .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 2px;
+        }
+        .stat-box .value.up {
+            color: var(--accent);
+        }
+        .stat-box .value.down {
+            color: var(--danger);
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin: 16px 0 28px;
+        }
+        .hero h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        .hero .sub {
+            color: var(--text-dim);
+            font-size: 16px;
+            margin-top: 4px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Description card */
+        .desc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .desc-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
             margin-bottom: 6px;
         }
-        .setup-card .sub {
+        .desc-card p {
+            color: var(--text-dim);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 12px 0 28px;
+        }
+        .btn-landing {
+            padding: 14px 34px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 180px;
+        }
+        .btn-landing.primary {
+            background: linear-gradient(135deg, var(--accent), #00a87e);
+            color: #000;
+            box-shadow: 0 4px 24px rgba(0, 229, 160, 0.25);
+        }
+        .btn-landing.primary:active {
+            transform: scale(0.96);
+        }
+        .btn-landing.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid var(--border);
+        }
+        .btn-landing.secondary:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0 28px;
+        }
+        .testimonial {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+        }
+        .testimonial .quote {
+            font-style: italic;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .testimonial .author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .testimonial .author .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .testimonial .author .name {
+            font-weight: 600;
+            color: #fff;
+            font-size: 14px;
+        }
+        .testimonial .author .title {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* Feature badges */
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 16px 0 20px;
+        }
+        .badge-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 8px;
             text-align: center;
+        }
+        .badge-item .num {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .badge-item .lbl {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge-item .lbl.live {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Risk disclaimer */
+        .risk {
+            font-size: 11px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            padding: 16px 0 8px;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* ── Login Modal (inside landing) ── */
+        #login-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #login-modal.active {
+            display: flex;
+        }
+        .login-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        .login-card .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .login-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .login-card .sub {
             color: var(--text-dim);
             font-size: 14px;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
         }
-        .setup-card label {
+        .login-card label {
             display: block;
             font-size: 13px;
             font-weight: 600;
             color: var(--text-dim);
             margin: 14px 0 4px;
         }
-        .setup-card input {
+        .login-card input {
             width: 100%;
             padding: 12px 14px;
             border-radius: 10px;
@@ -109,10 +377,10 @@
             outline: none;
             transition: border 0.2s;
         }
-        .setup-card input:focus {
+        .login-card input:focus {
             border-color: var(--accent);
         }
-        .setup-card .btn-primary {
+        .login-card .btn-login {
             width: 100%;
             margin-top: 24px;
             padding: 14px;
@@ -125,22 +393,32 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .setup-card .btn-primary:active {
+        .login-card .btn-login:active {
             transform: scale(0.97);
         }
-        .setup-card .hint {
+        .login-card .hint {
             font-size: 12px;
             color: var(--text-dim);
             margin-top: 16px;
             text-align: center;
             line-height: 1.5;
         }
-        .setup-card .hint a {
+        .login-card .hint a {
             color: var(--accent);
             text-decoration: none;
         }
 
-        /* ── Header ── */
+        /* ── Main App (hidden until logged in) ── */
+        #app-container {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #app-container.active {
+            display: flex;
+        }
+
+        /* ── Header (app) ── */
         .header {
             padding: 10px 16px;
             display: flex;
@@ -214,6 +492,21 @@
         .status-badge .dot.offline {
             background: var(--text-dim);
         }
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            color: var(--text-dim);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
 
         /* ── Top Nav ── */
         .top-nav {
@@ -254,7 +547,7 @@
             opacity: 0.6;
         }
 
-        /* ── Main ── */
+        /* ── Main Content ── */
         .main-content {
             flex: 1;
             overflow-y: auto;
@@ -297,7 +590,7 @@
             border-radius: 30px;
         }
 
-        /* ── Buttons ── */
+        /* ── Buttons (app) ── */
         button,
         .btn {
             background: linear-gradient(135deg, #00c896, #00a87e);
@@ -450,7 +743,6 @@
             font-size: 14px;
         }
 
-        /* Progress / loading bar */
         .progress-wrap {
             margin: 20px 0 10px;
             background: rgba(255, 255, 255, 0.05);
@@ -473,7 +765,6 @@
             justify-content: space-between;
         }
 
-        /* Feature grid */
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -507,7 +798,6 @@
             color: var(--text-dim);
         }
 
-        /* Market price cards */
         .market-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -535,7 +825,6 @@
             color: var(--text-dim);
         }
 
-        /* ── Other existing styles ── */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -573,9 +862,6 @@
         }
         .symbol-item:hover {
             background: rgba(255, 255, 255, 0.04);
-        }
-        .symbol-item:active {
-            background: rgba(255, 255, 255, 0.08);
         }
 
         .portfolio-item {
@@ -692,17 +978,6 @@
         .mb-8 {
             margin-bottom: 8px;
         }
-        .gap-4 {
-            gap: 4px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
         .result-highlight {
             font-size: 20px;
             font-weight: 700;
@@ -731,6 +1006,26 @@
         }
 
         @media (max-width: 600px) {
+            .landing-header .brand {
+                font-size: 22px;
+            }
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-row .stat-box:last-child {
+                grid-column: span 2;
+            }
+            .testimonials {
+                grid-template-columns: 1fr;
+            }
+            .badge-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .action-buttons .btn-landing {
+                min-width: 140px;
+                font-size: 14px;
+                padding: 12px 20px;
+            }
             .header .logo {
                 font-size: 16px;
             }
@@ -761,9 +1056,6 @@
             .freq-cell .digit {
                 font-size: 16px;
             }
-            .setup-card {
-                padding: 28px 18px;
-            }
             .inline {
                 gap: 4px;
             }
@@ -782,58 +1074,156 @@
 </head>
 <body>
 
-    <!-- ─── SETUP OVERLAY ─── -->
-    <div id="setup-overlay">
-        <div class="setup-card">
-            <div class="logo">Deriv Trader Pro</div>
-            <div class="sub">Connect your Deriv account to start trading</div>
+    <!-- ─── LANDING OVERLAY ─── -->
+    <div id="landing-overlay">
+        <div class="landing-container">
+            <!-- Header -->
+            <div class="landing-header">
+                <div class="brand">
+                    digittools
+                    <small>powered by</small>
+                </div>
+                <div class="powered">Deriv API</div>
+            </div>
 
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="label">Visibility</div>
+                    <div class="value up">25 +0.68%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Bear Market Index</div>
+                    <div class="value up">+2.09%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Bull Market Index</div>
+                    <div class="value down">-0.31%</div>
+                </div>
+            </div>
+
+            <!-- Hero -->
+            <div class="hero">
+                <h2>FREE DERIV BOTS, AUTOMATION, AND TRADING TOOLS IN ONE WORKSPACE</h2>
+                <div class="sub">Trade with better structure</div>
+            </div>
+
+            <!-- Description -->
+            <div class="desc-card">
+                <h3>Trade with better structure</h3>
+                <p>Use manual trading, charts, copy tools, automation, and market analysis without jumping between separate apps.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-landing primary" id="login-btn">Log In and Trade</button>
+                <button class="btn-landing secondary" id="create-account-btn">Create Free Account</button>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="testimonials">
+                <div class="testimonial">
+                    <div class="quote">"The Apex Bot 2026 is seriously on another level. It adapts to your needs."</div>
+                    <div class="author">
+                        <div class="avatar">EO</div>
+                        <div>
+                            <div class="name">Emmanuel Owusu</div>
+                            <div class="title">Full-time Trader – Ghana</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="quote">"The analysis tools here are on another level. Delicious."</div>
+                    <div class="author">
+                        <div class="avatar">FA</div>
+                        <div>
+                            <div class="name">Fatima Al-Rashid</div>
+                            <div class="title">Room & Crash Specialist – Nigeria</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges -->
+            <div class="badge-grid">
+                <div class="badge-item">
+                    <div class="num">10</div>
+                    <div class="lbl">DIGIT CUSTOMERS</div>
+                </div>
+                <div class="badge-item">
+                    <div class="num">24/7</div>
+                    <div class="lbl">SYNTHETIC MARKET ACCESS</div>
+                </div>
+                <div class="badge-item">
+                    <div class="num">●</div>
+                    <div class="lbl live">ANALYSIS WORKSPACE</div>
+                </div>
+                <div class="badge-item">
+                    <div class="num">●</div>
+                    <div class="lbl live">MARKET STATUS</div>
+                </div>
+            </div>
+
+            <!-- Risk Disclaimer -->
+            <div class="risk">
+                "Risk Disclaimer. Deriv offers complex derivatives, such as options and contracts for difference ("CFDs"). These products may not be suitable for all clients, and trading them puts you at risk. Please make sure that you understand the full financial risks before trading. Please read the terms and conditions of your account."
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── LOGIN MODAL ─── -->
+    <div id="login-modal">
+        <div class="login-card">
+            <button class="close-btn" id="close-login">×</button>
+            <h3>Log In to Trade</h3>
+            <div class="sub">Enter your Deriv credentials</div>
             <label>App ID</label>
-            <input id="setup-app-id" type="text" placeholder="e.g. 12345" />
-
+            <input id="login-app-id" type="text" placeholder="e.g. 12345" />
             <label>Personal Access Token</label>
-            <input id="setup-pat-token" type="password" placeholder="Your PAT token" />
-
-            <button class="btn-primary" id="setup-connect-btn">Connect</button>
-
+            <input id="login-pat-token" type="password" placeholder="Your PAT token" />
+            <button class="btn-login" id="login-submit">Connect & Trade</button>
             <div class="hint">
-                <a href="https://deriv.com" target="_blank">Get your App ID &amp; PAT</a> from the Deriv API dashboard.
+                Don't have an account? <a href="#" id="signup-hint">Create one here</a>
             </div>
         </div>
     </div>
 
-    <!-- ─── HEADER ─── -->
-    <div class="header">
-        <div class="logo">
-            Deriv Trader Pro
-            <span class="badge">TRADING HUB LIVE</span>
-        </div>
-        <div class="header-right">
-            <select id="account-select-header"><option value="">No account</option></select>
-            <div class="status-badge" id="connection-status">
-                <span class="dot offline" id="status-dot"></span>
-                <span id="status-label">Offline</span>
+    <!-- ─── MAIN APP (hidden until login) ─── -->
+    <div id="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                digittools
+                <span class="badge">TRADING HUB LIVE</span>
+            </div>
+            <div class="header-right">
+                <select id="account-select-header"><option value="">No account</option></select>
+                <div class="status-badge" id="connection-status">
+                    <span class="dot offline" id="status-dot"></span>
+                    <span id="status-label">Offline</span>
+                </div>
+                <button class="logout-btn" id="logout-btn">Logout</button>
             </div>
         </div>
-    </div>
 
-    <!-- ─── TOP NAV ─── -->
-    <div class="top-nav" id="top-nav">
-        <button class="nav-item active" data-tab="dashboard">Dashboard</button>
-        <button class="nav-item" data-tab="botbuilder">Bot Builder</button>
-        <button class="nav-item" data-tab="manualtrader">Manual Trader</button>
-        <button class="nav-item" data-tab="bulktrader">Bulk Trader</button>
-        <button class="nav-item" data-tab="aibots">AI Bots</button>
-        <button class="nav-item" data-tab="freebots">Free Bots</button>
-        <button class="nav-item" data-tab="copytrader">Copy Trader</button>
-        <button class="nav-item" data-tab="analysis">Analysis</button>
-        <button class="nav-item" data-tab="chart">Chart</button>
-        <button class="nav-item" data-tab="tradingview">TradingView</button>
-    </div>
+        <!-- Top Nav -->
+        <div class="top-nav" id="top-nav">
+            <button class="nav-item active" data-tab="dashboard">Dashboard</button>
+            <button class="nav-item" data-tab="botbuilder">Bot Builder</button>
+            <button class="nav-item" data-tab="manualtrader">Manual Trader</button>
+            <button class="nav-item" data-tab="bulktrader">Bulk Trader</button>
+            <button class="nav-item" data-tab="aibots">AI Bots</button>
+            <button class="nav-item" data-tab="freebots">Free Bots</button>
+            <button class="nav-item" data-tab="copytrader">Copy Trader</button>
+            <button class="nav-item" data-tab="analysis">Analysis</button>
+            <button class="nav-item" data-tab="chart">Chart</button>
+            <button class="nav-item" data-tab="tradingview">TradingView</button>
+        </div>
 
-    <!-- ─── MAIN ─── -->
-    <div class="main-content" id="main-content">
-        <div id="tab-content"></div>
+        <!-- Main Content -->
+        <div class="main-content" id="main-content">
+            <div id="tab-content"></div>
+        </div>
     </div>
 
     <script>
@@ -873,16 +1263,99 @@
         // Chart
         let priceChart = null;
 
-        // Dashboard market data (static examples, updated with ticks)
+        // Market prices for dashboard
         let marketPrices = {
-            'ETH/USD': { price: 3406.28, change: '+0.00%' },
+            'ETH/USD': { price: 3406.28, change: '+0.08%' },
             'EUR/USD': { price: 1.0875, change: '+0.08%' },
             'GBP/USD': { price: 1.2054, change: '-0.02%' },
             'BTC/USD': { price: 67432.50, change: '+0.30%' }
         };
 
         // ============================================================
-        //  UTILITIES
+        //  LANDING / LOGIN CONTROLS
+        // ============================================================
+        const landing = document.getElementById('landing-overlay');
+        const appContainer = document.getElementById('app-container');
+        const loginModal = document.getElementById('login-modal');
+
+        // Check saved credentials -> auto-login
+        const savedApp = localStorage.getItem('deriv_app_id');
+        const savedPat = localStorage.getItem('deriv_pat_token');
+        if (savedApp && savedPat) {
+            // Auto-login: we'll set credentials and start app, skip landing
+            APP_ID = savedApp;
+            PAT_TOKEN = savedPat;
+            landing.classList.add('hidden');
+            appContainer.classList.add('active');
+            autoSetup();
+        } else {
+            // Show landing
+            landing.classList.remove('hidden');
+            appContainer.classList.remove('active');
+        }
+
+        // Login button shows modal
+        document.getElementById('login-btn').addEventListener('click', () => {
+            loginModal.classList.add('active');
+        });
+
+        // Close modal
+        document.getElementById('close-login').addEventListener('click', () => {
+            loginModal.classList.remove('active');
+        });
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) loginModal.classList.remove('active');
+        });
+
+        // Signup hint -> open Deriv signup
+        document.getElementById('signup-hint').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('https://deriv.com/signup', '_blank');
+        });
+        document.getElementById('create-account-btn').addEventListener('click', () => {
+            window.open('https://deriv.com/signup', '_blank');
+        });
+
+        // Login submit
+        document.getElementById('login-submit').addEventListener('click', async () => {
+            const appId = document.getElementById('login-app-id').value.trim();
+            const pat = document.getElementById('login-pat-token').value.trim();
+            if (!appId || !pat) {
+                alert('Please enter both App ID and PAT token.');
+                return;
+            }
+            APP_ID = appId;
+            PAT_TOKEN = pat;
+            localStorage.setItem('deriv_app_id', appId);
+            localStorage.setItem('deriv_pat_token', pat);
+            loginModal.classList.remove('active');
+            landing.classList.add('hidden');
+            appContainer.classList.add('active');
+            await autoSetup();
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('deriv_app_id');
+            localStorage.removeItem('deriv_pat_token');
+            localStorage.removeItem('deriv_selected_account');
+            localStorage.removeItem('deriv_remember');
+            if (ws) { ws.close();
+                ws = null; }
+            stopPing();
+            setStatus(false);
+            APP_ID = '';
+            PAT_TOKEN = '';
+            selectedAccountId = '';
+            landing.classList.remove('hidden');
+            appContainer.classList.remove('active');
+            // Clear any sensitive data
+            document.getElementById('login-app-id').value = '';
+            document.getElementById('login-pat-token').value = '';
+        });
+
+        // ============================================================
+        //  UTILITY FUNCTIONS (same as before)
         // ============================================================
         function log(msg, type = 'info') {
             const el = document.getElementById('log');
@@ -917,41 +1390,6 @@
             return await fetch(`https://api.derivws.com${url}`, { method, headers, body: body ? JSON.stringify(body) :
                     null });
         }
-
-        // ============================================================
-        //  SETUP / AUTH
-        // ============================================================
-        function saveCredentials(appId, pat) {
-            APP_ID = appId;
-            PAT_TOKEN = pat;
-            localStorage.setItem('deriv_app_id', appId);
-            localStorage.setItem('deriv_pat_token', pat);
-            document.getElementById('setup-overlay').classList.add('hidden');
-        }
-
-        document.getElementById('setup-connect-btn').addEventListener('click', async () => {
-            const appId = document.getElementById('setup-app-id').value.trim();
-            const pat = document.getElementById('setup-pat-token').value.trim();
-            if (!appId || !pat) {
-                log('Please enter App ID and PAT token.', 'error');
-                return;
-            }
-            saveCredentials(appId, pat);
-            await autoSetup();
-        });
-
-        // Auto-fill if saved
-        (function() {
-            const savedApp = localStorage.getItem('deriv_app_id');
-            const savedPat = localStorage.getItem('deriv_pat_token');
-            if (savedApp && savedPat) {
-                document.getElementById('setup-app-id').value = savedApp;
-                document.getElementById('setup-pat-token').value = savedPat;
-                setTimeout(() => {
-                    document.getElementById('setup-connect-btn').click();
-                }, 300);
-            }
-        })();
 
         // ============================================================
         //  ACCOUNT MANAGEMENT
@@ -1043,7 +1481,7 @@
         function stopPing() { clearInterval(pingInterval); }
 
         // ============================================================
-        //  WEBSOCKET MESSAGE HANDLER
+        //  WEBSOCKET MESSAGE HANDLER (same as before)
         // ============================================================
         function handleWSMessage(event) {
             const msg = JSON.parse(event.data);
@@ -1064,32 +1502,18 @@
 
                 updateAnalysisState(digit);
 
-                // Update chart
                 if (window._updatePriceChart) window._updatePriceChart(msg.tick.quote);
 
-                // Update dashboard market prices (use current quote for a sample pair)
-                // We'll update one of the market cards with the current price
-                const priceEls = document.querySelectorAll('.market-card .price');
-                if (priceEls.length > 0 && priceEls[0]) {
-                    // Update the first one (ETH/USD) with the tick quote
-                    // But we need to map: we'll just update the first card with the tick price
-                    // More sophisticated: we could map symbols, but for simplicity we update one.
-                    // Actually we can set a specific pair: we'll update a dummy pair called "R_10"
-                    // but we'll just show the tick price in one of the cards.
-                    // Let's update the "BTC/USD" or "ETH/USD" with the quote.
-                    // We'll update the first card (ETH/USD) with the quote.
-                    const ethCard = document.querySelector('.market-card .price');
-                    if (ethCard) {
-                        ethCard.textContent = msg.tick.quote.toFixed(2);
-                    }
+                // Update dashboard market card (ETH/USD)
+                const ethCard = document.querySelector('.market-card .price');
+                if (ethCard) {
+                    ethCard.textContent = msg.tick.quote.toFixed(2);
                 }
 
-                // Copy trader
                 if (window.copyTraderActive && window.copyTraderFn) {
                     window.copyTraderFn(digit, msg.tick.quote);
                 }
 
-                // Bot
                 if (botEnabled && botFunction) {
                     try {
                         const decision = botFunction({
@@ -1534,12 +1958,10 @@
             switch (tab) {
                 case 'dashboard':
                     content.innerHTML = `
-                        <!-- Welcome Card -->
                         <div class="card welcome-card">
-                            <h1>Welcome to Deriv Trader Pro</h1>
+                            <h1>Welcome to digittools</h1>
                             <div class="sub">Empowering your financial journey</div>
                             <div class="tagline">⚡ Analyzing Tick Data...</div>
-                            <!-- Progress bar animation -->
                             <div class="progress-wrap">
                                 <div class="bar" id="init-progress-bar" style="width:0%;"></div>
                             </div>
@@ -1549,7 +1971,6 @@
                             </div>
                         </div>
 
-                        <!-- Feature Grid -->
                         <div class="feature-grid">
                             <div class="feature-item">
                                 <div class="icon">📈</div>
@@ -1568,7 +1989,6 @@
                             </div>
                         </div>
 
-                        <!-- Market Prices -->
                         <div class="card">
                             <h3>📊 Live Market Prices</h3>
                             <div class="market-grid">
@@ -1595,7 +2015,6 @@
                             </div>
                         </div>
 
-                        <!-- Balance & Last Result (compact) -->
                         <div class="card">
                             <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
                                 <div>
@@ -1609,16 +2028,15 @@
                             </div>
                         </div>
 
-                        <!-- Portfolio (collapsible or short) -->
                         <div class="card">
                             <h3>📋 Open Positions <span class="badge" id="open-count">0</span></h3>
                             <div id="portfolio-list"><p class="text-dim">No open contracts.</p></div>
                         </div>
 
-                        <div class="footer-note">© 2026 Deriv Trader Pro. All rights reserved.</div>
+                        <div class="footer-note">© 2026 digittools — Deriv Trading Workspace</div>
                     `;
 
-                    // Animate progress bar from 0 to 100% over 3 seconds
+                    // Animate progress bar
                     const bar = document.getElementById('init-progress-bar');
                     const percentLabel = document.getElementById('progress-percent');
                     if (bar) {
@@ -1633,7 +2051,6 @@
                             if (percentLabel) percentLabel.textContent = Math.floor(progress) + '%';
                         }, 200);
                     }
-                    // Update portfolio count
                     setTimeout(() => {
                         const countEl = document.getElementById('open-count');
                         if (countEl) countEl.textContent = openContracts.length;
@@ -1773,13 +2190,11 @@
                     break;
             }
 
-            // Highlight active nav
             document.querySelectorAll('.top-nav button').forEach(b => b.classList.remove('active'));
             const activeBtn = document.querySelector(`.top-nav button[data-tab="${tab}"]`);
             if (activeBtn) activeBtn.classList.add('active');
         }
 
-        // ── Nav click ──
         document.getElementById('top-nav').addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON' && e.target.dataset.tab) {
                 renderTab(e.target.dataset.tab);
@@ -1787,7 +2202,7 @@
         });
 
         // ============================================================
-        //  HELPER FUNCTIONS (exposed to inline onclick)
+        //  HELPER FUNCTIONS
         // ============================================================
         function updateTradeUI() {
             const type = document.getElementById('manual-contract-type')?.value;
@@ -1884,19 +2299,10 @@
         }
 
         // ============================================================
-        //  AUTO SETUP
+        //  AUTO SETUP (called after login)
         // ============================================================
         async function autoSetup() {
-            APP_ID = localStorage.getItem('deriv_app_id') || '';
-            PAT_TOKEN = localStorage.getItem('deriv_pat_token') || '';
-
-            if (!APP_ID || !PAT_TOKEN) {
-                document.getElementById('setup-overlay').classList.remove('hidden');
-                renderTab('dashboard');
-                return;
-            }
-
-            document.getElementById('setup-overlay').classList.add('hidden');
+            // Already have APP_ID and PAT_TOKEN set
             const success = await fetchAndDisplayAccounts();
             if (!success) {
                 log('Failed to fetch accounts. Check credentials.', 'error');
@@ -1908,7 +2314,7 @@
             }
             renderTab('dashboard');
 
-            // Restore bot
+            // Restore bot state
             botEnabled = localStorage.getItem('botEnabled') === 'true';
             const savedScript = localStorage.getItem('botScript');
             if (botEnabled && savedScript) {
@@ -1926,9 +2332,8 @@
             }
         }
 
-        // ── Start ──
-        autoSetup();
+        // If already logged in (saved creds), autoSetup already called above
+        // Otherwise, login flow will call autoSetup.
     </script>
-
 </body>
 </html>
